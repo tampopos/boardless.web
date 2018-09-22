@@ -28,7 +28,7 @@ import { RadioGroup } from 'src/components/forms-controls/radio-group';
 interface Styles extends StylesBase {
   row: {};
 }
-const styles = (): Styles => ({
+const styles: Styles = {
   root: {},
   row: {
     paddingBottom: 10,
@@ -36,7 +36,7 @@ const styles = (): Styles => ({
       paddingBottom: 0,
     },
   },
-});
+};
 interface Events {
   add: (friend: Friend, friends: Friend[]) => Promise<any>;
   remove: (id: number) => any;

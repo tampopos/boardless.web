@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { StoredState } from '../stored-state';
-import { createAppStore } from '../reducer-factory';
+import { StoredState } from 'src/stores/stored-state';
+import { createAppStore } from 'src/stores/reducer-factory';
 
 export interface StoreProviderProps {
   initialState: StoredState;

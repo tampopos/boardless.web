@@ -6,25 +6,24 @@ import { Colors } from '../../common/styles/theme';
 import {
   FormLabel,
   RadioGroup as MuiRadioGroup,
-  Theme,
   FormControl,
   Radio,
   FormControlLabel,
 } from '@material-ui/core';
 import { RadioGroupProps as MuiRadioGroupProps } from '@material-ui/core/RadioGroup';
-import { ThemeColorScope } from 'src/common/styles/components/theme-color-scope';
+import { ThemeColorScope } from '../styles/theme-color-scope';
 import { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
 
 interface Styles extends StylesBase {
   group: {};
 }
-const styles = (theme: Theme): Styles => ({
+const styles: Styles = {
   root: {
     width: '100%',
     margin: [0, 10],
   },
   group: { flexDirection: 'row' },
-});
+};
 interface RadioGroupProps extends InjectableStyledProps<Styles> {
   themeColor?: keyof Colors;
   label?: string;

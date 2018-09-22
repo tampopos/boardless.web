@@ -2,7 +2,7 @@ import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
 import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
-import { Theme, Colors } from '../../common/styles/theme';
+import { Colors } from '../../common/styles/theme';
 import {
   FormControl,
   InputLabel,
@@ -10,18 +10,18 @@ import {
 } from '@material-ui/core';
 import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import { SelectProps as MuiSelectProps } from '@material-ui/core/Select';
-import { ThemeColorScope } from 'src/common/styles/components/theme-color-scope';
+import { ThemeColorScope } from '../styles/theme-color-scope';
 
 interface Styles extends StylesBase {
   select: {};
 }
-const styles = (theme: Theme): Styles => ({
+const styles: Styles = {
   root: {
     width: '100%',
     margin: [0, 10],
   },
   select: {},
-});
+};
 interface SelectProps extends InjectableStyledProps<Styles> {
   items: MenuItemProps[];
   themeColor?: keyof Colors;

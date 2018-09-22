@@ -3,17 +3,17 @@ import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
-import { TextField, Theme } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { TextFieldProps } from '@material-ui/core/TextField';
-import { ThemeColorScope } from 'src/common/styles/components/theme-color-scope';
+import { ThemeColorScope } from '../styles/theme-color-scope';
 
 interface Styles extends StylesBase {}
-const styles = (theme: Theme): Styles => ({
+const styles: Styles = {
   root: {
     width: '100%',
     margin: [0, 10],
   },
-});
+};
 interface TextBoxProps extends InjectableStyledProps<Styles> {
   maxLength?: number;
   themeColor?: keyof Colors;

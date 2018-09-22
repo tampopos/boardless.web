@@ -1,9 +1,9 @@
 import { StoredState } from './stored-state';
 import { combineReducers, createStore, compose } from 'redux';
 import persistState from 'redux-localstorage';
-import { StoreProviderProps } from './components/store-provider';
 import { barFormReducer } from './bar/bar-form-reducer';
 import { barListReducer } from './bar/bar-list-reducer';
+import { StoreProviderProps } from 'src/components/stores/store-provider';
 
 const createReducers = (initialState: StoredState) =>
   combineReducers<StoredState>({

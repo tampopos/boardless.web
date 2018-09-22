@@ -5,10 +5,10 @@ import { ComponentHelper } from 'src/common/component-helper';
 import * as React from 'react';
 import { Button as MuiButton } from '@material-ui/core';
 import { ButtonProps as MuiButtonProps } from '@material-ui/core/Button';
-import { ThemeColorScope } from 'src/common/styles/components/theme-color-scope';
+import { ThemeColorScope } from '../styles/theme-color-scope';
 
 interface Styles extends StylesBase {}
-const styles = {
+const styles: Styles = {
   root: {
     width: '100%',
   },

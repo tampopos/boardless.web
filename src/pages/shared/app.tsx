@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { getInitialStoredState } from '../../services/store-service';
 import { connect } from 'react-redux';
-import { StoreProvider } from '../../stores/components/store-provider';
 import { StateMapper, DispatchMapper } from '../../stores/types';
 import { Theme, createTheme } from '../../common/styles/theme';
-import { ThemeProvider } from '../../common/styles/components/theme-provider';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './app-router';
+import { ThemeProvider } from 'src/components/styles/theme-provider';
+import { StoreProvider } from 'src/components/stores/store-provider';
 
 interface Props {
   theme: Theme;
