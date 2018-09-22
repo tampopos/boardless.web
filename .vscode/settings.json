@@ -1,0 +1,23 @@
+{
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/build": true,
+    "**/dist": true
+  },
+  "prettier.eslintIntegration": true,
+  "editor.tabSize": 2,
+  "prettier.trailingComma": "all",
+  "tslint.autoFixOnSave": true,
+  "tslint.alwaysShowRuleFailuresAsWarnings": true,
+  "tslint.alwaysShowStatus": true,
+  "cSpell.words": [
+    "Injectable",
+    "boardless",
+    "localstorage",
+    "selectable",
+    "tmpps"
+  ]
+}
