@@ -5,7 +5,7 @@ import {
   appendClassName,
 } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
-import { createPropagationProps } from '../../common/component-helper';
+import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 
 interface Styles extends StylesBase {
@@ -39,7 +39,7 @@ interface TableRowProps extends InjectableStyledProps<Styles> {
 export const TableRow = decorate(styles)<TableRowProps & DivProps>(props => {
   const { selectable, selected } = props;
   const { root, selectableRow, selectedRow } = getInjectClasses(props);
-  const pProps = createPropagationProps(props, 'selectable', 'selected');
+  const pProps = ComponentHelper.createPropagationProps(props, 'selectable', 'selected');
   const className = appendClassName(
     root,
     selectable ? selectableRow : '',

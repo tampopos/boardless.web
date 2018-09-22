@@ -5,15 +5,13 @@ import {
   appendClassName,
 } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
-import { createPropagationProps } from '../../common/component-helper';
+import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
-import { Theme } from '../../common/styles/theme';
+import { Theme, Colors, colors } from '../../common/styles/theme';
+import { ObjectHelper } from 'src/common/object-helper';
 
-interface Styles extends StylesBase {
+interface Styles extends StylesBase, Record<keyof Colors, {}> {
   header: any;
-  mono: any;
-  blue: any;
-  red: any;
 }
 const styles = (theme: Theme): Styles => ({
   root: {
@@ -23,43 +21,38 @@ const styles = (theme: Theme): Styles => ({
     display: 'table-cell',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    borderColor: theme.shared.table.borderColor,
   },
   header: {
-    backgroundColor: theme.mono.table.headerBackgroundColor,
-    color: theme.mono.table.headerColor,
+    backgroundColor: theme.shared.table.headerBackgroundColor,
+    color: theme.shared.table.headerColor,
     fontWeight: theme.shared.fontWeight.bold,
-    borderColor: theme.mono.table.color,
   },
-  mono: {
-    color: theme.mono.table.color,
-    borderColor: theme.mono.table.color,
-  },
-  blue: {
-    color: theme.blue.table.color,
-    borderColor: theme.mono.table.color,
-  },
-  red: {
-    color: theme.red.table.color,
-    borderColor: theme.mono.table.color,
-  },
+  ...ObjectHelper.mapObject(colors, color => ({
+    color: color['500'],
+  })),
 });
 interface TableCellProps extends InjectableStyledProps<Styles> {
   isHeader?: boolean;
-  themeType?: 'mono' | 'blue' | 'red';
+  themeColor?: keyof Colors;
 }
 export const TableCell = decorate(styles)<TableCellProps & DivProps>(props => {
-  const { isHeader, themeType } = props;
+  const { isHeader, themeColor } = props;
   const classes = getInjectClasses(props);
   const { root, header } = classes;
-  const pProps = createPropagationProps(props, 'isHeader', 'themeType');
+  const pProps = ComponentHelper.createPropagationProps(
+    props,
+    'isHeader',
+    'themeColor',
+  );
   return (
     <div
       className={appendClassName(
         root,
-        isHeader ? header : themeType ? classes[themeType] : '',
+        isHeader ? header : themeColor ? classes[themeColor] : '',
       )}
       {...pProps}
     />
   );
 });
-TableCell.defaultProps = { isHeader: false, themeType: 'mono' };
+TableCell.defaultProps = { isHeader: false };

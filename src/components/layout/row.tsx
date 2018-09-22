@@ -1,21 +1,19 @@
 import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
 import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
-import { DivProps } from '../types';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
+import { Grid } from '@material-ui/core';
+import { GridProps } from '@material-ui/core/Grid';
 
 interface Styles extends StylesBase {}
 const styles: Styles = {
   root: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    display: 'table',
+    display: 'flex',
   },
 };
-interface TableProps extends InjectableStyledProps<Styles> {}
-export const Table = decorate(styles)<TableProps & DivProps>(props => {
+interface RowProps extends InjectableStyledProps<Styles> {}
+export const Row = decorate(styles)<RowProps & GridProps>(props => {
   const { root } = getInjectClasses(props);
   const pProps = ComponentHelper.createPropagationProps(props);
-  return <div className={root} {...pProps} />;
+  return <Grid {...pProps} className={root} item={true} xs={12} />;
 });
-Table.defaultProps = {};

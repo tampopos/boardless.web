@@ -7,7 +7,6 @@
     "**/build": true,
     "**/dist": true
   },
-  "prettier.eslintIntegration": true,
   "editor.tabSize": 2,
   "prettier.trailingComma": "all",
   "tslint.autoFixOnSave": true,
@@ -17,7 +16,11 @@
     "Injectable",
     "boardless",
     "localstorage",
+    "roboto",
     "selectable",
     "tmpps"
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "files.autoSave": "onFocusChange",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

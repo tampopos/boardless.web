@@ -1,60 +1,56 @@
 import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
-import {
-  decorate,
-  getInjectClasses,
-  appendClassName,
-} from '../../common/styles/styles-helper';
-import { BaseSelectProps, OptionProps } from '../types';
-import { createPropagationProps } from '../../common/component-helper';
+import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
+import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
-import { Theme } from '../../common/styles/theme';
+import { Theme, Colors } from '../../common/styles/theme';
+import {
+  FormControl,
+  InputLabel,
+  Select as MuiSelect,
+} from '@material-ui/core';
+import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
+import { SelectProps as MuiSelectProps } from '@material-ui/core/Select';
+import { ThemeColorScope } from 'src/common/styles/components/theme-color-scope';
 
 interface Styles extends StylesBase {
-  mono: any;
-  blue: any;
-  red: any;
+  select: {};
 }
 const styles = (theme: Theme): Styles => ({
   root: {
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 5,
-    fontWeight: 'bold',
-    outline: 'none',
     width: '100%',
+    margin: [0, 10],
   },
-  mono: {
-    borderColor: theme.mono.formControl.borderColor,
-    color: theme.mono.formControl.color,
-  },
-  blue: {
-    borderColor: theme.blue.formControl.borderColor,
-    color: theme.blue.formControl.color,
-  },
-  red: {
-    borderColor: theme.red.formControl.borderColor,
-    color: theme.red.formControl.color,
-  },
+  select: {},
 });
 interface SelectProps extends InjectableStyledProps<Styles> {
-  selectItems: OptionProps[];
-  themeType?: 'mono' | 'blue' | 'red';
+  items: MenuItemProps[];
+  themeColor?: keyof Colors;
+  label: string;
 }
-export const Select = decorate(styles)<SelectProps & BaseSelectProps>(props => {
-  const { selectItems, themeType } = props;
+export const Select = decorate(styles)<SelectProps & MuiSelectProps>(props => {
+  const { items, themeColor, label } = props;
   const classes = getInjectClasses(props);
-  const { root } = classes;
-  const pProps = createPropagationProps(props, 'selectItems', 'themeType');
+  const { root, select } = classes;
+  const pProps = ComponentHelper.createPropagationProps(
+    props,
+    'items',
+    'themeColor',
+    'label',
+  );
   return (
-    <select
-      className={appendClassName(root, themeType ? classes[themeType] : '')}
-      {...pProps}
-    >
-      {selectItems.map(x => (
-        <option {...x} />
-      ))}
-    </select>
+    <ThemeColorScope themeColor={themeColor}>
+      <FormControl className={root}>
+        <InputLabel>{label}</InputLabel>
+        <MuiSelect
+          {...pProps}
+          className={select}
+          color={themeColor ? 'primary' : 'inherit'}
+        >
+          {items.map(x => (
+            <MenuItem {...x} />
+          ))}
+        </MuiSelect>
+      </FormControl>
+    </ThemeColorScope>
   );
 });
-Select.defaultProps = { themeType: 'mono' };

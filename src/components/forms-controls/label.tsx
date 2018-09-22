@@ -1,7 +1,7 @@
 import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
 import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
 import { BaseLabelProps } from '../types';
-import { createPropagationProps } from '../../common/component-helper';
+import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Theme } from '../../common/styles/theme';
 
@@ -19,7 +19,7 @@ const styles = (theme: Theme): Styles => ({
 interface LabelProps extends InjectableStyledProps<Styles> {}
 export const Label = decorate(styles)<LabelProps & BaseLabelProps>(props => {
   const { root } = getInjectClasses(props);
-  const pProps = createPropagationProps(props);
+  const pProps = ComponentHelper.createPropagationProps(props);
   return <label className={root} {...pProps} />;
 });
 Label.defaultProps = {};

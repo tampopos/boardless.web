@@ -1,5 +1,5 @@
 import Friend from '../models/friend';
-import { delay } from '../common/async-helper';
+import { AsyncHelper } from '../common/async-helper';
 
 const malePersonalities = [
   'ごうけつ',
@@ -124,7 +124,7 @@ export const createNewFriend = async (
     sex: string;
   },
 ) => {
-  await delay(100);
+  await AsyncHelper.delay(100);
   return Object.assign({}, p, {
     id,
     attack: getRandomParameter(1, 20),
