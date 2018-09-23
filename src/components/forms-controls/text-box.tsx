@@ -3,9 +3,10 @@ import { getInjectClasses } from '../../common/styles/styles-helper';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
-import { TextField, createStyles, withStyles } from '@material-ui/core';
+import { TextField, createStyles } from '@material-ui/core';
 import { TextFieldProps } from '@material-ui/core/TextField';
 import { ThemeColorScope } from '../styles/theme-color-scope';
+import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = createStyles({
   root: {
@@ -19,7 +20,7 @@ interface TextBoxProps {
   themeColor?: keyof Colors;
 }
 type Props = WithStyleProps<typeof styles, TextBoxProps & TextFieldProps>;
-export const TextBox = withStyles(styles)((props: Props) => {
+export const TextBox = decorate(styles)((props: Props) => {
   const { themeColor, onChange, maxLength } = props;
   const classes = getInjectClasses(props);
   const { root } = classes;

@@ -10,11 +10,11 @@ import {
   Radio,
   FormControlLabel,
   createStyles,
-  withStyles,
 } from '@material-ui/core';
 import { RadioGroupProps as MuiRadioGroupProps } from '@material-ui/core/RadioGroup';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
+import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = createStyles({
   root: {
@@ -35,7 +35,7 @@ type Props = WithStyleProps<
   RadioGroupProps & MuiRadioGroupProps
 >;
 
-export const RadioGroup = withStyles(styles)((props: Props) => {
+export const RadioGroup = decorate(styles)((props: Props) => {
   const { themeColor, label, items, readOnly } = props;
   const classes = getInjectClasses(props);
   const { root, group } = classes;

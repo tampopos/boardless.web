@@ -8,7 +8,8 @@ import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Theme, Colors, colors } from '../../common/styles/theme';
 import { ObjectHelper } from 'src/common/object-helper';
-import { createStyles, withStyles } from '@material-ui/core';
+import { createStyles } from '@material-ui/core';
+import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,7 +36,7 @@ interface TableCellProps {
   themeColor?: keyof Colors;
 }
 type Props = WithStyleProps<typeof styles, TableCellProps & DivProps>;
-export const TableCell = withStyles(styles)((props: Props) => {
+export const TableCell = decorate(styles)((props: Props) => {
   const { isHeader, themeColor } = props;
   const classes = getInjectClasses(props);
   const { root, header } = classes;

@@ -12,7 +12,8 @@ import { Cell } from '../../components/layout/cell';
 import { Button } from '../../components/forms-controls/button';
 import { barFormActionCreators } from '../../stores/bar/bar-form-reducer';
 import { Container } from 'src/components/layout/container';
-import { Typography, createStyles, withStyles } from '@material-ui/core';
+import { Typography, createStyles } from '@material-ui/core';
+import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = createStyles({
   root: {},
@@ -55,7 +56,7 @@ const mapStateToProps: StateMapper<BarListProps> = ({
   };
 };
 type Props = WithStyleProps<typeof styles, BarListProps & Events>;
-const decoratedComponent = withStyles(styles)((props: Props) => {
+const decoratedComponent = decorate(styles)((props: Props) => {
   const { friends, toAddMode, selectRow, friend, classes } = props;
   const getThemeColor = ({ sex }: Friend) =>
     sex === 'male' ? 'indigo' : sex === 'female' ? 'pink' : undefined;

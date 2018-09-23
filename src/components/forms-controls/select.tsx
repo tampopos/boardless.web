@@ -8,11 +8,11 @@ import {
   InputLabel,
   Select as MuiSelect,
   createStyles,
-  withStyles,
 } from '@material-ui/core';
 import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import { SelectProps as MuiSelectProps } from '@material-ui/core/Select';
 import { ThemeColorScope } from '../styles/theme-color-scope';
+import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = createStyles({
   root: {
@@ -28,7 +28,7 @@ interface SelectProps {
   label: string;
 }
 type Props = WithStyleProps<typeof styles, SelectProps & MuiSelectProps>;
-export const Select = withStyles(styles)((props: Props) => {
+export const Select = decorate(styles)((props: Props) => {
   const { items, themeColor, label } = props;
   const classes = getInjectClasses(props);
   const { root, select } = classes;

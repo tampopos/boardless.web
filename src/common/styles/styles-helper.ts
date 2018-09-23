@@ -1,12 +1,10 @@
-import { WithStyleProps, Styles } from './types';
+import { WithStyleProps, Styles, StyledComponent } from './types';
 import injectSheet from 'react-jss';
 
 export const decorate = <TStyles extends Styles>(style: TStyles) => <
   TProps = {}
 >(
-  component:
-    | React.Component<WithStyleProps<TStyles, TProps>>
-    | React.SFC<WithStyleProps<TStyles, TProps>>,
+  component: StyledComponent<TStyles, TProps>,
 ): React.ComponentType<TProps> => injectSheet(style)(component);
 
 export const getInjectClasses = <TStyles extends Styles>(

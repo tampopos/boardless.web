@@ -4,6 +4,7 @@ import {
   colors as MuiColors,
 } from '@material-ui/core';
 import { FontWeightProperty } from 'csstype';
+import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 
 export const colors = {
   amber: MuiColors.amber,
@@ -32,7 +33,7 @@ export namespace CommonColors {
   export const { white, black } = MuiColors.common;
 }
 const { grey } = colors;
-const customTheme = {
+const customThemeOption = {
   shared: {
     fontWeight: { bold: 'bold' as FontWeightProperty },
     borderWidth: { thick: 4 },
@@ -43,7 +44,9 @@ const customTheme = {
     },
   },
 };
-export type Theme = typeof customTheme & MuiTheme;
+const muiThemeOption: ThemeOptions = { palette: { primary: grey } };
+const themeOption = Object.assign(muiThemeOption, customThemeOption);
+export type Theme = typeof customThemeOption & MuiTheme;
 export const createTheme = () => {
-  return createMuiTheme(customTheme as Theme) as Theme;
+  return createMuiTheme(themeOption) as Theme;
 };

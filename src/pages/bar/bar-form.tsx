@@ -8,7 +8,8 @@ import {
 import { ComponentHelper } from '../../common/component-helper';
 import { ObjectHelper } from 'src/common/object-helper';
 import { Container, ContainerProps } from 'src/components/layout/container';
-import { createStyles, withStyles } from '@material-ui/core';
+import { createStyles } from '@material-ui/core';
+import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,7 +31,7 @@ interface BarFormProps {
   themeColor?: keyof Colors;
 }
 type Props = WithStyleProps<typeof styles, BarFormProps & ContainerProps>;
-export const BarForm = withStyles(styles)((props: Props) => {
+export const BarForm = decorate(styles)((props: Props) => {
   const { themeColor } = props;
   const classes = getInjectClasses(props);
   const { root } = classes;
