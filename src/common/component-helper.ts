@@ -8,6 +8,7 @@ export namespace ComponentHelper {
   ) => {
     return ObjectHelper.pickExclude(
       props,
+      'theme',
       'classes',
       'className',
       'injectClasses',

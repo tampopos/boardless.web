@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StyleRules, WithStyles } from '@material-ui/core/styles';
 import { StyleRulesCallback } from '@material-ui/core';
 import { ClassNameMap } from '@material-ui/core/styles/withStyles';
+import { Theme } from './theme';
 
 export type StyledComponentClass<
   TStyles extends Styles,
@@ -16,6 +17,7 @@ export type StyledComponent<TStyles extends Styles, TProps = {}> =
 
 export type Styles = string | StyleRules | StyleRulesCallback;
 export interface InjectableStylesProps<T extends Styles> {
+  theme?: Theme;
   className?: string;
   injectClasses?: ClassNameMap<
     T extends string
