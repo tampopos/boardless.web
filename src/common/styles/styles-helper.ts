@@ -1,32 +1,28 @@
+import { WithStyleProps, Styles, StyledComponent } from './types';
 import injectSheet from 'react-jss';
-import {
-  StyleFactory,
-  StyledComponentType,
-  StyledProps,
-  StylesBase,
-  InjectableStyledProps,
-} from './types';
 
-export const decorate = <T extends object>(style: T | StyleFactory<T>) => <
-  Props = {}
+export const decorate = <TStyles extends Styles>(style: TStyles) => <
+  TProps = {}
 >(
-  component: StyledComponentType<T, Props>,
-): React.ComponentType<Props> => injectSheet(style)(component);
+  component: StyledComponent<TStyles, TProps>,
+): React.ComponentType<TProps> => injectSheet(style)(component);
 
-export const getInjectClasses = <TStyles extends StylesBase>(
-  props: InjectableStyledProps<TStyles> & StyledProps<TStyles>,
+export const getInjectClasses = <TStyles extends Styles>(
+  props: WithStyleProps<TStyles>,
 ) => {
   const { classes, injectClasses, className } = props;
-  const classesList: Array<Partial<Record<keyof TStyles, string>>> = [classes];
+  const classesList: Array<{}> = [classes];
   if (injectClasses) {
     classesList.push(injectClasses);
   }
   if (className) {
     classesList.push({
       root: className,
-    } as Partial<Record<keyof TStyles, string>>);
+    });
   }
-  return mergeClasses(...classesList);
+  return mergeClasses(...classesList) as typeof props.classes & {
+    root: string;
+  };
 };
 
 export const mergeClasses = <TStyles>(

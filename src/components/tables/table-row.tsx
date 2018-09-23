@@ -1,18 +1,15 @@
-import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
+import { WithStyleProps } from '../../common/styles/types';
 import {
-  decorate,
   getInjectClasses,
   appendClassName,
 } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
+import { createStyles } from '@material-ui/core';
+import { decorate } from 'src/common/styles/styles-helper';
 
-interface Styles extends StylesBase {
-  selectableRow: any;
-  selectedRow: any;
-}
-const styles: Styles = {
+const styles = createStyles({
   root: {
     width: '100%',
     borderCollapse: 'collapse',
@@ -31,15 +28,20 @@ const styles: Styles = {
       backgroundColor: '#ddd',
     },
   },
-};
-interface TableRowProps extends InjectableStyledProps<Styles> {
+});
+interface TableRowProps {
   selectable?: boolean;
   selected?: boolean;
 }
-export const TableRow = decorate(styles)<TableRowProps & DivProps>(props => {
+type Props = WithStyleProps<typeof styles, TableRowProps & DivProps>;
+export const TableRow = decorate(styles)((props: Props) => {
   const { selectable, selected } = props;
   const { root, selectableRow, selectedRow } = getInjectClasses(props);
-  const pProps = ComponentHelper.createPropagationProps(props, 'selectable', 'selected');
+  const pProps = ComponentHelper.createPropagationProps(
+    props,
+    'selectable',
+    'selected',
+  );
   const className = appendClassName(
     root,
     selectable ? selectableRow : '',

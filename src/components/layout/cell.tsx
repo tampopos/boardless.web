@@ -1,18 +1,19 @@
-import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
-import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
+import { WithStyleProps } from '../../common/styles/types';
+import { getInjectClasses } from '../../common/styles/styles-helper';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { GridProps } from '@material-ui/core/Grid';
-import { Grid } from '@material-ui/core';
+import { Grid, createStyles } from '@material-ui/core';
+import { decorate } from 'src/common/styles/styles-helper';
 
-interface Styles extends StylesBase {}
-const styles: Styles = {
+const styles = createStyles({
   root: {
     display: 'flex',
   },
-};
-interface CellProps extends InjectableStyledProps<Styles> {}
-export const Cell = decorate(styles)<CellProps & GridProps>(props => {
+});
+interface CellProps {}
+type Props = WithStyleProps<typeof styles, CellProps & GridProps>;
+export const Cell = decorate(styles)((props: Props) => {
   const { root } = getInjectClasses(props);
   const pProps = ComponentHelper.createPropagationProps(props);
   return <Grid {...pProps} className={root} item={true} />;

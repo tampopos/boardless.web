@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { DispatchMapper, StateMapper } from '../../stores/types';
 import { connect } from 'react-redux';
-import { decorate } from '../../common/styles/styles-helper';
-import { StylesBase } from '../../common/styles/types';
+import { WithStyleProps } from '../../common/styles/types';
 import Friend from '../../models/friend';
 import { getSexName, createEmptyFriend } from '../../services/friend-service';
 import { Table } from '../../components/tables/table';
@@ -13,12 +12,10 @@ import { Cell } from '../../components/layout/cell';
 import { Button } from '../../components/forms-controls/button';
 import { barFormActionCreators } from '../../stores/bar/bar-form-reducer';
 import { Container } from 'src/components/layout/container';
-import { Typography } from '@material-ui/core';
+import { Typography, createStyles } from '@material-ui/core';
+import { decorate } from 'src/common/styles/styles-helper';
 
-interface Styles extends StylesBase {
-  row: {};
-}
-const styles = (): Styles => ({
+const styles = createStyles({
   root: {},
   row: {
     paddingBottom: 10,
@@ -31,7 +28,7 @@ interface Events {
   toAddMode: () => void;
   selectRow: (friend: Friend) => void;
 }
-interface Props {
+interface BarListProps {
   friend: Friend;
   friends: Friend[];
 }
@@ -47,7 +44,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({
+const mapStateToProps: StateMapper<BarListProps> = ({
   barListState,
   barFormState,
 }) => {
@@ -58,7 +55,8 @@ const mapStateToProps: StateMapper<Props> = ({
     friend,
   };
 };
-const decoratedComponent = decorate(styles)<Props & Events>(props => {
+type Props = WithStyleProps<typeof styles, BarListProps & Events>;
+const decoratedComponent = decorate(styles)((props: Props) => {
   const { friends, toAddMode, selectRow, friend, classes } = props;
   const getThemeColor = ({ sex }: Friend) =>
     sex === 'male' ? 'indigo' : sex === 'female' ? 'pink' : undefined;

@@ -1,24 +1,33 @@
-import { Theme } from './theme';
 import * as React from 'react';
+import { StyleRules, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core';
+import { ClassNameMap } from '@material-ui/core/styles/withStyles';
 
-export type Classes<Style> = Record<keyof Partial<Style>, string>;
-export type StyleFactory<T extends object> = (theme: Theme) => T;
-export interface StyledProps<TStyles> {
-  theme: Theme;
-  classes: Record<keyof TStyles, string>;
-}
-export type StyledComponentType<TStyles, TProps = {}> = React.ComponentType<
-  TProps & StyledProps<TStyles>
+export type StyledComponentClass<
+  TStyles extends Styles,
+  TProps = {}
+> = React.Component<WithStyleProps<TStyles, TProps>>;
+export type StyledSFC<TStyles extends Styles, TProps = {}> = React.SFC<
+  WithStyleProps<TStyles, TProps>
 >;
-export class StyledComponent<
-  TStyles,
-  TProps = {},
-  TState = {}
-> extends React.Component<TProps & StyledProps<TStyles>, TState> {}
-export interface StylesBase {
-  root: any;
-}
-export interface InjectableStyledProps<TStyles extends StylesBase> {
+export type StyledComponent<TStyles extends Styles, TProps = {}> =
+  | StyledComponentClass<TStyles, TProps>
+  | StyledSFC<TStyles, TProps>;
+
+export type Styles = string | StyleRules | StyleRulesCallback;
+export interface InjectableStylesProps<T extends Styles> {
   className?: string;
-  injectClasses?: Record<keyof TStyles, string>;
+  injectClasses?: ClassNameMap<
+    T extends string
+      ? T
+      : T extends StyleRulesCallback<infer K>
+        ? K
+        : T extends StyleRules<infer L> ? L : never
+  >;
 }
+export type WithStyleProps<TStyles extends Styles, TProps = {}> = WithStyles<
+  TStyles
+> &
+  InjectableStylesProps<TStyles> &
+  TProps &
+  React.Props<{}>;

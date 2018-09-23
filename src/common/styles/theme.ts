@@ -1,57 +1,12 @@
 import {
   Theme as MuiTheme,
   createMuiTheme,
-  Color,
   colors as MuiColors,
 } from '@material-ui/core';
+import { FontWeightProperty } from 'csstype';
+import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 
-interface Parameter {
-  formControl: {
-    color: string;
-    borderColor: string;
-  };
-}
-export interface CustomTheme {
-  mono: Parameter;
-  blue: Parameter;
-  red: Parameter;
-  shared: {
-    fontWeight: {
-      bold: string;
-    };
-    borderWidth: {
-      thick: number;
-    };
-    table: {
-      headerBackgroundColor: string;
-      headerColor: string;
-      borderColor: string;
-    };
-  };
-}
-export interface Theme extends CustomTheme, MuiTheme {}
-export interface Colors {
-  amber: Color;
-  blue: Color;
-  blueGrey: Color;
-  brown: Color;
-  cyan: Color;
-  deepOrange: Color;
-  deepPurple: Color;
-  green: Color;
-  grey: Color;
-  indigo: Color;
-  lightBlue: Color;
-  lightGreen: Color;
-  lime: Color;
-  orange: Color;
-  pink: Color;
-  purple: Color;
-  red: Color;
-  teal: Color;
-  yellow: Color;
-}
-export const colors: Colors = {
+export const colors = {
   amber: MuiColors.amber,
   blue: MuiColors.blue,
   blueGrey: MuiColors.blueGrey,
@@ -72,38 +27,26 @@ export const colors: Colors = {
   teal: MuiColors.teal,
   yellow: MuiColors.yellow,
 };
+export type Colors = typeof colors;
+
 export namespace CommonColors {
   export const { white, black } = MuiColors.common;
 }
+const { grey } = colors;
+const customThemeOption = {
+  shared: {
+    fontWeight: { bold: 'bold' as FontWeightProperty },
+    borderWidth: { thick: 4 },
+    table: {
+      headerBackgroundColor: grey['900'],
+      borderColor: grey['400'],
+      headerColor: CommonColors.white,
+    },
+  },
+};
+const muiThemeOption: ThemeOptions = { palette: { primary: grey } };
+const themeOption = Object.assign(muiThemeOption, customThemeOption);
+export type Theme = typeof customThemeOption & MuiTheme;
 export const createTheme = () => {
-  const { grey, indigo, pink } = colors;
-  return createMuiTheme({
-    mono: {
-      formControl: {
-        color: grey['400'],
-        borderColor: grey['200'],
-      },
-    },
-    blue: {
-      formControl: {
-        color: indigo['500'],
-        borderColor: indigo['500'],
-      },
-    },
-    red: {
-      formControl: {
-        color: pink['500'],
-        borderColor: pink['500'],
-      },
-    },
-    shared: {
-      fontWeight: { bold: 'bold' },
-      borderWidth: { thick: 4 },
-      table: {
-        headerBackgroundColor: grey['900'],
-        borderColor: grey['400'],
-        headerColor: CommonColors.white,
-      },
-    },
-  } as Theme) as Theme;
+  return createMuiTheme(themeOption) as Theme;
 };

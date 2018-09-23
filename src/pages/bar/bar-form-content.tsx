@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { DispatchMapper, StateMapper } from '../../stores/types';
 import { connect } from 'react-redux';
-import { decorate } from '../../common/styles/styles-helper';
-import { StylesBase } from '../../common/styles/types';
+import { WithStyleProps } from '../../common/styles/types';
 import Friend from '../../models/friend';
 import {
   createNewFriend,
@@ -20,15 +19,13 @@ import { Select } from '../../components/forms-controls/select';
 import { barListActionCreators } from '../../stores/bar/bar-list-reducer';
 import { barFormActionCreators } from '../../stores/bar/bar-form-reducer';
 import { Colors } from '../../common/styles/theme';
-import { Typography } from '@material-ui/core';
+import { Typography, createStyles } from '@material-ui/core';
 import { MenuItemProps } from '@material-ui/core/MenuItem';
 import { Container } from 'src/components/layout/container';
 import { RadioGroup } from 'src/components/forms-controls/radio-group';
+import { decorate } from 'src/common/styles/styles-helper';
 
-interface Styles extends StylesBase {
-  row: {};
-}
-const styles: Styles = {
+const styles = createStyles({
   root: {},
   row: {
     paddingBottom: 10,
@@ -36,7 +33,7 @@ const styles: Styles = {
       paddingBottom: 0,
     },
   },
-};
+});
 interface Events {
   add: (friend: Friend, friends: Friend[]) => Promise<any>;
   remove: (id: number) => any;
@@ -45,7 +42,7 @@ interface Events {
     value: Friend[TKey],
   ) => void;
 }
-interface Props {
+interface BarFormContentProps {
   friend: Friend;
   friends: Friend[];
   isAddMode: boolean;
@@ -72,7 +69,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({
+const mapStateToProps: StateMapper<BarFormContentProps> = ({
   barFormState,
   barListState,
 }) => {
@@ -109,7 +106,8 @@ const jobs = [
   'あそびにん',
 ].map(x => ({ key: x, value: x, children: x } as MenuItemProps));
 
-const decoratedComponent = decorate(styles)<Props & Events>(props => {
+type Props = WithStyleProps<typeof styles, BarFormContentProps & Events>;
+const decoratedComponent = decorate(styles)((props: Props) => {
   const {
     remove,
     add,

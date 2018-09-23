@@ -1,19 +1,18 @@
-import { decorate } from 'src/common/styles/styles-helper';
 import * as React from 'react';
+import { withStyles, createStyles } from '@material-ui/core';
+import { WithStyleProps } from 'src/common/styles/types';
 
-interface Styles {
-  '@global': {};
-}
-const styles: Styles = {
+const styles = createStyles({
   '@global': {
     body: {
-      fontFamily: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+      fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
     },
     a: {
       textDecoration: 'underline',
     },
   },
-};
-export const GlobalStyle = decorate(styles)(({ children }) => {
+});
+type Props = WithStyleProps<typeof styles>;
+export const GlobalStyle = withStyles(styles)(({ children }: Props) => {
   return <React.Fragment>{children}</React.Fragment>;
 });
