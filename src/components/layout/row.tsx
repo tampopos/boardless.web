@@ -16,5 +16,5 @@ type Props = WithStyleProps<typeof styles, RowProps & GridProps>;
 export const Row = decorate(styles)((props: Props) => {
   const { root } = getInjectClasses(props);
   const pProps = ComponentHelper.createPropagationProps(props);
-  return <Grid {...pProps} className={root} item={true} xs={12} />;
+  return <Grid {...pProps} className={root} item={true} xs={12 as 12} />;
 });
