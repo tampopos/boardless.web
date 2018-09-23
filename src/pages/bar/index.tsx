@@ -1,18 +1,15 @@
 import * as React from 'react';
 import { BarFormContent } from './bar-form-content';
 import { BarList } from './bar-list';
-import { StylesBase } from 'src/common/styles/types';
-import { decorate } from 'src/common/styles/styles-helper';
+import { WithStyleProps } from 'src/common/styles/types';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
-import { Typography } from '@material-ui/core';
+import { Typography, createStyles, withStyles } from '@material-ui/core';
 
-interface Styles extends StylesBase {
-  row: {};
-}
-const styles: Styles = {
+const styles = createStyles({
   root: {
-    padding: [0, 10],
+    paddingLeft: 10,
+    paddingRight: 10,
     '$row:last-child': {
       paddingBottom: 0,
     },
@@ -26,8 +23,9 @@ const styles: Styles = {
       paddingBottom: 0,
     },
   },
-};
-export const Bar = decorate(styles)(({ classes }) => {
+});
+type Props = WithStyleProps<typeof styles>;
+export const Bar = withStyles(styles)(({ classes }: Props) => {
   const { root, row } = classes;
   return (
     <Container className={root}>

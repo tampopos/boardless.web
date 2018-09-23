@@ -1,5 +1,5 @@
-import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
-import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
+import { WithStyleProps } from '../../common/styles/types';
+import { getInjectClasses } from '../../common/styles/styles-helper';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
@@ -9,30 +9,33 @@ import {
   FormControl,
   Radio,
   FormControlLabel,
+  createStyles,
+  withStyles,
 } from '@material-ui/core';
 import { RadioGroupProps as MuiRadioGroupProps } from '@material-ui/core/RadioGroup';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
 
-interface Styles extends StylesBase {
-  group: {};
-}
-const styles: Styles = {
+const styles = createStyles({
   root: {
     width: '100%',
-    margin: [0, 10],
+    marginLeft: 10,
+    marginRight: 10,
   },
   group: { flexDirection: 'row' },
-};
-interface RadioGroupProps extends InjectableStyledProps<Styles> {
+});
+interface RadioGroupProps {
   themeColor?: keyof Colors;
   label?: string;
   items?: Array<Partial<FormControlLabelProps>>;
   readOnly?: boolean;
 }
-export const RadioGroup = decorate(styles)<
+type Props = WithStyleProps<
+  typeof styles,
   RadioGroupProps & MuiRadioGroupProps
->(props => {
+>;
+
+export const RadioGroup = withStyles(styles)((props: Props) => {
   const { themeColor, label, items, readOnly } = props;
   const classes = getInjectClasses(props);
   const { root, group } = classes;

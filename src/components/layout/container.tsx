@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
-import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
+import { WithStyleProps } from '../../common/styles/types';
+import { getInjectClasses } from '../../common/styles/styles-helper';
 import { ComponentHelper } from '../../common/component-helper';
-import { Grid } from '@material-ui/core';
+import { Grid, createStyles, withStyles } from '@material-ui/core';
 import { GridProps } from '@material-ui/core/Grid';
 
-interface Styles extends StylesBase {}
-const styles: Styles = {
+const styles = createStyles({
   root: {},
-};
-export interface ContainerProps extends InjectableStyledProps<Styles> {}
-export const Container = decorate(styles)<ContainerProps & GridProps>(props => {
+});
+export interface ContainerProps {}
+type Props = WithStyleProps<typeof styles, ContainerProps & GridProps>;
+export const Container = withStyles(styles)((props: Props) => {
   const classes = getInjectClasses(props);
   const { root } = classes;
   const pProps = ComponentHelper.createPropagationProps(props);

@@ -1,5 +1,5 @@
-import { StylesBase, InjectableStyledProps } from '../../common/styles/types';
-import { decorate, getInjectClasses } from '../../common/styles/styles-helper';
+import { WithStyleProps } from '../../common/styles/types';
+import { getInjectClasses } from '../../common/styles/styles-helper';
 import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
@@ -7,27 +7,28 @@ import {
   FormControl,
   InputLabel,
   Select as MuiSelect,
+  createStyles,
+  withStyles,
 } from '@material-ui/core';
 import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import { SelectProps as MuiSelectProps } from '@material-ui/core/Select';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 
-interface Styles extends StylesBase {
-  select: {};
-}
-const styles: Styles = {
+const styles = createStyles({
   root: {
     width: '100%',
-    margin: [0, 10],
+    marginLeft: 10,
+    marginRight: 10,
   },
   select: {},
-};
-interface SelectProps extends InjectableStyledProps<Styles> {
+});
+interface SelectProps {
   items: MenuItemProps[];
   themeColor?: keyof Colors;
   label: string;
 }
-export const Select = decorate(styles)<SelectProps & MuiSelectProps>(props => {
+type Props = WithStyleProps<typeof styles, SelectProps & MuiSelectProps>;
+export const Select = withStyles(styles)((props: Props) => {
   const { items, themeColor, label } = props;
   const classes = getInjectClasses(props);
   const { root, select } = classes;
