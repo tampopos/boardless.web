@@ -14,8 +14,10 @@
   "tslint.alwaysShowStatus": true,
   "cSpell.words": [
     "Injectable",
+    "appbar",
     "boardless",
     "csstype",
+    "haspopup",
     "localstorage",
     "roboto",
     "selectable",

@@ -1,7 +1,7 @@
 import { StoredState } from '../stores/stored-state';
 import { createEmptyFriend } from './friend-service';
 
-export const getInitialStoredState = () => {
+export const getInitialStoredState = (): StoredState => {
   return {
     barFormState: {
       friend: createEmptyFriend(),
@@ -9,5 +9,9 @@ export const getInitialStoredState = () => {
     barListState: {
       friends: [],
     },
-  } as StoredState;
+    authenticateState: {
+      selectedToken: -1,
+      tokens: [],
+    },
+  };
 };

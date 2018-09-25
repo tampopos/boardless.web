@@ -4,10 +4,16 @@ import { StyleRulesCallback } from '@material-ui/core';
 import { ClassNameMap } from '@material-ui/core/styles/withStyles';
 import { Theme } from './theme';
 
+export class StyledComponentBase<
+  TStyles extends Styles,
+  TProps = {},
+  TState = {}
+> extends React.Component<WithStyleProps<TStyles, TProps>, TState> {}
 export type StyledComponentClass<
   TStyles extends Styles,
-  TProps = {}
-> = React.Component<WithStyleProps<TStyles, TProps>>;
+  TProps = {},
+  TState = {}
+> = React.ComponentClass<WithStyleProps<TStyles, TProps>, TState>;
 export type StyledSFC<TStyles extends Styles, TProps = {}> = React.SFC<
   WithStyleProps<TStyles, TProps>
 >;
