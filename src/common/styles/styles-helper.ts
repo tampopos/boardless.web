@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { WithStyleProps, Styles, StyledComponent } from './types';
 import injectSheet from 'react-jss';
 
