@@ -12,7 +12,7 @@ import { StyledComponentBase } from 'src/common/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 
 import * as React from 'react';
-import { DispatchMapper, StateMapper } from 'src/stores/types';
+import { StateMapper } from 'src/stores/types';
 import { AuthenticateService } from 'src/services/authenticate-service';
 import { connect } from 'react-redux';
 
@@ -27,13 +27,12 @@ const styles = createStyles({
   },
 });
 interface State {
-  anchorEl?: EventTarget & HTMLElement | null;
+  anchorEl?: EventTarget & HTMLElement;
 }
 interface Props {
   authenticated: boolean;
 }
-interface Events {}
-class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
+class Inner extends StyledComponentBase<typeof styles, Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {};
@@ -43,12 +42,12 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   };
 
   public handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ anchorEl: undefined });
   };
   public render() {
-    const { root, menuButton, grow } = getInjectClasses(this.props);
     const { authenticated } = this.props;
     const { anchorEl } = this.state;
+    const { root, menuButton, grow } = getInjectClasses(this.props);
     const open = Boolean(anchorEl);
     return (
       <AppBar position="static" className={root}>
@@ -95,15 +94,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 }
 
 const StyledInner = decorate(styles)(Inner);
-const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
-  return {};
-};
 const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
   return {
     authenticated: AuthenticateService.isAuthenticated(authenticateState),
   };
 };
-export const AppTop = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(StyledInner);
+export const AppTop = connect(mapStateToProps)(StyledInner);

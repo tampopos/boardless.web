@@ -5,9 +5,16 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { ActionCreators } from '../types';
+import { AuthenticateState } from './authenticate-state';
 
-export const authenticateReducer = (state: StoredState) =>
-  reducerWithInitialState(state.authenticateState)
+export const authenticateReducer = (storedState: StoredState) =>
+  reducerWithInitialState(storedState.authenticateState)
+    .case(authenticateActionCreators.init, (s, {}) => {
+      return Object.assign({}, s, { isInitialized: false });
+    })
+    .case(authenticateActionCreators.set, (s, { state }) => {
+      return Object.assign({}, state);
+    })
     .case(
       authenticateActionCreators.changeSelectedToken,
       (s, { selectedToken }) => {
@@ -15,32 +22,21 @@ export const authenticateReducer = (state: StoredState) =>
       },
     )
     .case(authenticateActionCreators.add, (s, { token }) => {
-      s.tokens.push(token);
-      return Object.assign({}, s);
-    })
-    .case(authenticateActionCreators.remove, (s, { token }) => {
-      return Object.assign({}, s, {
-        tokens: s.tokens.filter(x => x !== token),
-      });
-    })
-    .case(authenticateActionCreators.update, (s, { preToken, newToken }) => {
-      s.tokens.push(newToken);
-      return Object.assign({}, s, {
-        tokens: s.tokens.filter(x => x !== preToken),
-      });
+      const selectedToken = s.tokens.push(token) - 1;
+      return Object.assign({}, s, { selectedToken });
     });
 interface Event {
+  init: {};
+  set: { state: AuthenticateState };
   changeSelectedToken: { selectedToken: number };
   add: { token: string };
-  remove: { token: string };
-  update: { preToken: string; newToken: string };
 }
 const factory = actionCreatorFactory();
 export const authenticateActionCreators: ActionCreators<Event> = {
+  init: factory<{}>('authenticateActionCreators.init'),
+  set: factory<{ state: AuthenticateState }>('authenticateActionCreators.set'),
   changeSelectedToken: factory<{ selectedToken: number }>(
-    'changeSelectedToken',
+    'authenticateActionCreators.changeSelectedToken',
   ),
-  add: factory<{ token: string }>('add'),
-  remove: factory<{ token: string }>('remove'),
-  update: factory<{ preToken: string; newToken: string }>('update'),
+  add: factory<{ token: string }>('authenticateActionCreators.add'),
 };

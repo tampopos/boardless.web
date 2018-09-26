@@ -10,6 +10,7 @@ export const getInitialStoredState = (): StoredState => {
       friends: [],
     },
     authenticateState: {
+      isInitialized: false,
       selectedToken: -1,
       tokens: [],
     },

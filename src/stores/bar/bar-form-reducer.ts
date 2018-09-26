@@ -18,6 +18,8 @@ interface Event {
 }
 const factory = actionCreatorFactory();
 export const barFormActionCreators: ActionCreators<Event> = {
-  setFriend: factory<{ friend: Friend }>('setFriend'),
-  setValue: factory<{ friend: Partial<Friend> }>('setValue'),
+  setFriend: factory<{ friend: Friend }>('barFormActionCreators.setFriend'),
+  setValue: factory<{ friend: Partial<Friend> }>(
+    'barFormActionCreators.setValue',
+  ),
 };
