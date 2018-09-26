@@ -7,6 +7,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './app-router';
 import { ThemeProvider } from 'src/components/styles/theme-provider';
 import { StoreProvider } from 'src/components/stores/store-provider';
+import { AppTop } from './app-top';
+import { AuthenticateProvider } from './authenticate-provider';
 
 interface Props {
   theme: Theme;
@@ -15,7 +17,10 @@ const Inner: React.SFC<Props> = ({ theme }) => {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <AppRouter />
+        <AuthenticateProvider>
+          <AppTop />
+          <AppRouter />
+        </AuthenticateProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

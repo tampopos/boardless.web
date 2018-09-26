@@ -22,6 +22,6 @@ interface Event {
 }
 const factory = actionCreatorFactory();
 export const barListActionCreators: ActionCreators<Event> = {
-  add: factory<{ friend: Friend }>('add'),
-  remove: factory<{ id: number }>('remove'),
+  add: factory<{ friend: Friend }>('barListActionCreators.add'),
+  remove: factory<{ id: number }>('barListActionCreators.remove'),
 };

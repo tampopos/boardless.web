@@ -4,7 +4,8 @@ import { BarList } from './bar-list';
 import { WithStyleProps } from 'src/common/styles/types';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
-import { Typography, createStyles, withStyles } from '@material-ui/core';
+import { Typography, createStyles } from '@material-ui/core';
+import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = createStyles({
   root: {
@@ -25,7 +26,7 @@ const styles = createStyles({
   },
 });
 type Props = WithStyleProps<typeof styles>;
-export const Bar = withStyles(styles)(({ classes }: Props) => {
+export const Bar = decorate(styles)(({ classes }: Props) => {
   const { root, row } = classes;
   return (
     <Container className={root}>
