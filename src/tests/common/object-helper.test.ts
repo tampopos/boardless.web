@@ -1,4 +1,4 @@
-import { ObjectHelper } from '../../common/object-helper';
+import { ObjectHelper } from 'src/common/object-helper';
 
 const objectHelper = new ObjectHelper();
 it('ObjectHelper.pick', () => {
@@ -7,6 +7,6 @@ it('ObjectHelper.pick', () => {
     x => x !== 'p1',
   ) as { p2: string };
   const expected = { p2: 'p2', p3: 'p3' };
-  expect(JSON.stringify(actual) === JSON.stringify(expected));
-  expect(actual.p2 === expected.p2);
+  expect(JSON.stringify(actual)).toEqual(JSON.stringify(expected));
+  expect(actual.p2).toEqual(expected.p2);
 });
