@@ -1,5 +1,5 @@
 import Friend from '../models/friend';
-import { AsyncHelper } from '../common/async-helper';
+import { resolve } from 'src/common/service-provider';
 
 const malePersonalities = [
   'ごうけつ',
@@ -101,21 +101,6 @@ const getRandomPersonality = (sex: string) => {
   const i = getRandomParameter(0, max);
   return personalities[i];
 };
-export const createEmptyFriend = () =>
-  ({
-    id: -1,
-    name: '',
-    sex: '',
-    job: '',
-    attack: 0,
-    agility: 0,
-    physical: 0,
-    intelligence: 0,
-    luck: 0,
-    maxHp: 0,
-    maxMp: 0,
-    personality: '',
-  } as Friend);
 export const createNewFriend = async (
   id: number,
   p: {
@@ -124,7 +109,7 @@ export const createNewFriend = async (
     sex: string;
   },
 ) => {
-  await AsyncHelper.delay(100);
+  await resolve('asyncHelper').delay(100);
   return Object.assign({}, p, {
     id,
     attack: getRandomParameter(1, 20),

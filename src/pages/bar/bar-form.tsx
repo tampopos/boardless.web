@@ -5,11 +5,10 @@ import {
   getInjectClasses,
   appendClassName,
 } from '../../common/styles/styles-helper';
-import { ComponentHelper } from '../../common/component-helper';
-import { ObjectHelper } from 'src/common/object-helper';
 import { Container, ContainerProps } from 'src/components/layout/container';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
+import { resolve } from 'src/common/service-provider';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -22,7 +21,7 @@ const styles = (theme: Theme) =>
       borderStyle: 'solid',
       borderRadius: 15,
     },
-    ...ObjectHelper.mapObject(colors, color => ({
+    ...resolve('objectHelper').mapObject(colors, color => ({
       color: color['500'],
       borderColor: color['500'],
     })),
@@ -35,7 +34,10 @@ export const BarForm = decorate(styles)((props: Props) => {
   const { themeColor } = props;
   const classes = getInjectClasses(props);
   const { root } = classes;
-  const pProps = ComponentHelper.createPropagationProps(props, 'themeColor');
+  const pProps = resolve('componentHelper').createPropagationProps(
+    props,
+    'themeColor',
+  );
   return (
     <Container
       container={true}

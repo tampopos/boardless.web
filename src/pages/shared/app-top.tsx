@@ -13,8 +13,8 @@ import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 
 import * as React from 'react';
 import { StateMapper } from 'src/stores/types';
-import { AuthenticateService } from 'src/services/authenticate-service';
 import { connect } from 'react-redux';
+import { resolve } from 'src/common/service-provider';
 
 const styles = createStyles({
   root: {},
@@ -96,7 +96,9 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
 const StyledInner = decorate(styles)(Inner);
 const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
   return {
-    authenticated: AuthenticateService.isAuthenticated(authenticateState),
+    authenticated: resolve('authenticateService').isAuthenticated(
+      authenticateState,
+    ),
   };
 };
 export const AppTop = connect(mapStateToProps)(StyledInner);

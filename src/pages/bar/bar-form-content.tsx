@@ -2,11 +2,8 @@ import * as React from 'react';
 import { DispatchMapper, StateMapper } from '../../stores/types';
 import { connect } from 'react-redux';
 import { WithStyleProps } from '../../common/styles/types';
-import Friend from '../../models/friend';
-import {
-  createNewFriend,
-  createEmptyFriend,
-} from '../../services/friend-service';
+import Friend, { createEmptyFriend } from '../../models/friend';
+import { createNewFriend } from '../../services/friend-service';
 import { BarForm } from './bar-form';
 import { Row } from '../../components/layout/row';
 import { Cell } from '../../components/layout/cell';

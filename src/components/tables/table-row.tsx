@@ -4,10 +4,10 @@ import {
   appendClassName,
 } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
-import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
+import { resolve } from 'src/common/service-provider';
 
 const styles = createStyles({
   root: {
@@ -37,7 +37,7 @@ type Props = WithStyleProps<typeof styles, TableRowProps & DivProps>;
 export const TableRow = decorate(styles)((props: Props) => {
   const { selectable, selected } = props;
   const { root, selectableRow, selectedRow } = getInjectClasses(props);
-  const pProps = ComponentHelper.createPropagationProps(
+  const pProps = resolve('componentHelper').createPropagationProps(
     props,
     'selectable',
     'selected',

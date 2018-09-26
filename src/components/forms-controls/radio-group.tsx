@@ -1,6 +1,5 @@
 import { WithStyleProps } from '../../common/styles/types';
 import { getInjectClasses } from '../../common/styles/styles-helper';
-import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
 import {
@@ -15,6 +14,7 @@ import { RadioGroupProps as MuiRadioGroupProps } from '@material-ui/core/RadioGr
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
 import { decorate } from 'src/common/styles/styles-helper';
+import { resolve } from 'src/common/service-provider';
 
 const styles = createStyles({
   root: {
@@ -39,7 +39,7 @@ export const RadioGroup = decorate(styles)((props: Props) => {
   const { themeColor, label, items, readOnly } = props;
   const classes = getInjectClasses(props);
   const { root, group } = classes;
-  const pProps = ComponentHelper.createPropagationProps(
+  const pProps = resolve('componentHelper').createPropagationProps(
     props,
     'themeColor',
     'label',

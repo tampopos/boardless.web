@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { getInitialStoredState } from '../../services/store-service';
 import { connect } from 'react-redux';
 import { StateMapper, DispatchMapper } from '../../stores/types';
 import { Theme, createTheme } from '../../common/styles/theme';
@@ -9,6 +8,7 @@ import { ThemeProvider } from 'src/components/styles/theme-provider';
 import { StoreProvider } from 'src/components/stores/store-provider';
 import { AppTop } from './app-top';
 import { AuthenticateProvider } from './authenticate-provider';
+import { getInitialStoredState } from 'src/stores/stored-state';
 
 interface Props {
   theme: Theme;

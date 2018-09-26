@@ -1,5 +1,14 @@
-export namespace ObjectHelper {
-  export const pick = <TProps>(
+export interface IObjectHelper {
+  pick: <TProps>(props: TProps, filter: (key: keyof TProps) => boolean) => {};
+  pickInclude: <TProps>(props: TProps, ...includes: Array<keyof TProps>) => {};
+  pickExclude: <TProps>(props: TProps, ...excludes: Array<keyof TProps>) => {};
+  mapObject: <K extends string, T, U>(
+    obj: Record<K, T>,
+    func: (x: T) => U,
+  ) => Record<K, U>;
+}
+export class ObjectHelper implements IObjectHelper {
+  public pick = <TProps>(
     props: TProps,
     filter: (key: keyof TProps) => boolean,
   ) => {
@@ -12,19 +21,19 @@ export namespace ObjectHelper {
       .forEach(key => (obj[key] = props[key]));
     return obj;
   };
-  export const pickInclude = <TProps>(
+  public pickInclude = <TProps>(
     props: TProps,
     ...includes: Array<keyof TProps>
   ) => {
-    return pick(props, key => includes.indexOf(key) >= 0);
+    return this.pick(props, key => includes.indexOf(key) >= 0);
   };
-  export const pickExclude = <TProps>(
+  public pickExclude = <TProps>(
     props: TProps,
     ...excludes: Array<keyof TProps>
   ) => {
-    return pick(props, key => excludes.indexOf(key) < 0);
+    return this.pick(props, key => excludes.indexOf(key) < 0);
   };
-  export const mapObject = <K extends string, T, U>(
+  public mapObject = <K extends string, T, U>(
     obj: Record<K, T>,
     func: (x: T) => U,
   ): Record<K, U> => {

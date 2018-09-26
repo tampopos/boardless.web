@@ -1,13 +1,20 @@
 import { AuthenticateState } from 'src/stores/authenticate/authenticate-state';
-import { AsyncHelper } from 'src/common/async-helper';
+import { IAsyncHelper } from 'src/common/async-helper';
 import { SignInModel } from 'src/models/sign-in-model';
 
-export namespace AuthenticateService {
-  export const isAuthenticated = (state: AuthenticateState) => {
+export interface IAuthenticateService {
+  isAuthenticated: (state: AuthenticateState) => boolean;
+  refreshTokenAsync: (state: AuthenticateState) => Promise<AuthenticateState>;
+  validate: (model: SignInModel) => string[];
+  signInAsync: (model: SignInModel) => Promise<string>;
+}
+export class AuthenticateService implements IAuthenticateService {
+  constructor(private asyncHelper: IAsyncHelper) {}
+  public isAuthenticated = (state: AuthenticateState) => {
     const { selectedToken, tokens, isInitialized } = state;
     return isInitialized && selectedToken >= 0 && tokens.length > selectedToken;
   };
-  export const refreshTokenAsync = async (state: AuthenticateState) => {
+  public refreshTokenAsync = async (state: AuthenticateState) => {
     const { selectedToken, tokens } = state;
     if (selectedToken < 0 || tokens.length <= selectedToken) {
       return Object.assign({}, state, {
@@ -17,7 +24,7 @@ export namespace AuthenticateService {
     }
     const token = tokens[selectedToken];
     const newTokens = tokens.filter(x => x !== token);
-    const newToken = await refreshAsync(token);
+    const newToken = await this.refreshAsync(token);
     if (!newToken) {
       return {
         tokens: newTokens,
@@ -32,11 +39,11 @@ export namespace AuthenticateService {
       isInitialized: true,
     };
   };
-  const refreshAsync = async (token: string) => {
-    await AsyncHelper.delay(100);
+  private refreshAsync = async (token: string) => {
+    await this.asyncHelper.delay(100);
     return token + '1';
   };
-  export const validate = (model: SignInModel) => {
+  public validate = (model: SignInModel) => {
     const { email, password } = model;
     const errors = [];
     if (!email) {
@@ -47,7 +54,7 @@ export namespace AuthenticateService {
     }
     return errors;
   };
-  export const signInAsync = async (model: SignInModel) => {
+  public signInAsync = async (model: SignInModel) => {
     const { email, password } = model;
     const errors = [];
     if (!email) {

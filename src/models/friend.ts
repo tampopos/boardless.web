@@ -12,3 +12,18 @@ export default interface Friend {
   maxMp: number;
   personality: string;
 }
+export const createEmptyFriend = () =>
+  ({
+    id: -1,
+    name: '',
+    sex: '',
+    job: '',
+    attack: 0,
+    agility: 0,
+    physical: 0,
+    intelligence: 0,
+    luck: 0,
+    maxHp: 0,
+    maxMp: 0,
+    personality: '',
+  } as Friend);

@@ -1,6 +1,5 @@
 import { WithStyleProps } from '../../common/styles/types';
 import { getInjectClasses } from '../../common/styles/styles-helper';
-import { ComponentHelper } from '../../common/component-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
 import {
@@ -13,6 +12,7 @@ import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import { SelectProps as MuiSelectProps } from '@material-ui/core/Select';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { decorate } from 'src/common/styles/styles-helper';
+import { resolve } from 'src/common/service-provider';
 
 const styles = createStyles({
   root: {
@@ -32,7 +32,7 @@ export const Select = decorate(styles)((props: Props) => {
   const { items, themeColor, label } = props;
   const classes = getInjectClasses(props);
   const { root, select } = classes;
-  const pProps = ComponentHelper.createPropagationProps(
+  const pProps = resolve('componentHelper').createPropagationProps(
     props,
     'items',
     'themeColor',

@@ -1,12 +1,19 @@
 import { Styles, WithStyleProps } from './styles/types';
-import { ObjectHelper } from './object-helper';
+import { IObjectHelper } from './object-helper';
 
-export namespace ComponentHelper {
-  export const createPropagationProps = <TStyles extends Styles, TProps = {}>(
+export interface IComponentHelper {
+  createPropagationProps: <TStyles extends Styles, TProps = {}>(
+    props: WithStyleProps<TStyles, TProps>,
+    ...excludes: Array<keyof TProps>
+  ) => {};
+}
+export class ComponentHelper implements IComponentHelper {
+  constructor(private objectHelper: IObjectHelper) {}
+  public createPropagationProps = <TStyles extends Styles, TProps = {}>(
     props: WithStyleProps<TStyles, TProps>,
     ...excludes: Array<keyof TProps>
   ) => {
-    return ObjectHelper.pickExclude(
+    return this.objectHelper.pickExclude(
       props,
       'theme',
       'classes',

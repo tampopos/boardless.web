@@ -4,9 +4,9 @@ import * as React from 'react';
 import { TextBox } from 'src/components/forms-controls/text-box';
 import { connect } from 'react-redux';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
-import { AuthenticateService } from 'src/services/authenticate-service';
 import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { SignInModel } from 'src/models/sign-in-model';
+import { resolve } from 'src/common/service-provider';
 
 const styles = createStyles({
   root: {},
@@ -57,11 +57,12 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
     signIn: async model => {
-      const errors = AuthenticateService.validate(model);
+      const authenticateService = resolve('authenticateService');
+      const errors = authenticateService.validate(model);
       if (errors.length > 0) {
         return;
       }
-      const token = await AuthenticateService.signInAsync(model);
+      const token = await authenticateService.signInAsync(model);
       dispatch(authenticateActionCreators.add({ token }));
     },
   };
