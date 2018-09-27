@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { WithStyleProps } from '../../common/styles/types';
 import { Theme, Colors, colors } from '../../common/styles/theme';
 import {
   getInjectClasses,
@@ -29,20 +28,21 @@ const styles = (theme: Theme) =>
 interface BarFormProps {
   themeColor?: keyof Colors;
 }
-type Props = WithStyleProps<typeof styles, BarFormProps & ContainerProps>;
-export const BarForm = decorate(styles)((props: Props) => {
-  const { themeColor } = props;
-  const classes = getInjectClasses(props);
-  const { root } = classes;
-  const pProps = resolve('componentHelper').createPropagationProps(
-    props,
-    'themeColor',
-  );
-  return (
-    <Container
-      container={true}
-      {...pProps}
-      className={appendClassName(root, themeColor ? classes[themeColor] : '')}
-    />
-  );
-});
+export const BarForm = decorate(styles)<BarFormProps & ContainerProps>(
+  props => {
+    const { themeColor } = props;
+    const classes = getInjectClasses(props);
+    const { root } = classes;
+    const pProps = resolve('componentHelper').createPropagationProps(
+      props,
+      'themeColor',
+    );
+    return (
+      <Container
+        container={true}
+        {...pProps}
+        className={appendClassName(root, themeColor ? classes[themeColor] : '')}
+      />
+    );
+  },
+);

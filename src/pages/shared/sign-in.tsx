@@ -7,11 +7,16 @@ import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { SignInModel } from 'src/models/sign-in-model';
 import { resolve } from 'src/common/service-provider';
+import { Resources } from 'src/common/location/resources';
+import { getCultureInfo } from 'src/common/location/localize-provider';
+import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 
 const styles = createStyles({
   root: {},
 });
-interface Props {}
+interface Props {
+  resources: Resources;
+}
 interface Events {
   signIn: (state: SignInModel) => void;
 }
@@ -33,7 +38,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   public render() {
-    const { signIn } = this.props;
+    const { signIn, resources } = this.props;
     const { email, password } = this.state.model;
     return (
       <form>
@@ -41,15 +46,17 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           value={email}
           type="email"
           onChange={this.onChange('email')}
-          label="email"
+          label={resources.Email}
         />
         <TextBox
-          label="password"
+          label={resources.Password}
           value={password}
           type="password"
           onChange={this.onChange('password')}
         />
-        <Button onClick={e => signIn(this.state.model)}>Sign In</Button>
+        <Button onClick={e => signIn(this.state.model)}>
+          {resources.SignIn}
+        </Button>
       </form>
     );
   }
@@ -60,6 +67,13 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
       const authenticateService = resolve('authenticateService');
       const errors = authenticateService.validate(model);
       if (errors.length > 0) {
+        errors.forEach(error => {
+          dispatch(
+            messagesActionCreators.showMessage({
+              message: { level: 'error', text: error },
+            }),
+          );
+        });
         return;
       }
       const token = await authenticateService.signInAsync(model);
@@ -67,8 +81,11 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({}) => {
-  return {};
+const mapStateToProps: StateMapper<Props> = ({ locationState }) => {
+  const { resources } = getCultureInfo(locationState.cultureName);
+  return {
+    resources,
+  };
 };
 export const SignIn = connect(
   mapStateToProps,

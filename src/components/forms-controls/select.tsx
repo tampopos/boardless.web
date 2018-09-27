@@ -1,4 +1,3 @@
-import { WithStyleProps } from '../../common/styles/types';
 import { getInjectClasses } from '../../common/styles/styles-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
@@ -27,8 +26,7 @@ interface SelectProps {
   themeColor?: keyof Colors;
   label: string;
 }
-type Props = WithStyleProps<typeof styles, SelectProps & MuiSelectProps>;
-export const Select = decorate(styles)((props: Props) => {
+export const Select = decorate(styles)<SelectProps & MuiSelectProps>(props => {
   const { items, themeColor, label } = props;
   const classes = getInjectClasses(props);
   const { root, select } = classes;

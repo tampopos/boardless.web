@@ -32,7 +32,8 @@ export type Colors = typeof colors;
 export namespace CommonColors {
   export const { white, black } = MuiColors.common;
 }
-const { grey } = colors;
+const { grey, indigo, yellow, red } = colors;
+const type = 'light';
 const customThemeOption = {
   shared: {
     fontWeight: { bold: 'bold' as FontWeightProperty },
@@ -41,6 +42,17 @@ const customThemeOption = {
       headerBackgroundColor: grey['900'],
       borderColor: grey['400'],
       headerColor: CommonColors.white,
+    },
+    messages: {
+      info: {
+        color: type === 'light' ? indigo['700'] : indigo['300'],
+      },
+      warning: {
+        color: type === 'light' ? yellow['800'] : yellow['500'],
+      },
+      error: {
+        color: type === 'light' ? red['700'] : red['500'],
+      },
     },
   },
 };

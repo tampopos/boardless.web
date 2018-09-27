@@ -1,4 +1,3 @@
-import { WithStyleProps } from '../../common/styles/types';
 import { getInjectClasses } from '../../common/styles/styles-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
@@ -30,12 +29,9 @@ interface RadioGroupProps {
   items?: Array<Partial<FormControlLabelProps>>;
   readOnly?: boolean;
 }
-type Props = WithStyleProps<
-  typeof styles,
+export const RadioGroup = decorate(styles)<
   RadioGroupProps & MuiRadioGroupProps
->;
-
-export const RadioGroup = decorate(styles)((props: Props) => {
+>(props => {
   const { themeColor, label, items, readOnly } = props;
   const classes = getInjectClasses(props);
   const { root, group } = classes;

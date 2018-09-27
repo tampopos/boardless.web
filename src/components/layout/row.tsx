@@ -1,4 +1,3 @@
-import { WithStyleProps } from '../../common/styles/types';
 import { getInjectClasses } from '../../common/styles/styles-helper';
 import * as React from 'react';
 import { Grid, createStyles } from '@material-ui/core';
@@ -12,8 +11,7 @@ const styles = createStyles({
   },
 });
 interface RowProps {}
-type Props = WithStyleProps<typeof styles, RowProps & GridProps>;
-export const Row = decorate(styles)((props: Props) => {
+export const Row = decorate(styles)<RowProps & GridProps>(props => {
   const { root } = getInjectClasses(props);
   const pProps = resolve('componentHelper').createPropagationProps(props);
   return <Grid {...pProps} className={root} item={true} xs={12 as 12} />;

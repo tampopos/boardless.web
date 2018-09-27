@@ -1,5 +1,7 @@
-interface FetchRequest<T extends {} = {}> {
+import { MethodName } from './types';
+
+export interface FetchRequest<T extends {} = {}> {
   body: T;
   relativeUrl: string;
-  methodName: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  methodName: MethodName;
 }

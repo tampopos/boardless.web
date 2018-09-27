@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BarFormContent } from './bar-form-content';
 import { BarList } from './bar-list';
-import { WithStyleProps } from 'src/common/styles/types';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Typography, createStyles } from '@material-ui/core';
@@ -25,8 +24,7 @@ const styles = createStyles({
     },
   },
 });
-type Props = WithStyleProps<typeof styles>;
-export const Bar = decorate(styles)(({ classes }: Props) => {
+export const Bar = decorate(styles)(({ classes }) => {
   const { root, row } = classes;
   return (
     <Container className={root}>

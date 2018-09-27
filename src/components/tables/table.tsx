@@ -1,4 +1,3 @@
-import { WithStyleProps } from '../../common/styles/types';
 import { getInjectClasses } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
 import * as React from 'react';
@@ -14,8 +13,7 @@ const styles = createStyles({
   },
 });
 interface TableProps {}
-type Props = WithStyleProps<typeof styles, TableProps & DivProps>;
-export const Table = decorate(styles)((props: Props) => {
+export const Table = decorate(styles)<TableProps & DivProps>(props => {
   const { root } = getInjectClasses(props);
   const pProps = resolve('componentHelper').createPropagationProps(props);
   return <div className={root} {...pProps} />;

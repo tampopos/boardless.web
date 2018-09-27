@@ -1,5 +1,6 @@
 import { IConfig } from './config';
 import { IAsyncHelper } from './async-helper';
+import { FetchRequest } from 'src/models/fetch-request';
 
 export interface IFetchHelper {
   setCredential: (token: string) => void;

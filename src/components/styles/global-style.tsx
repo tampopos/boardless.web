@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { withStyles, createStyles } from '@material-ui/core';
-import { WithStyleProps } from 'src/common/styles/types';
+import { decorate } from 'src/common/styles/styles-helper';
+import { createStyles } from '@material-ui/core';
 
 const styles = createStyles({
   '@global': {
@@ -12,7 +12,6 @@ const styles = createStyles({
     },
   },
 });
-type Props = WithStyleProps<typeof styles>;
-export const GlobalStyle = withStyles(styles)(({ children }: Props) => {
+export const GlobalStyle = decorate(styles)(({ children }) => {
   return <React.Fragment>{children}</React.Fragment>;
 });

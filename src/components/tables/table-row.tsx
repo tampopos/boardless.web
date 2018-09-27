@@ -1,4 +1,3 @@
-import { WithStyleProps } from '../../common/styles/types';
 import {
   getInjectClasses,
   appendClassName,
@@ -33,8 +32,7 @@ interface TableRowProps {
   selectable?: boolean;
   selected?: boolean;
 }
-type Props = WithStyleProps<typeof styles, TableRowProps & DivProps>;
-export const TableRow = decorate(styles)((props: Props) => {
+export const TableRow = decorate(styles)<TableRowProps & DivProps>(props => {
   const { selectable, selected } = props;
   const { root, selectableRow, selectedRow } = getInjectClasses(props);
   const pProps = resolve('componentHelper').createPropagationProps(

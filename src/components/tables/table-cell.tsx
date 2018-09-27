@@ -1,4 +1,3 @@
-import { WithStyleProps } from '../../common/styles/types';
 import {
   getInjectClasses,
   appendClassName,
@@ -34,8 +33,7 @@ interface TableCellProps {
   isHeader?: boolean;
   themeColor?: keyof Colors;
 }
-type Props = WithStyleProps<typeof styles, TableCellProps & DivProps>;
-export const TableCell = decorate(styles)((props: Props) => {
+export const TableCell = decorate(styles)<TableCellProps & DivProps>(props => {
   const { isHeader, themeColor } = props;
   const classes = getInjectClasses(props);
   const { root, header } = classes;

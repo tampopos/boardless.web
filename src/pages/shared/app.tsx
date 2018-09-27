@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { StateMapper, DispatchMapper } from '../../stores/types';
 import { Theme, createTheme } from '../../common/styles/theme';
 import { BrowserRouter } from 'react-router-dom';
-import { AppRouter } from './app-router';
 import { ThemeProvider } from 'src/components/styles/theme-provider';
 import { StoreProvider } from 'src/components/stores/store-provider';
 import { AppTop } from './app-top';
 import { AuthenticateProvider } from './authenticate-provider';
 import { getInitialStoredState } from 'src/stores/stored-state';
+import { AppBody } from './app-body';
 
 interface Props {
   theme: Theme;
@@ -19,7 +19,7 @@ const Inner: React.SFC<Props> = ({ theme }) => {
       <BrowserRouter>
         <AuthenticateProvider>
           <AppTop />
-          <AppRouter />
+          <AppBody />
         </AuthenticateProvider>
       </BrowserRouter>
     </ThemeProvider>

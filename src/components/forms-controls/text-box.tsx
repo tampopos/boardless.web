@@ -1,4 +1,3 @@
-import { WithStyleProps } from '../../common/styles/types';
 import { getInjectClasses } from '../../common/styles/styles-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
@@ -19,31 +18,32 @@ interface TextBoxProps {
   maxLength?: number;
   themeColor?: keyof Colors;
 }
-type Props = WithStyleProps<typeof styles, TextBoxProps & TextFieldProps>;
-export const TextBox = decorate(styles)((props: Props) => {
-  const { themeColor, onChange, maxLength } = props;
-  const classes = getInjectClasses(props);
-  const { root } = classes;
-  const pProps = resolve('componentHelper').createPropagationProps(
-    props,
-    'themeColor',
-    'maxLength',
-  );
-  return (
-    <ThemeColorScope themeColor={themeColor}>
-      <TextField
-        {...pProps}
-        className={root}
-        onChange={e =>
-          onChange
-            ? maxLength
-              ? e.target.value.length <= maxLength && onChange(e)
-              : onChange(e)
-            : null
-        }
-        color={themeColor ? 'primary' : 'inherit'}
-      />
-    </ThemeColorScope>
-  );
-});
+export const TextBox = decorate(styles)<TextBoxProps & TextFieldProps>(
+  props => {
+    const { themeColor, onChange, maxLength } = props;
+    const classes = getInjectClasses(props);
+    const { root } = classes;
+    const pProps = resolve('componentHelper').createPropagationProps(
+      props,
+      'themeColor',
+      'maxLength',
+    );
+    return (
+      <ThemeColorScope themeColor={themeColor}>
+        <TextField
+          {...pProps}
+          className={root}
+          onChange={e =>
+            onChange
+              ? maxLength
+                ? e.target.value.length <= maxLength && onChange(e)
+                : onChange(e)
+              : null
+          }
+          color={themeColor ? 'primary' : 'inherit'}
+        />
+      </ThemeColorScope>
+    );
+  },
+);
 TextBox.defaultProps = { type: 'text' };

@@ -14,8 +14,10 @@
   "tslint.alwaysShowStatus": true,
   "cSpell.words": [
     "Injectable",
+    "Snackbar",
     "appbar",
     "boardless",
+    "clickaway",
     "csstype",
     "haspopup",
     "localstorage",
@@ -23,6 +25,7 @@
     "selectable",
     "tmpps"
   ],
+  "cSpell.ignoreRegExpList": ["/.*ー/"],
   "editor.formatOnSave": true,
   "files.autoSave": "onFocusChange",
   "typescript.tsdk": "node_modules/typescript/lib"

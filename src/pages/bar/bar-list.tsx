@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DispatchMapper, StateMapper } from '../../stores/types';
 import { connect } from 'react-redux';
-import { WithStyleProps } from '../../common/styles/types';
 import Friend, { createEmptyFriend } from '../../models/friend';
 import { getSexName } from '../../services/friend-service';
 import { Table } from '../../components/tables/table';
@@ -55,8 +54,7 @@ const mapStateToProps: StateMapper<BarListProps> = ({
     friend,
   };
 };
-type Props = WithStyleProps<typeof styles, BarListProps & Events>;
-const decoratedComponent = decorate(styles)((props: Props) => {
+const decoratedComponent = decorate(styles)<BarListProps & Events>(props => {
   const { friends, toAddMode, selectRow, friend, classes } = props;
   const getThemeColor = ({ sex }: Friend) =>
     sex === 'male' ? 'indigo' : sex === 'female' ? 'pink' : undefined;
