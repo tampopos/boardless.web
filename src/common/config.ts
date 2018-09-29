@@ -7,6 +7,7 @@ export class Config implements IConfig {
   public apiUrl: string;
   constructor() {
     Object.assign(this, this.getConfig());
+    this.changeApiUrl();
   }
   private getConfig = (): IConfig => {
     switch (process.env.NODE_ENV) {
@@ -26,4 +27,12 @@ export class Config implements IConfig {
       apiUrl: String(process.env.REACT_APP_DEV_API_URL),
     };
   };
+  private changeApiUrl(): any {
+    if (!this.isMockMode || !window || !window.location) {
+      return;
+    }
+    this.apiUrl = `${window.location.protocol}//${
+      window.location.hostname
+    }:3001`;
+  }
 }
