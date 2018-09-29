@@ -31,3 +31,7 @@ tmpps.boardless の Web サーバー
 #### CI 用テスト
 
 `npm run test-ci`
+
+#### API Mock サーバーの起動
+
+`npm run mock`
