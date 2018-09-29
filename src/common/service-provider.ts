@@ -1,12 +1,16 @@
-import { IObjectHelper, ObjectHelper } from './object-helper';
-import { IAsyncHelper, AsyncHelper } from './async-helper';
-import { IComponentHelper, ComponentHelper } from './component-helper';
-import {
-  IAuthenticateService,
-  AuthenticateService,
-} from 'src/services/authenticate-service';
-import { config, IConfig } from './config';
-import { IFetchHelper, FetchHelperDummy, FetchHelper } from './fetch-helper';
+import { ObjectHelper } from './object-helper';
+import { AsyncHelper } from './async-helper';
+import { ComponentHelper } from './component-helper';
+import { AuthenticateService } from 'src/services/authenticate-service';
+import { Config } from './config';
+import { FetchHelper } from './fetch-helper';
+import { Container } from 'inversify';
+import { IObjectHelper } from './interfaces/object-helper';
+import { IConfig } from './interfaces/config';
+import { IAsyncHelper } from './interfaces/async-helper';
+import { IFetchHelper } from './interfaces/fetch-helper';
+import { IComponentHelper } from './interfaces/component-helper';
+import { IAuthenticateService } from 'src/services/interfaces/authenticate-service';
 
 interface Services {
   config: IConfig;
@@ -16,19 +20,19 @@ interface Services {
   componentHelper: IComponentHelper;
   authenticateService: IAuthenticateService;
 }
-const services = {} as Services;
-services.config = config;
-services.objectHelper = new ObjectHelper();
-services.asyncHelper = new AsyncHelper();
-services.fetchHelper = config.isMockMode
-  ? new FetchHelperDummy(services.asyncHelper)
-  : new FetchHelper(services.config);
-services.componentHelper = new ComponentHelper(services.objectHelper);
-services.authenticateService = new AuthenticateService(services.asyncHelper);
 
-export const resolve = <TKey extends keyof Services>(key: TKey) =>
-  services[key];
-export const register = <TKey extends keyof Services>(
+const container = new Container();
+const register = <TKey extends keyof Services>(key: TKey) =>
+  container.bind<Services[TKey]>(key.toString());
+export const resolve = <TKey extends keyof Services>(
   key: TKey,
-  obj: Services[TKey],
-) => (services[key] = obj);
+): Services[TKey] => {
+  return container.get<Services[TKey]>(key.toString());
+};
+
+register('config').to(Config);
+register('objectHelper').to(ObjectHelper);
+register('asyncHelper').to(AsyncHelper);
+register('fetchHelper').to(FetchHelper);
+register('componentHelper').to(ComponentHelper);
+register('authenticateService').to(AuthenticateService);
