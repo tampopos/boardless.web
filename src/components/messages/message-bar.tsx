@@ -60,9 +60,7 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
       anchorOrigin={anchorOrigin}
       open={true}
       onClose={(event, reason) => {
-        // if (reason !== 'clickaway' && props.onClose)
-        //     props.onClose();
-        if (onClose) {
+        if (reason !== 'clickaway' && onClose) {
           onClose();
         }
       }}
