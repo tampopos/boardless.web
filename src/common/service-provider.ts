@@ -21,7 +21,7 @@ interface Services {
   authenticateService: IAuthenticateService;
 }
 
-const container = new Container();
+const container = new Container({ autoBindInjectable: true });
 const register = <TKey extends keyof Services>(key: TKey) =>
   container.bind<Services[TKey]>(key.toString());
 export const resolve = <TKey extends keyof Services>(
@@ -29,10 +29,21 @@ export const resolve = <TKey extends keyof Services>(
 ): Services[TKey] => {
   return container.get<Services[TKey]>(key.toString());
 };
-
-register('config').to(Config);
-register('objectHelper').to(ObjectHelper);
-register('asyncHelper').to(AsyncHelper);
-register('fetchHelper').to(FetchHelper);
-register('componentHelper').to(ComponentHelper);
-register('authenticateService').to(AuthenticateService);
+register('config')
+  .to(Config)
+  .inSingletonScope();
+register('objectHelper')
+  .to(ObjectHelper)
+  .inSingletonScope();
+register('asyncHelper')
+  .to(AsyncHelper)
+  .inSingletonScope();
+register('fetchHelper')
+  .to(FetchHelper)
+  .inSingletonScope();
+register('componentHelper')
+  .to(ComponentHelper)
+  .inSingletonScope();
+register('authenticateService')
+  .to(AuthenticateService)
+  .inSingletonScope();
