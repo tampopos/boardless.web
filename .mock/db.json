@@ -1,0 +1,9 @@
+{
+  "authenticate-refresh": {
+    "token": "token"
+  },
+  "authenticate-sign-in": {
+    "errors": [],
+    "token": "token"
+  }
+}

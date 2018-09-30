@@ -1,5 +1,4 @@
 import { IConfig } from './interfaces/config';
-import { IAsyncHelper } from './interfaces/async-helper';
 import { FetchRequest } from 'src/models/fetch-request';
 import { injectable, inject } from 'inversify';
 import { IFetchHelper } from './interfaces/fetch-helper';
@@ -7,25 +6,26 @@ import { IFetchHelper } from './interfaces/fetch-helper';
 @injectable()
 export class FetchHelper implements IFetchHelper {
   private token: string;
-  constructor(
-    @inject('config') private config: IConfig,
-    @inject('asyncHelper') private asyncHelper: IAsyncHelper,
-  ) {}
+  constructor(@inject('config') private config: IConfig) {}
   public setCredential = (token: string) => (this.token = token);
   public fetchAsync = async <TResult>(request: FetchRequest) => {
-    if (this.config.isMockMode) {
-      return await this.fetchAsyncMock<TResult>(request);
+    const url = this.config.apiUrl + request.relativeUrl;
+    const req = {
+      body:
+        request.body && !this.config.isMockMode
+          ? JSON.stringify(request.body)
+          : null,
+      headers: new Headers(
+        request.methodName !== 'GET'
+          ? { Accept: 'application/json', 'Content-Type': 'application/json' }
+          : {},
+      ),
+    } as Request;
+    if (this.token) {
+      // req.credentials.=this.token;
     }
-    const response = await fetch({
-      credentials: this.token,
-      url: this.config.apiUrl,
-    } as Request);
-    return (await response.json()) as TResult;
-  };
-  private fetchAsyncMock = async <TResult>(request: FetchRequest) => {
-    await this.asyncHelper.delay(100);
-    switch (request.relativeUrl) {
-    }
-    return {} as TResult;
+    const response = await fetch(url, req);
+    const json = await response.json();
+    return json as TResult;
   };
 }

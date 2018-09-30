@@ -5,5 +5,10 @@ export interface IAuthenticateService {
   isAuthenticated: (state: AuthenticateState) => boolean;
   refreshTokenAsync: (state: AuthenticateState) => Promise<AuthenticateState>;
   validate: (model: SignInModel) => string[];
-  signInAsync: (model: SignInModel) => Promise<string>;
+  signInAsync: (
+    model: SignInModel,
+  ) => Promise<{
+    token: string;
+    errors: string[];
+  }>;
 }
