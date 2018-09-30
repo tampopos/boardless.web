@@ -1,35 +1,28 @@
-import { IConfig } from './config';
-import { IAsyncHelper } from './async-helper';
+import { IConfig } from './interfaces/config';
+import { IAsyncHelper } from './interfaces/async-helper';
 import { FetchRequest } from 'src/models/fetch-request';
+import { injectable, inject } from 'inversify';
+import { IFetchHelper } from './interfaces/fetch-helper';
 
-export interface IFetchHelper {
-  setCredential: (token: string) => void;
-  fetchAsync: <TRequest extends {}, TResult extends {}>(
-    request: FetchRequest<TRequest>,
-  ) => Promise<TResult>;
-}
+@injectable()
 export class FetchHelper implements IFetchHelper {
   private token: string;
-  constructor(private config: IConfig) {}
+  constructor(
+    @inject('config') private config: IConfig,
+    @inject('asyncHelper') private asyncHelper: IAsyncHelper,
+  ) {}
   public setCredential = (token: string) => (this.token = token);
-  public fetchAsync = async <TRequest, TResult>(
-    request: FetchRequest<TRequest>,
-  ) => {
+  public fetchAsync = async <TResult>(request: FetchRequest) => {
+    if (this.config.isMockMode) {
+      return await this.fetchAsyncMock<TResult>(request);
+    }
     const response = await fetch({
       credentials: this.token,
       url: this.config.apiUrl,
     } as Request);
     return (await response.json()) as TResult;
   };
-}
-export class FetchHelperDummy implements IFetchHelper {
-  constructor(private asyncHelper: IAsyncHelper) {}
-  public setCredential = (token: string) => {
-    console.info(token);
-  };
-  public fetchAsync = async <TRequest, TResult>(
-    request: FetchRequest<TRequest>,
-  ) => {
+  private fetchAsyncMock = async <TResult>(request: FetchRequest) => {
     await this.asyncHelper.delay(100);
     switch (request.relativeUrl) {
     }

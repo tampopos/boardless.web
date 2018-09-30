@@ -1,7 +1,7 @@
 import { MethodName } from './types';
 
-export interface FetchRequest<T extends {} = {}> {
-  body: T;
+export interface FetchRequest {
+  body: object;
   relativeUrl: string;
   methodName: MethodName;
 }
