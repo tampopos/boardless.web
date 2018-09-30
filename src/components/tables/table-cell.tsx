@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
       fontWeight: theme.shared.fontWeight.bold,
     },
     ...resolve('objectHelper').mapObject(colors, color => ({
-      color: color['500'],
+      color: theme.palette.type === 'light' ? color['600'] : color['400'],
     })),
   });
 interface TableCellProps {

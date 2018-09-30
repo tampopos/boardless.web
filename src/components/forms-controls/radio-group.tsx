@@ -41,7 +41,7 @@ export const RadioGroup = decorate(styles)<
     'label',
     'items',
   );
-  const color = themeColor ? 'primary' : 'inherit';
+  const color = themeColor ? 'primary' : 'default';
   const radioColor = themeColor ? 'primary' : 'default';
   return (
     <ThemeColorScope themeColor={themeColor}>

@@ -12,7 +12,6 @@ import { resolve } from 'src/common/service-provider';
 const styles = createStyles({
   root: {
     position: 'relative',
-    overflow: 'auto',
   },
 });
 interface Props {

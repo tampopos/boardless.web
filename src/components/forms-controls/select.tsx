@@ -43,7 +43,7 @@ export const Select = decorate(styles)<SelectProps & MuiSelectProps>(props => {
         <MuiSelect
           {...pProps}
           className={select}
-          color={themeColor ? 'primary' : 'inherit'}
+          color={themeColor ? 'primary' : 'default'}
         >
           {items.map(x => (
             <MenuItem {...x} />

@@ -4,14 +4,17 @@ import * as React from 'react';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
 import { resolve } from 'src/common/service-provider';
+import { Theme } from 'src/common/styles/theme';
 
-const styles = createStyles({
-  root: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    display: 'table',
-  },
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+      borderCollapse: 'collapse',
+      display: 'table',
+      boxShadow: theme.shadows[0],
+    },
+  });
 interface TableProps {}
 export const Table = decorate(styles)<TableProps & DivProps>(props => {
   const { root } = getInjectClasses(props);
