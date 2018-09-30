@@ -1,8 +1,9 @@
 import { AuthenticateState } from 'src/stores/authenticate/authenticate-state';
 import { IAsyncHelper } from 'src/common/interfaces/async-helper';
 import { SignInModel } from 'src/models/sign-in-model';
-import { injectable, inject } from 'inversify';
+import { injectable } from 'inversify';
 import { IAuthenticateService } from './interfaces/authenticate-service';
+import { inject } from 'src/common/di/inject';
 
 @injectable()
 export class AuthenticateService implements IAuthenticateService {

@@ -13,7 +13,7 @@ import { RadioGroupProps as MuiRadioGroupProps } from '@material-ui/core/RadioGr
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {

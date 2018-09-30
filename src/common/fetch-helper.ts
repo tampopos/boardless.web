@@ -1,8 +1,9 @@
 import { IConfig } from './interfaces/config';
 import { IAsyncHelper } from './interfaces/async-helper';
 import { FetchRequest } from 'src/models/fetch-request';
-import { injectable, inject } from 'inversify';
+import { injectable } from 'inversify';
 import { IFetchHelper } from './interfaces/fetch-helper';
+import { inject } from './di/inject';
 
 @injectable()
 export class FetchHelper implements IFetchHelper {

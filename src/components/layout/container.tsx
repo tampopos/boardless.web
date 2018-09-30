@@ -3,7 +3,7 @@ import { getInjectClasses } from '../../common/styles/styles-helper';
 import { Grid, createStyles } from '@material-ui/core';
 import { GridProps } from '@material-ui/core/Grid';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {},

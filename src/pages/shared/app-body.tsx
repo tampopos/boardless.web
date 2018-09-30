@@ -7,7 +7,7 @@ import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { AppMessages } from './app-message';
 import { SignIn } from './sign-in';
 import { StateMapper } from 'src/stores/types';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {
