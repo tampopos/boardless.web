@@ -14,7 +14,7 @@ import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
 import { StateMapper } from 'src/stores/types';
 import { connect } from 'react-redux';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {},

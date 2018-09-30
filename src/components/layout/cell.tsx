@@ -3,7 +3,7 @@ import * as React from 'react';
 import { GridProps } from '@material-ui/core/Grid';
 import { Grid, createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {

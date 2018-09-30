@@ -1,9 +1,10 @@
 import { AuthenticateState } from 'src/stores/authenticate/authenticate-state';
 import { SignInModel } from 'src/models/sign-in-model';
-import { injectable, inject } from 'inversify';
+import { injectable } from 'inversify';
 import { IAuthenticateService } from './interfaces/authenticate-service';
 import { IFetchHelper } from 'src/common/interfaces/fetch-helper';
 import { Url } from 'src/common/statics/url';
+import { inject } from 'src/common/di/inject';
 
 @injectable()
 export class AuthenticateService implements IAuthenticateService {

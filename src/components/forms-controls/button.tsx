@@ -4,7 +4,7 @@ import { Button as MuiButton, createStyles } from '@material-ui/core';
 import { ButtonProps as MuiButtonProps } from '@material-ui/core/Button';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {
