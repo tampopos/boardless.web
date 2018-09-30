@@ -1,12 +1,13 @@
 import { AuthenticateState } from 'src/stores/authenticate/authenticate-state';
-import { IAsyncHelper } from 'src/common/interfaces/async-helper';
 import { SignInModel } from 'src/models/sign-in-model';
 import { injectable, inject } from 'inversify';
 import { IAuthenticateService } from './interfaces/authenticate-service';
+import { IFetchHelper } from 'src/common/interfaces/fetch-helper';
+import { Url } from 'src/common/statics/url';
 
 @injectable()
 export class AuthenticateService implements IAuthenticateService {
-  constructor(@inject('asyncHelper') private asyncHelper: IAsyncHelper) {}
+  constructor(@inject('fetchHelper') private fetchHelper: IFetchHelper) {}
   public isAuthenticated = (state: AuthenticateState) => {
     const { selectedToken, tokens, isInitialized } = state;
     return isInitialized && selectedToken >= 0 && tokens.length > selectedToken;
@@ -37,8 +38,11 @@ export class AuthenticateService implements IAuthenticateService {
     };
   };
   private refreshAsync = async (token: string) => {
-    await this.asyncHelper.delay(100);
-    return token + '1';
+    const res = await this.fetchHelper.fetchAsync<{ token: string }>({
+      relativeUrl: Url.authenticateRefresh,
+      methodName: 'POST',
+    });
+    return res.token;
   };
   public validate = (model: SignInModel) => {
     const { email, password } = model;
@@ -52,14 +56,13 @@ export class AuthenticateService implements IAuthenticateService {
     return errors;
   };
   public signInAsync = async (model: SignInModel) => {
-    const { email, password } = model;
-    const errors = [];
-    if (!email) {
-      errors.push('error');
-    }
-    if (!password) {
-      errors.push('error');
-    }
-    return 'token';
+    return await this.fetchHelper.fetchAsync<{
+      token: string;
+      errors: string[];
+    }>({
+      relativeUrl: Url.authenticateSignIn,
+      methodName: 'POST',
+      body: model,
+    });
   };
 }
