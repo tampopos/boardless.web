@@ -1,42 +1,62 @@
 import { StoredState } from '../stored-state';
-
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-
 import actionCreatorFactory from 'typescript-fsa';
-
 import { ActionCreators } from '../types';
+import { SignInResult } from 'src/models/authenticate/sign-in-result';
 import { AuthenticateState } from './authenticate-state';
 
 export const authenticateReducer = (storedState: StoredState) =>
   reducerWithInitialState(storedState.authenticateState)
-    .case(authenticateActionCreators.init, (s, {}) => {
-      return Object.assign({}, s, { isInitialized: false });
+    .case(authenticateActionCreators.init, s => {
+      const newState = Object.assign({}, s);
+      if (newState.claim) {
+        newState.claim.isInitialized = false;
+      }
+      Object.keys(newState.claims).forEach(key => {
+        newState.claims[key].isInitialized = false;
+      });
+      return newState;
     })
-    .case(authenticateActionCreators.set, (s, { state }) => {
-      return Object.assign({}, state);
-    })
-    .case(
-      authenticateActionCreators.changeSelectedToken,
-      (s, { selectedToken }) => {
-        return Object.assign({}, s, { selectedToken });
-      },
-    )
-    .case(authenticateActionCreators.add, (s, { token }) => {
-      const selectedToken = s.tokens.push(token) - 1;
-      return Object.assign({}, s, { selectedToken });
+    .case(authenticateActionCreators.signIn, (s, { result }) => {
+      const { claim, workSpaces } = result;
+      const newState: AuthenticateState = {
+        claims: {},
+        workSpaces: {},
+      };
+      if (s.claim) {
+        const oldUserId = s.claim.userId;
+        const oldClaims = Object.entries(s.claims).filter(
+          x => x[1].userId !== oldUserId,
+        );
+        const oldWorkSpaces = Object.entries(s.workSpaces).filter(
+          x => x[1].userId !== oldUserId,
+        );
+        oldClaims.forEach(x => {
+          newState.claims[x[0]] = x[1];
+        });
+        oldWorkSpaces.forEach(x => {
+          newState.workSpaces[x[0]] = x[1];
+        });
+      }
+      if (claim) {
+        claim.isInitialized = true;
+        newState.claim = claim;
+        if (workSpaces) {
+          workSpaces.forEach(workSpace => {
+            newState.workSpaces[workSpace.id] = workSpace;
+          });
+        }
+      }
+      return newState;
     });
 interface Event {
   init: {};
-  set: { state: AuthenticateState };
-  changeSelectedToken: { selectedToken: number };
-  add: { token: string };
+  signIn: { result: SignInResult };
 }
 const factory = actionCreatorFactory();
 export const authenticateActionCreators: ActionCreators<Event> = {
   init: factory<{}>('authenticateActionCreators.init'),
-  set: factory<{ state: AuthenticateState }>('authenticateActionCreators.set'),
-  changeSelectedToken: factory<{ selectedToken: number }>(
-    'authenticateActionCreators.changeSelectedToken',
+  signIn: factory<{ result: SignInResult }>(
+    'authenticateActionCreators.signIn',
   ),
-  add: factory<{ token: string }>('authenticateActionCreators.add'),
 };

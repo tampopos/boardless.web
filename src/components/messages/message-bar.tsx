@@ -3,7 +3,7 @@ import { MessageField } from './message-field';
 import { createStyles, Snackbar, IconButton } from '@material-ui/core';
 import { SnackbarOrigin } from '@material-ui/core/Snackbar';
 import { Theme } from 'src/common/styles/theme';
-import { Message } from 'src/models/message';
+import { Message } from 'src/models/common/message';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { Close } from '@material-ui/icons';
 

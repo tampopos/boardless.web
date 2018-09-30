@@ -1,9 +1,27 @@
 {
   "authenticate-refresh": {
-    "token": "token"
+    "claim": {
+      "token": "token",
+      "userId": "user01",
+      "email": "user01@example.com"
+    },
+    "workSpaces": [
+      { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
+      { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
+    ]
   },
   "authenticate-sign-in": {
     "errors": [],
-    "token": "token"
+    "result": {
+      "claim": {
+        "token": "token",
+        "userId": "user01",
+        "email": "user01@example.com"
+      },
+      "workSpaces": [
+        { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
+        { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
+      ]
+    }
   }
 }

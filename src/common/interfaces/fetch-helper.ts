@@ -1,4 +1,4 @@
-import { FetchRequest } from 'src/models/fetch-request';
+import { FetchRequest } from 'src/models/common/fetch-request';
 
 export interface IFetchHelper {
   setCredential: (token: string) => void;

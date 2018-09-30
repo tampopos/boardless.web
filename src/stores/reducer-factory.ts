@@ -7,6 +7,7 @@ import { StoreProviderProps } from 'src/components/stores/store-provider';
 import { authenticateReducer } from './authenticate/authenticate-reducer';
 import { locationReducer } from './location/location-reducer';
 import { messagesReducer } from './messages/messages-reducer';
+import { sideMenuReducer } from './side-menu/side-menu-reducer';
 
 const createReducers = (initialState: StoredState) =>
   combineReducers<StoredState>({
@@ -15,6 +16,7 @@ const createReducers = (initialState: StoredState) =>
     authenticateState: authenticateReducer(initialState),
     locationState: locationReducer(initialState),
     messagesState: messagesReducer(initialState),
+    sideMenuState: sideMenuReducer(initialState),
   });
 const createLocalStorageSetting = (...key: Array<keyof StoredState>) =>
   persistState(key);

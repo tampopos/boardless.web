@@ -1,49 +1,27 @@
-import { AuthenticateState } from 'src/stores/authenticate/authenticate-state';
-import { SignInModel } from 'src/models/sign-in-model';
+import { SignInModel } from 'src/models/authenticate/sign-in-model';
 import { injectable } from 'inversify';
 import { IAuthenticateService } from './interfaces/authenticate-service';
 import { IFetchHelper } from 'src/common/interfaces/fetch-helper';
 import { Url } from 'src/common/routing/url';
 import { inject } from 'src/common/di/inject';
+import { SignInResult } from 'src/models/authenticate/sign-in-result';
+import { Claim } from 'src/models/authenticate/claim';
 
 @injectable()
 export class AuthenticateService implements IAuthenticateService {
   constructor(@inject('fetchHelper') private fetchHelper: IFetchHelper) {}
-  public isAuthenticated = (state: AuthenticateState) => {
-    const { selectedToken, tokens, isInitialized } = state;
-    return isInitialized && selectedToken >= 0 && tokens.length > selectedToken;
+  public isAuthenticated = (claim?: Claim) => {
+    return Boolean(claim && claim.isInitialized);
   };
-  public refreshTokenAsync = async (state: AuthenticateState) => {
-    const { selectedToken, tokens } = state;
-    if (selectedToken < 0 || tokens.length <= selectedToken) {
-      return Object.assign({}, state, {
-        selectedToken: -1,
-        isInitialized: true,
-      });
+  public refreshTokenAsync = async (claim?: Claim) => {
+    if (!claim) {
+      return {};
     }
-    const token = tokens[selectedToken];
-    const newTokens = tokens.filter(x => x !== token);
-    const newToken = await this.refreshAsync(token);
-    if (!newToken) {
-      return {
-        tokens: newTokens,
-        selectedToken: -1,
-        isInitialized: true,
-      };
-    }
-    const newSelectedToken = newTokens.push(newToken) - 1;
-    return {
-      tokens: newTokens,
-      selectedToken: newSelectedToken,
-      isInitialized: true,
-    };
-  };
-  private refreshAsync = async (token: string) => {
-    const res = await this.fetchHelper.fetchAsync<{ token: string }>({
+    return await this.fetchHelper.fetchAsync<SignInResult>({
       relativeUrl: Url.authenticateRefresh,
       methodName: 'POST',
+      body: claim,
     });
-    return res.token;
   };
   public validate = (model: SignInModel) => {
     const { email, password } = model;
@@ -58,7 +36,7 @@ export class AuthenticateService implements IAuthenticateService {
   };
   public signInAsync = async (model: SignInModel) => {
     return await this.fetchHelper.fetchAsync<{
-      token: string;
+      result: SignInResult;
       errors: string[];
     }>({
       relativeUrl: Url.authenticateSignIn,

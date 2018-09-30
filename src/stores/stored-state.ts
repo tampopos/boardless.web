@@ -1,9 +1,10 @@
 import { BarFormState } from './bar/bar-form-state';
 import { BarListState } from './bar/bar-list-state';
 import { AuthenticateState } from './authenticate/authenticate-state';
-import { createEmptyFriend } from 'src/models/friend';
+import { createEmptyFriend } from 'src/models/bar/friend';
 import { LocationState } from './location/location-state';
 import { MessagesState } from './messages/messages-state';
+import { SideMenuState } from './side-menu/side-menu-state';
 
 export interface StoredState {
   barFormState: BarFormState;
@@ -11,6 +12,7 @@ export interface StoredState {
   authenticateState: AuthenticateState;
   locationState: LocationState;
   messagesState: MessagesState;
+  sideMenuState: SideMenuState;
 }
 export const getInitialStoredState = (): StoredState => {
   return {
@@ -21,13 +23,13 @@ export const getInitialStoredState = (): StoredState => {
       friends: [],
     },
     authenticateState: {
-      isInitialized: false,
-      selectedToken: -1,
-      tokens: [],
+      claims: {},
+      workSpaces: {},
     },
     locationState: {
       cultureName: 'ja',
     },
     messagesState: { messages: [] },
+    sideMenuState: { open: false },
   };
 };

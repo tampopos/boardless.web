@@ -9,6 +9,7 @@ import { resolve } from 'src/common/di/service-provider';
 const styles = createStyles({
   root: {
     width: '100%',
+    marginRight: 10,
   },
 });
 export interface ButtonProps {
@@ -27,10 +28,12 @@ export const Button = decorate(styles)<ButtonProps & MuiButtonProps>(props => {
       <MuiButton
         {...pProps}
         className={root}
-        variant="outlined"
         color={themeColor ? 'primary' : 'default'}
       />
     </ThemeColorScope>
   );
 });
 Button.defaultProps = { disabled: false };
+export const OutlinedButton: React.SFC<
+  ButtonProps & MuiButtonProps
+> = props => <Button {...props} variant="outlined" />;

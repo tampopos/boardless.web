@@ -1,4 +1,4 @@
-import { Message } from 'src/models/message';
+import { Message } from 'src/models/common/message';
 
 export interface MessagesState {
   messages: Message[];

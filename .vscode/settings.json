@@ -23,6 +23,7 @@
     "inversify",
     "localstorage",
     "middlewares",
+    "mixins",
     "roboto",
     "selectable",
     "tmpps"

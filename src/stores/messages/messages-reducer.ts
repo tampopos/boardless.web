@@ -1,4 +1,4 @@
-import { Message } from 'src/models/message';
+import { Message } from 'src/models/common/message';
 import { StoredState } from '../stored-state';
 import actionCreatorFactory from 'typescript-fsa';
 import { ActionCreators } from '../types';

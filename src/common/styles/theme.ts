@@ -58,6 +58,7 @@ const customThemeOption = {
         color: isLight ? red['700'] : red['500'],
       },
     },
+    drawer: { width: 240 },
   },
 };
 const muiThemeOption: ThemeOptions = { palette: { primary: grey, type } };

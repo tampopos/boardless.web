@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MessageContainer } from '../../components/messages/message-container';
 import { connect } from 'react-redux';
-import { Message } from 'src/models/message';
+import { Message } from 'src/models/common/message';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 

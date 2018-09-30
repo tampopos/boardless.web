@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { DispatchMapper, StateMapper } from '../../stores/types';
 import { connect } from 'react-redux';
-import Friend, { createEmptyFriend } from '../../models/friend';
+import Friend, { createEmptyFriend } from '../../models/bar/friend';
 import { createNewFriend } from '../../services/friend-service';
 import { BarForm } from './bar-form';
 import { Row } from '../../components/layout/row';
 import { Cell } from '../../components/layout/cell';
-import { Button } from '../../components/forms-controls/button';
+import { OutlinedButton } from '../../components/forms-controls/button';
 import { Table } from '../../components/tables/table';
 import { TableRow } from '../../components/tables/table-row';
 import { TableCell } from '../../components/tables/table-cell';
@@ -208,7 +208,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
           <Row className={row}>
             <Cell xs={10} />
             <Cell xs={2}>
-              <Button
+              <OutlinedButton
                 themeColor={color}
                 disabled={!isValid}
                 onClick={() =>
@@ -216,7 +216,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
                 }
               >
                 {buttonLabel}
-              </Button>
+              </OutlinedButton>
             </Cell>
           </Row>
         </BarForm>

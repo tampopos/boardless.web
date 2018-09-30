@@ -47,3 +47,6 @@ export const TextBox = decorate(styles)<TextBoxProps & TextFieldProps>(
   },
 );
 TextBox.defaultProps = { type: 'text' };
+export const OutlinedTextBox: React.SFC<
+  TextBoxProps & TextFieldProps
+> = props => <TextBox {...props} variant="outlined" />;

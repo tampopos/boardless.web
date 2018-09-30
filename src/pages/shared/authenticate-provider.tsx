@@ -1,41 +1,41 @@
-import { AuthenticateState } from 'src/stores/authenticate/authenticate-state';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { connect } from 'react-redux';
 import * as React from 'react';
 import { resolve } from 'src/common/di/service-provider';
+import { Claim } from 'src/models/authenticate/claim';
 
 interface Events {
-  refreshTokenAsync: (state: AuthenticateState) => Promise<void>;
+  refreshTokenAsync: (claim?: Claim) => Promise<void>;
 }
 interface Props {
-  authenticateState: AuthenticateState;
+  claim?: Claim;
 }
 const Inner: React.SFC<Props & Events> = props => {
-  const { authenticateState, refreshTokenAsync, children } = props;
-  if (!authenticateState.isInitialized) {
-    refreshTokenAsync(authenticateState);
+  const { claim, refreshTokenAsync, children } = props;
+  const notInitialized=claim && !claim.isInitialized;
+  if (notInitialized) {
+    refreshTokenAsync(claim);
   }
   return (
-    <React.Fragment>
-      {authenticateState.isInitialized && children}
-    </React.Fragment>
+    <React.Fragment>{!notInitialized && children}</React.Fragment>
   );
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   dispatch(authenticateActionCreators.init({}));
   return {
     refreshTokenAsync: async state => {
-      const newState = await resolve('authenticateService').refreshTokenAsync(
+      const result = await resolve('authenticateService').refreshTokenAsync(
         state,
       );
-      dispatch(authenticateActionCreators.set({ state: newState }));
+      dispatch(authenticateActionCreators.signIn({ result }));
     },
   };
 };
 const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
+  const { claim } = authenticateState;
   return {
-    authenticateState,
+    claim,
   };
 };
 export const AuthenticateProvider = connect(

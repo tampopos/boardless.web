@@ -1,6 +1,6 @@
 import { StoredState } from '../stored-state';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import Friend from '../../models/friend';
+import Friend from '../../models/bar/friend';
 import actionCreatorFactory from 'typescript-fsa';
 import { ActionCreators } from '../types';
 

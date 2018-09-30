@@ -1,4 +1,4 @@
-import Friend from '../models/friend';
+import Friend from '../models/bar/friend';
 import { resolve } from 'src/common/di/service-provider';
 
 const malePersonalities = [
