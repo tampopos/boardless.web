@@ -11,7 +11,7 @@ import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import { SelectProps as MuiSelectProps } from '@material-ui/core/Select';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {

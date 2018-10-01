@@ -5,7 +5,7 @@ import { TextField, createStyles } from '@material-ui/core';
 import { TextFieldProps } from '@material-ui/core/TextField';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = createStyles({
   root: {

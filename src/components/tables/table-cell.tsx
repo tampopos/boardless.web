@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Theme, Colors, colors } from '../../common/styles/theme';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = (theme: Theme) =>
   createStyles({
