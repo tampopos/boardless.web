@@ -10,6 +10,7 @@ const styles = createStyles({
   root: {
     paddingLeft: 10,
     paddingRight: 10,
+    alignSelf: 'flex-start',
     '$row:last-child': {
       paddingBottom: 0,
     },
