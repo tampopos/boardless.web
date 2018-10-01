@@ -23,6 +23,7 @@ const styles = (theme: Theme) =>
     container: {
       height: '100%',
       overflow: 'auto',
+      display: 'flex',
     },
   });
 interface Props {

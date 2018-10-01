@@ -27,6 +27,11 @@ import { OutlinedButton } from 'src/components/forms-controls/button';
 const styles = createStyles({
   root: {
     padding: 50,
+    width: 500,
+    minWidth: 500,
+    margin: 'auto',
+    paddingBottom: 200,
+    alignSelf: 'center',
   },
   form: {
     paddingTop: 20,
@@ -119,8 +124,8 @@ class Inner extends StyledComponentBase<
                 />
               </Row>
               <Row className={row}>
-                <Cell xs={8} md={10} />
-                <Cell xs={4} md={2}>
+                <Cell xs={8} />
+                <Cell xs={4}>
                   <OutlinedButton type="submit">
                     {resources.SignIn}
                   </OutlinedButton>
