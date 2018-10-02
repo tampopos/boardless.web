@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { SignInModel } from 'src/models/authenticate/sign-in-model';
-import { resolve } from 'src/common/di/service-provider';
+import { resolve } from 'src/services/common/service-provider';
 import { Resources } from 'src/common/location/resources';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 import { Form } from 'src/components/forms-controls/form';

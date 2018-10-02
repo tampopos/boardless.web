@@ -7,7 +7,8 @@ import {
 import { Container, ContainerProps } from 'src/components/layout/container';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/di/service-provider';
+import { createPropagationProps } from 'src/common/component-helper';
+import { mapObject } from 'src/common/object-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -20,7 +21,7 @@ const styles = (theme: Theme) =>
       borderStyle: 'solid',
       borderRadius: 15,
     },
-    ...resolve('objectHelper').mapObject(colors, color => ({
+    ...mapObject(colors, color => ({
       color: theme.palette.type === 'light' ? color['600'] : color['400'],
       borderColor: theme.palette.type === 'light' ? color['400'] : color['600'],
     })),
@@ -33,10 +34,7 @@ export const BarForm = decorate(styles)<BarFormProps & ContainerProps>(
     const { themeColor } = props;
     const classes = getInjectClasses(props);
     const { root } = classes;
-    const pProps = resolve('componentHelper').createPropagationProps(
-      props,
-      'themeColor',
-    );
+    const pProps = createPropagationProps(props, 'themeColor');
     return (
       <Container
         container={true}

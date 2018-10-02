@@ -1,5 +1,5 @@
 import Friend from '../models/bar/friend';
-import { resolve } from 'src/common/di/service-provider';
+import { delay } from 'src/common/async-helper';
 
 const malePersonalities = [
   'ごうけつ',
@@ -111,7 +111,7 @@ export const createNewFriend = async (
 ) => {
   const id =
     friends && friends.length > 0 ? Math.max(...friends.map(x => x.id)) + 1 : 0;
-  await resolve('asyncHelper').delay(100);
+  await delay(100);
   return Object.assign({}, p, {
     id,
     attack: getRandomParameter(1, 20),

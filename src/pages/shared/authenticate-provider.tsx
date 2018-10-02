@@ -2,7 +2,7 @@ import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { connect } from 'react-redux';
 import * as React from 'react';
-import { resolve } from 'src/common/di/service-provider';
+import { resolve } from 'src/services/common/service-provider';
 import { Claim } from 'src/models/authenticate/claim';
 
 interface Events {

@@ -5,7 +5,7 @@ import { TextField, createStyles } from '@material-ui/core';
 import { TextFieldProps } from '@material-ui/core/TextField';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/di/service-provider';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = createStyles({
   root: {
@@ -23,11 +23,7 @@ export const TextBox = decorate(styles)<TextBoxProps & TextFieldProps>(
     const { themeColor, onChange, maxLength } = props;
     const classes = getInjectClasses(props);
     const { root } = classes;
-    const pProps = resolve('componentHelper').createPropagationProps(
-      props,
-      'themeColor',
-      'maxLength',
-    );
+    const pProps = createPropagationProps(props, 'themeColor', 'maxLength');
     return (
       <ThemeColorScope themeColor={themeColor}>
         <TextField

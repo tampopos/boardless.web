@@ -3,7 +3,7 @@ import * as React from 'react';
 import { GridProps } from '@material-ui/core/Grid';
 import { Grid, createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/di/service-provider';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = createStyles({
   root: {
@@ -13,6 +13,6 @@ const styles = createStyles({
 interface CellProps {}
 export const Cell = decorate(styles)<CellProps & GridProps>(props => {
   const { root } = getInjectClasses(props);
-  const pProps = resolve('componentHelper').createPropagationProps(props);
+  const pProps = createPropagationProps(props);
   return <Grid {...pProps} className={root} item={true} />;
 });

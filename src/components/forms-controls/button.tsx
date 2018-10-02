@@ -4,7 +4,7 @@ import { Button as MuiButton, createStyles } from '@material-ui/core';
 import { ButtonProps as MuiButtonProps } from '@material-ui/core/Button';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/di/service-provider';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = createStyles({
   root: {
@@ -19,10 +19,7 @@ export const Button = decorate(styles)<ButtonProps & MuiButtonProps>(props => {
   const { themeColor } = props;
   const classes = getInjectClasses(props);
   const { root } = classes;
-  const pProps = resolve('componentHelper').createPropagationProps(
-    props,
-    'themeColor',
-  );
+  const pProps = createPropagationProps(props, 'themeColor');
   return (
     <ThemeColorScope themeColor={themeColor}>
       <MuiButton
