@@ -1,9 +1,6 @@
-export interface Config {
-  isMockMode: boolean;
-  apiUrl: string;
-}
+import { ExternalConfig, Config } from 'src/models/common/config';
 
-const createConfig = (): Config => {
+const createExternalConfig = (): ExternalConfig => {
   switch (process.env.NODE_ENV) {
     case 'test':
       return {
@@ -23,7 +20,7 @@ const createConfig = (): Config => {
 };
 
 const getConfig = () => {
-  const c = createConfig();
+  const c: Config = { version: '0', ...createExternalConfig() };
   if (!c.isMockMode || !window || !window.location) {
     return c;
   }

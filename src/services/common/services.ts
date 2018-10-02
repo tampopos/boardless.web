@@ -1,9 +1,9 @@
 import { IAuthenticateService } from 'src/services/interfaces/authenticate-service';
 import { IFetchService } from '../interfaces/fetch-service';
-import { Config } from 'src/common/config';
+import { Config } from 'src/models/common/config';
 
 export interface Services {
-  configurationProvider: Config;
+  config: Config;
   fetchService: IFetchService;
   authenticateService: IAuthenticateService;
 }

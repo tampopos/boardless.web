@@ -1,12 +1,12 @@
 import { StoredState } from './stored-state';
 import { combineReducers, createStore, compose } from 'redux';
-import persistState from 'redux-localstorage';
 import { barFormReducer } from './bar/bar-form-reducer';
 import { barListReducer } from './bar/bar-list-reducer';
 import { StoreProviderProps } from 'src/components/stores/store-provider';
 import { authenticateReducer } from './authenticate/authenticate-reducer';
 import { messagesReducer } from './messages/messages-reducer';
 import { sideMenuReducer } from './side-menu/side-menu-reducer';
+import { createLocalstorageSetting } from './localstorage';
 
 const createReducers = (initialState: StoredState) =>
   combineReducers<StoredState>({
@@ -16,10 +16,8 @@ const createReducers = (initialState: StoredState) =>
     messagesState: messagesReducer(initialState),
     sideMenuState: sideMenuReducer(initialState),
   });
-const createLocalStorageSetting = (...key: Array<keyof StoredState>) =>
-  persistState(key);
 const enhancer = compose(
-  createLocalStorageSetting('barListState', 'authenticateState'),
+  createLocalstorageSetting('barListState', 'authenticateState'),
 );
 export const createAppStore = (props: StoreProviderProps) =>
   createStore(createReducers(props.initialState), enhancer);

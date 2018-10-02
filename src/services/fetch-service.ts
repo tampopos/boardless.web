@@ -1,21 +1,18 @@
 import { injectable, inject } from 'inversify';
 import { IFetchService } from './interfaces/fetch-service';
 import { FetchRequest } from 'src/models/common/fetch-request';
-import { ConfigurationProvider } from './configuration-provider';
+import { Config } from 'src/models/common/config';
 
 @injectable()
 export class FetchService implements IFetchService {
   private token: string;
-  constructor(
-    @inject('configurationProvider')
-    private configurationProvider: ConfigurationProvider,
-  ) {}
+  constructor(@inject('config') private config: Config) {}
   public setCredential = (token: string) => (this.token = token);
   public fetchAsync = async <TResult>(request: FetchRequest) => {
-    const url = this.configurationProvider.apiUrl + request.relativeUrl;
+    const url = this.config.apiUrl + request.relativeUrl;
     const req = {
       body:
-        request.body && !this.configurationProvider.isMockMode
+        request.body && !this.config.isMockMode
           ? JSON.stringify(request.body)
           : null,
       headers: new Headers(

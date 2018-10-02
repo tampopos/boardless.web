@@ -1,8 +1,8 @@
 import { Container } from 'inversify';
 import { Services, ServiceKeys } from './services';
-import { ConfigurationProvider } from '../configuration-provider';
 import { FetchService } from '../fetch-service';
 import { AuthenticateService } from '../authenticate-service';
+import { config } from 'src/common/config';
 
 const container = new Container({ autoBindInjectable: true });
 export const register = <TKey extends ServiceKeys>(key: TKey) =>
@@ -12,6 +12,6 @@ export const resolve = <TKey extends ServiceKeys>(
 ): Services[TKey] => {
   return container.get<Services[TKey]>(key.toString());
 };
-register('configurationProvider').to(ConfigurationProvider);
+register('config').toConstantValue(config);
 register('fetchService').to(FetchService);
 register('authenticateService').to(AuthenticateService);
