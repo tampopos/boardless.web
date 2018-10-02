@@ -10,9 +10,6 @@ import { Claim } from 'src/models/authenticate/claim';
 @injectable()
 export class AuthenticateService implements IAuthenticateService {
   constructor(@inject('fetchHelper') private fetchHelper: IFetchHelper) {}
-  public isAuthenticated = (claim?: Claim) => {
-    return Boolean(claim && claim.isInitialized);
-  };
   public refreshTokenAsync = async (claim?: Claim) => {
     if (!claim) {
       return {};

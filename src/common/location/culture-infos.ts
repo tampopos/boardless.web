@@ -2,7 +2,7 @@ import { Localizer, LocalizerEn } from './localizer';
 import { Messages, MessagesEn } from './messages';
 import { Resources, ResourcesEn } from './resources';
 
-const locales = {
+export const cultureInfos = {
   ja: {
     localizer: new Localizer(),
     messages: new Messages(),
@@ -14,11 +14,5 @@ const locales = {
     resources: new ResourcesEn(),
   },
 };
-type Locales = typeof locales;
-export type Culture = keyof Locales;
-
-export const getCultureInfo = <TCulture extends Culture>(
-  name: TCulture,
-): Locales[TCulture] => {
-  return locales[name];
-};
+type CultureInfos = typeof cultureInfos;
+export type Culture = keyof CultureInfos;

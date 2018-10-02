@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
-import { resolve } from 'src/common/di/service-provider';
 import { Url } from 'src/common/routing/url';
 import { StateMapper } from 'src/stores/types';
 import { connect } from 'react-redux';
 import { SignIn } from './sign-in';
 import { AuthenticatedRoot } from './authenticated-root';
+import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
 
 interface Props {
   authenticated: boolean;
@@ -33,9 +33,7 @@ export const Inner: React.SFC<Props> = ({ authenticated }) => {
   );
 };
 const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { claim } = authenticateState;
-  return {
-    authenticated: resolve('authenticateService').isAuthenticated(claim),
-  };
+  const { authenticated } = new AuthenticateStateGetters(authenticateState);
+  return { authenticated };
 };
 export const AppRouter = connect(mapStateToProps)(Inner);

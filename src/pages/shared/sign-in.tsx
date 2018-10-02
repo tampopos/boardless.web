@@ -8,7 +8,6 @@ import { authenticateActionCreators } from 'src/stores/authenticate/authenticate
 import { SignInModel } from 'src/models/authenticate/sign-in-model';
 import { resolve } from 'src/common/di/service-provider';
 import { Resources } from 'src/common/location/resources';
-import { getCultureInfo } from 'src/common/location/localize-provider';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 import { Form } from 'src/components/forms-controls/form';
 import { RouteComponentProps } from 'react-router';
@@ -23,6 +22,7 @@ import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
+import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
 
 const styles = createStyles({
   root: {
@@ -172,17 +172,11 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({
-  locationState,
-  authenticateState,
-}) => {
-  const { workSpaces, claims } = authenticateState;
-  const { resources } = getCultureInfo(locationState.cultureName);
-  return {
-    resources,
-    workSpaces,
-    claims,
-  };
+const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
+  const { workSpaces, claims, resources } = new AuthenticateStateGetters(
+    authenticateState,
+  );
+  return { workSpaces, claims, resources };
 };
 const StyledInner = decorate(styles)(Inner);
 const RoutingInner = withRouter(StyledInner);

@@ -13,9 +13,7 @@ import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
 import { StateMapper, DispatchMapper } from 'src/stores/types';
 import { connect } from 'react-redux';
-import { resolve } from 'src/common/di/service-provider';
 import { Resources } from 'src/common/location/resources';
-import { getCultureInfo } from 'src/common/location/localize-provider';
 import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { History } from 'history';
 import { RouteComponentProps } from 'react-router';
@@ -23,6 +21,7 @@ import { Url } from 'src/common/routing/url';
 import { withRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
+import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -138,16 +137,11 @@ class Inner extends StyledComponentBase<
   }
 }
 
-const mapStateToProps: StateMapper<Props> = ({
-  locationState,
-  authenticateState,
-}) => {
-  const { claim } = authenticateState;
-  const { resources } = getCultureInfo(locationState.cultureName);
-  return {
-    resources,
-    authenticated: resolve('authenticateService').isAuthenticated(claim),
-  };
+const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
+  const { resources, authenticated } = new AuthenticateStateGetters(
+    authenticateState,
+  );
+  return { resources, authenticated };
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
