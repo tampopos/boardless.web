@@ -1,7 +1,6 @@
 import { StoredState } from '../stored-state';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import actionCreatorFactory from 'typescript-fsa';
-import { ActionCreators } from '../types';
 
 export const sideMenuReducer = (state: StoredState) =>
   reducerWithInitialState(state.sideMenuState)
@@ -11,12 +10,8 @@ export const sideMenuReducer = (state: StoredState) =>
     .case(sideMenuActionCreators.handleClose, (s, p) => {
       return Object.assign({}, s, { open: false });
     });
-interface Event {
-  handleOpen: void;
-  handleClose: void;
-}
 const factory = actionCreatorFactory();
-export const sideMenuActionCreators: ActionCreators<Event> = {
+export const sideMenuActionCreators = {
   handleOpen: factory<void>('sideMenuActionCreators.handleOpen'),
   handleClose: factory<void>('sideMenuActionCreators.handleClose'),
 };

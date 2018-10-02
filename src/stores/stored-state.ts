@@ -25,7 +25,7 @@ export const getInitialStoredState = (): StoredState => {
       claims: {},
       workSpaces: {},
     },
-    messagesState: { messages: [] },
+    messagesState: { messageGenerators: [] },
     sideMenuState: { open: false },
   };
 };

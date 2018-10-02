@@ -23,6 +23,7 @@ import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
 import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
+import { Guid } from 'src/common/guid';
 
 const styles = createStyles({
   root: {
@@ -147,13 +148,20 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
         if (!e || e.length === 0) {
           return false;
         }
-        e.forEach(error => {
-          dispatch(
-            messagesActionCreators.showMessage({
-              message: { level: 'error', text: error },
+        dispatch(
+          messagesActionCreators.showMessages({
+            messageGenerators: e.map(error => {
+              const id = Guid.newGuid();
+              return {
+                id,
+                generator: () => ({
+                  level: 'error' as 'error',
+                  text: error + id,
+                }),
+              };
             }),
-          );
-        });
+          }),
+        );
         return true;
       };
       if (writeMessages(errors)) {

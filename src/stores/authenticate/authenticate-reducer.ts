@@ -1,7 +1,6 @@
 import { StoredState } from '../stored-state';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import actionCreatorFactory from 'typescript-fsa';
-import { ActionCreators } from '../types';
 import { SignInResult } from 'src/models/authenticate/sign-in-result';
 import { AuthenticateState } from './authenticate-state';
 
@@ -49,12 +48,8 @@ export const authenticateReducer = (storedState: StoredState) =>
       }
       return newState;
     });
-interface Event {
-  init: {};
-  signIn: { result: SignInResult };
-}
 const factory = actionCreatorFactory();
-export const authenticateActionCreators: ActionCreators<Event> = {
+export const authenticateActionCreators = {
   init: factory<{}>('authenticateActionCreators.init'),
   signIn: factory<{ result: SignInResult }>(
     'authenticateActionCreators.signIn',

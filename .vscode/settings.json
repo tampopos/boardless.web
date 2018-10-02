@@ -13,6 +13,7 @@
   "tslint.alwaysShowRuleFailuresAsWarnings": true,
   "tslint.alwaysShowStatus": true,
   "cSpell.words": [
+    "Guid",
     "Injectable",
     "Snackbar",
     "appbar",
@@ -26,7 +27,8 @@
     "mixins",
     "roboto",
     "selectable",
-    "tmpps"
+    "tmpps",
+    "yxxx"
   ],
   "cSpell.ignoreRegExpList": ["/.*ー/"],
   "editor.formatOnSave": true,

@@ -33,12 +33,13 @@ const styles = (theme: Theme) =>
     },
   });
 export interface MessageBarProps {
-  onClose?: () => void;
+  clear?: () => void;
+  close?: () => void;
   message: Message;
   anchorOrigin?: SnackbarOrigin;
 }
 export const MessageBar = decorate(styles)<MessageBarProps>(props => {
-  const { onClose, message, anchorOrigin } = props;
+  const { close, message, anchorOrigin } = props;
   const {
     root,
     content,
@@ -60,8 +61,8 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
       anchorOrigin={anchorOrigin}
       open={true}
       onClose={(event, reason) => {
-        if (reason !== 'clickaway' && onClose) {
-          onClose();
+        if (reason !== 'clickaway' && close) {
+          close();
         }
       }}
       message={<MessageField message={message} />}
@@ -71,7 +72,7 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
           color="inherit"
           disableRipple={true}
           className={contentButton}
-          onClick={onClose}
+          onClick={close}
         >
           <Close className={closeIcon} />
         </IconButton>,

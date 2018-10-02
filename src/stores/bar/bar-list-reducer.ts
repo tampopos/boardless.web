@@ -2,7 +2,6 @@ import { StoredState } from '../stored-state';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import Friend from '../../models/bar/friend';
 import actionCreatorFactory from 'typescript-fsa';
-import { ActionCreators } from '../types';
 
 export const barListReducer = (state: StoredState) =>
   reducerWithInitialState(state.barListState)
@@ -16,12 +15,8 @@ export const barListReducer = (state: StoredState) =>
         { friends: s.friends.filter(friend => friend.id !== id) },
       );
     });
-interface Event {
-  add: { friend: Friend };
-  remove: { id: number };
-}
 const factory = actionCreatorFactory();
-export const barListActionCreators: ActionCreators<Event> = {
+export const barListActionCreators = {
   add: factory<{ friend: Friend }>('barListActionCreators.add'),
   remove: factory<{ id: number }>('barListActionCreators.remove'),
 };

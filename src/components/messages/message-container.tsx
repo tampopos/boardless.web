@@ -28,13 +28,14 @@ const styles = (theme: Theme) =>
     'root-horizontal-right': { right: 0 },
   });
 export interface MessageContainerProps {
-  onClose?: (index: number) => void;
+  clear?: () => void;
+  close?: (id: string) => void;
   messages: Message[];
   anchorOrigin?: SnackbarOrigin;
 }
 export const MessageContainer = decorate(styles)<MessageContainerProps>(
   props => {
-    const { messages, onClose, anchorOrigin } = props;
+    const { clear, messages, close, anchorOrigin } = props;
     const classes = getInjectClasses(props);
     const { root } = classes;
     const classNames = [root];
@@ -49,12 +50,13 @@ export const MessageContainer = decorate(styles)<MessageContainerProps>(
           messages.map((m, i) => {
             return (
               <MessageBar
-                key={i}
+                key={m.id}
                 anchorOrigin={anchorOrigin}
                 message={m}
-                onClose={() => {
-                  if (onClose) {
-                    onClose(i);
+                clear={clear}
+                close={() => {
+                  if (close) {
+                    close(m.id);
                   }
                 }}
               />

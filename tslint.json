@@ -12,7 +12,8 @@
     "class-name": false,
     "no-var-requires": false,
     "no-empty-interface": false,
-    "no-console": false
+    "no-console": false,
+    "no-bitwise": false
   },
   "linterOptions": {
     "exclude": [
