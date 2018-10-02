@@ -13,22 +13,17 @@ interface Props {
 }
 const Inner: React.SFC<Props & Events> = props => {
   const { claim, refreshTokenAsync, children } = props;
-  const notInitialized=claim && !claim.isInitialized;
+  const notInitialized = claim && !claim.isInitialized;
   if (notInitialized) {
     refreshTokenAsync(claim);
   }
-  return (
-    <React.Fragment>{!notInitialized && children}</React.Fragment>
-  );
+  return <React.Fragment>{!notInitialized && children}</React.Fragment>;
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   dispatch(authenticateActionCreators.init({}));
   return {
     refreshTokenAsync: async state => {
-      const result = await resolve('authenticateService').refreshTokenAsync(
-        state,
-      );
-      dispatch(authenticateActionCreators.signIn({ result }));
+      await resolve('authenticateService').refreshTokenAsync(state);
     },
   };
 };

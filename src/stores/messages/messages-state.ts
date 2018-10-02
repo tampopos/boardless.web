@@ -1,17 +1,17 @@
-import { MessageGenerator } from 'src/models/common/message';
-import { Messages } from 'src/common/location/messages';
+import { MessageGeneratorArgs } from 'src/models/common/message';
+import { CultureInfo } from 'src/common/location/culture-infos';
 
 export interface MessagesState {
-  messageGenerators: MessageGenerator[];
+  messageGeneratorArgs: MessageGeneratorArgs[];
 }
 export class MessagesStateGetters implements MessagesState {
-  public messageGenerators: MessageGenerator[];
+  public messageGeneratorArgs: MessageGeneratorArgs[];
   constructor(state: MessagesState) {
     Object.assign(this, state);
   }
-  public getMessages = (messages: Messages) =>
-    this.messageGenerators.map(({ id, generator }) => ({
+  public getMessages = (cultureInfo: CultureInfo) =>
+    this.messageGeneratorArgs.map(({ id, generator }) => ({
       id,
-      ...generator(messages),
+      ...generator(cultureInfo),
     }));
 }

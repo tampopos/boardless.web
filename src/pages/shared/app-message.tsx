@@ -38,10 +38,10 @@ const mapStateToProps: StateMapper<Props> = ({
   messagesState,
   authenticateState,
 }) => {
-  const { messages } = new AuthenticateStateGetters(authenticateState);
+  const { cultureInfo } = new AuthenticateStateGetters(authenticateState);
   const { getMessages } = new MessagesStateGetters(messagesState);
   return {
-    messages: getMessages(messages),
+    messages: getMessages(cultureInfo),
   };
 };
 export const AppMessages = connect(

@@ -2,7 +2,7 @@ import { StoredState } from './stored-state';
 import { combineReducers, createStore, compose } from 'redux';
 import { barFormReducer } from './bar/bar-form-reducer';
 import { barListReducer } from './bar/bar-list-reducer';
-import { StoreProviderProps } from 'src/components/stores/store-provider';
+import { StoreProviderProps } from 'src/pages/shared/store-provider';
 import { authenticateReducer } from './authenticate/authenticate-reducer';
 import { messagesReducer } from './messages/messages-reducer';
 import { sideMenuReducer } from './side-menu/side-menu-reducer';

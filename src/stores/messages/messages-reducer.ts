@@ -1,4 +1,4 @@
-import { MessageGenerator } from 'src/models/common/message';
+import { MessageGeneratorArgs } from 'src/models/common/message';
 import { StoredState } from '../stored-state';
 import actionCreatorFactory from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
@@ -6,33 +6,33 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 export const messagesReducer = (state: StoredState) =>
   reducerWithInitialState(state.messagesState)
     .case(messagesActionCreators.clear, s => {
-      const newState = Object.assign({}, s, { messageGenerators: [] });
+      const newState = Object.assign({}, s, { messageGeneratorArgs: [] });
       return newState;
     })
     .case(messagesActionCreators.removeMessage, (s, { id }) => {
       return Object.assign({}, s, {
-        messageGenerators: s.messageGenerators.filter(x => x.id !== id),
+        messageGeneratorArgs: s.messageGeneratorArgs.filter(x => x.id !== id),
       });
     })
     .case(
       messagesActionCreators.showMessage,
-      (s, { messageGenerator, append }) => {
-        const messageGenerators = (append ? s.messageGenerators : []).concat(
-          messageGenerator,
+      (s, { messageGeneratorArgs, append }) => {
+        const array = (append ? s.messageGeneratorArgs : []).concat(
+          messageGeneratorArgs,
         );
         return Object.assign({}, s, {
-          messageGenerators,
+          messageGeneratorArgs: array,
         });
       },
     )
     .case(
       messagesActionCreators.showMessages,
-      (s, { messageGenerators, append }) => {
-        const array = (append ? s.messageGenerators : []).concat(
-          messageGenerators,
+      (s, { messageGeneratorArgs, append }) => {
+        const array = (append ? s.messageGeneratorArgs : []).concat(
+          messageGeneratorArgs,
         );
         return Object.assign({}, s, {
-          messageGenerators: array,
+          messageGeneratorArgs: array,
         });
       },
     );
@@ -44,11 +44,11 @@ export const messagesActionCreators = {
     'messagesActionCreators.removeMessage',
   ),
   showMessage: factory<{
-    messageGenerator: MessageGenerator;
+    messageGeneratorArgs: MessageGeneratorArgs;
     append?: boolean;
   }>('messagesActionCreators.showMessage'),
   showMessages: factory<{
-    messageGenerators: MessageGenerator[];
+    messageGeneratorArgs: MessageGeneratorArgs[];
     append?: boolean;
   }>('messagesActionCreators.showMessages'),
 };

@@ -4,11 +4,9 @@ import * as React from 'react';
 import { OutlinedTextBox } from 'src/components/forms-controls/text-box';
 import { connect } from 'react-redux';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
-import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { SignInModel } from 'src/models/authenticate/sign-in-model';
 import { resolve } from 'src/services/common/service-provider';
 import { Resources } from 'src/common/location/resources';
-import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 import { Form } from 'src/components/forms-controls/form';
 import { RouteComponentProps } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
@@ -23,7 +21,6 @@ import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
 import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
-import { Guid } from 'src/common/guid';
 
 const styles = createStyles({
   root: {
@@ -139,44 +136,14 @@ class Inner extends StyledComponentBase<
     );
   }
 }
-const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
+const mapDispatchToProps: DispatchMapper<Events> = () => {
   return {
     signIn: async (model, history, workSpaceId) => {
       const authenticateService = resolve('authenticateService');
-      const errors = authenticateService.validate(model);
-      const writeMessages = (e: string[]) => {
-        if (!e || e.length === 0) {
-          return false;
-        }
-        dispatch(
-          messagesActionCreators.showMessages({
-            messageGenerators: e.map(error => {
-              const id = Guid.newGuid();
-              return {
-                id,
-                generator: () => ({
-                  level: 'error' as 'error',
-                  text: error + id,
-                }),
-              };
-            }),
-          }),
-        );
-        return true;
-      };
-      if (writeMessages(errors)) {
+      if (!(await authenticateService.validate(model))) {
         return;
       }
-      const res = await authenticateService.signInAsync(model);
-      if (writeMessages(res.errors)) {
-        return;
-      }
-      dispatch(authenticateActionCreators.signIn({ result: res.result }));
-      if (workSpaceId) {
-        history.push(Url.workSpaceRoot(workSpaceId));
-        return;
-      }
-      history.push(Url.root);
+      await authenticateService.signInAsync(model, history, workSpaceId);
     },
   };
 };

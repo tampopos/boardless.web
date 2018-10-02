@@ -4,7 +4,7 @@ import { StateMapper, DispatchMapper } from '../../stores/types';
 import { Theme, createTheme } from '../../common/styles/theme';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'src/components/styles/theme-provider';
-import { StoreProvider } from 'src/components/stores/store-provider';
+import { StoreProvider } from 'src/pages/shared/store-provider';
 import { AppTop } from './app-top';
 import { AuthenticateProvider } from './authenticate-provider';
 import { getInitialStoredState } from 'src/stores/stored-state';

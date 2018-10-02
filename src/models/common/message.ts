@@ -1,16 +1,17 @@
 import { MessageLevel } from './types';
-import { Messages } from 'src/common/location/messages';
+import { CultureInfo } from 'src/common/location/culture-infos';
 export interface Message {
   id: string;
   text: string;
   level: MessageLevel;
 }
-export interface MessageGenerator {
+export type MessageGenerator = (
+  cultureInfo: CultureInfo,
+) => {
+  text: string;
+  level: MessageLevel;
+};
+export interface MessageGeneratorArgs {
   id: string;
-  generator: (
-    messages?: Messages,
-  ) => {
-    text: string;
-    level: MessageLevel;
-  };
+  generator: MessageGenerator;
 }

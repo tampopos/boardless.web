@@ -14,5 +14,6 @@ export const cultureInfos = {
     resources: new ResourcesEn(),
   },
 };
+export type CultureInfo = typeof cultureInfos.ja | typeof cultureInfos.en;
 type CultureInfos = typeof cultureInfos;
 export type Culture = keyof CultureInfos;
