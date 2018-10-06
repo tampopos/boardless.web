@@ -1,5 +1,5 @@
 {
-  "authenticate-refresh": {
+  "accounts-refresh": {
     "claim": {
       "token": "token",
       "userId": "user01",
@@ -11,7 +11,7 @@
       { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
     ]
   },
-  "authenticate-sign-in": {
+  "accounts-sign-in": {
     "errors": [],
     "result": {
       "claim": {

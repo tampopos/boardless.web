@@ -5,7 +5,7 @@ import { Message } from 'src/models/common/message';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 import { MessagesStateGetters } from 'src/stores/messages/messages-state';
-import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
+import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 
 interface Events {
   clear: () => void;
@@ -36,9 +36,9 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
 };
 const mapStateToProps: StateMapper<Props> = ({
   messagesState,
-  authenticateState,
+  accountsState,
 }) => {
-  const { cultureInfo } = new AuthenticateGetters(authenticateState);
+  const { cultureInfo } = new AccountsGetters(accountsState);
   const { getMessages } = new MessagesStateGetters(messagesState);
   return {
     messages: getMessages(cultureInfo),

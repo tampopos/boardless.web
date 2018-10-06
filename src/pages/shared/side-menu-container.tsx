@@ -6,7 +6,7 @@ import { SideMenu } from './side-menu';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
 import { connect } from 'react-redux';
-import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
+import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -88,9 +88,9 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
 };
 const mapStateToProps: StateMapper<Props> = ({
   sideMenuState,
-  authenticateState,
+  accountsState,
 }) => {
-  const { sideMenuEnabled } = new AuthenticateGetters(authenticateState);
+  const { sideMenuEnabled } = new AccountsGetters(accountsState);
   const { open } = sideMenuState;
   return {
     open,

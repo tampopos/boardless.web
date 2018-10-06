@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'src/components/styles/theme-provider';
 import { StoreProvider } from 'src/pages/shared/store-provider';
 import { AppTop } from './app-top';
-import { AuthenticateProvider } from './authenticate-provider';
+import { AuthenticateProvider } from './accounts/authenticate-provider';
 import { getInitialStoredState } from 'src/stores/stored-state';
 import { AppBody } from './app-body';
 import { ThemeGetters } from 'src/stores/theme/theme-state';

@@ -18,14 +18,14 @@ import * as React from 'react';
 import { StateMapper, DispatchMapper } from 'src/stores/types';
 import { connect } from 'react-redux';
 import { Resources } from 'src/common/location/resources';
-import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
+import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { History } from 'history';
 import { RouteComponentProps } from 'react-router';
 import { Url } from 'src/common/routing/url';
 import { withRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
-import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
+import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -155,16 +155,16 @@ class Inner extends StyledComponentBase<
   }
 }
 
-const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { resources, authenticated, sideMenuEnabled } = new AuthenticateGetters(
-    authenticateState,
+const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+  const { resources, authenticated, sideMenuEnabled } = new AccountsGetters(
+    accountsState,
   );
   return { resources, authenticated, sideMenuEnabled };
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
     signOut: (history: History) => {
-      dispatch(authenticateActionCreators.signIn({ result: {} }));
+      dispatch(accountsActionCreators.signIn({ result: {} }));
       history.push(Url.root);
     },
     handleOpenMenu: () => {

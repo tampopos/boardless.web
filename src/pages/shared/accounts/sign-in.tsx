@@ -4,7 +4,7 @@ import * as React from 'react';
 import { OutlinedTextBox } from 'src/components/forms-controls/text-box';
 import { connect } from 'react-redux';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
-import { SignInModel } from 'src/models/authenticate/sign-in-model';
+import { SignInModel } from 'src/models/accounts/sign-in-model';
 import { resolve } from 'src/services/common/service-provider';
 import { Resources } from 'src/common/location/resources';
 import { Form } from 'src/components/forms-controls/form';
@@ -13,14 +13,14 @@ import { decorate } from 'src/common/styles/styles-helper';
 import { withRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
-import { WorkSpace } from 'src/models/authenticate/work-space';
-import { Claim } from 'src/models/authenticate/claim';
-import { SideMenuContainer } from './side-menu-container';
+import { WorkSpace } from 'src/models/accounts/work-space';
+import { Claim } from 'src/models/accounts/claim';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
-import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
+import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { SideMenuContainer } from '../side-menu-container';
 
 const styles = createStyles({
   root: {
@@ -139,17 +139,17 @@ class Inner extends StyledComponentBase<
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   return {
     signIn: async (model, history, workSpaceId) => {
-      const authenticateService = resolve('authenticateService');
-      if (!(await authenticateService.validate(model))) {
+      const accountsService = resolve('accountsService');
+      if (!(await accountsService.validate(model))) {
         return;
       }
-      await authenticateService.signInAsync(model, history, workSpaceId);
+      await accountsService.signInAsync(model, history, workSpaceId);
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { workSpaces, claims } = authenticateState;
-  const { resources } = new AuthenticateGetters(authenticateState);
+const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+  const { workSpaces, claims } = accountsState;
+  const { resources } = new AccountsGetters(accountsState);
   return { workSpaces, claims, resources };
 };
 const StyledInner = decorate(styles)(Inner);

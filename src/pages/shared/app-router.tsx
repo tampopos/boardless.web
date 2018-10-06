@@ -3,9 +3,9 @@ import { Route, Switch, Redirect } from 'react-router';
 import { Url } from 'src/common/routing/url';
 import { StateMapper } from 'src/stores/types';
 import { connect } from 'react-redux';
-import { SignIn } from './sign-in';
-import { AuthenticatedRoot } from './authenticated-root';
-import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
+import { SignIn } from './accounts/sign-in';
+import { AuthenticatedRoot } from './accounts/authenticated-root';
+import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 
 interface Props {
   authenticated: boolean;
@@ -32,8 +32,8 @@ export const Inner: React.SFC<Props> = ({ authenticated }) => {
     </Switch>
   );
 };
-const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { authenticated } = new AuthenticateGetters(authenticateState);
+const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+  const { authenticated } = new AccountsGetters(accountsState);
   return { authenticated };
 };
 export const AppRouter = connect(mapStateToProps)(Inner);

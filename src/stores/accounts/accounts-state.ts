@@ -1,19 +1,19 @@
-import { Claim } from 'src/models/authenticate/claim';
-import { WorkSpace } from 'src/models/authenticate/work-space';
+import { Claim } from 'src/models/accounts/claim';
+import { WorkSpace } from 'src/models/accounts/work-space';
 import { cultureInfos } from 'src/common/location/culture-infos';
-export interface AuthenticateState {
+export interface AccountsState {
   claim?: Claim;
   claims: { [index: string]: Claim };
   workSpaces: { [index: string]: WorkSpace };
 }
 
-export const defaultAuthenticateState: AuthenticateState = {
+export const defaultAccountsState: AccountsState = {
   claims: {},
   workSpaces: {},
 };
 
-export class AuthenticateGetters {
-  constructor(private state: AuthenticateState) {}
+export class AccountsGetters {
+  constructor(private state: AccountsState) {}
   public get resources() {
     const { resources } = this.cultureInfo;
     return resources;

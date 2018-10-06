@@ -1,18 +1,18 @@
-import { SignInModel } from 'src/models/authenticate/sign-in-model';
+import { SignInModel } from 'src/models/accounts/sign-in-model';
 import { injectable } from 'inversify';
-import { IAuthenticateService } from './interfaces/authenticate-service';
+import { IAccountsService } from './interfaces/accounts-service';
 import { Url } from 'src/common/routing/url';
 import { inject } from 'src/services/common/inject';
-import { SignInResult } from 'src/models/authenticate/sign-in-result';
-import { Claim } from 'src/models/authenticate/claim';
+import { SignInResult } from 'src/models/accounts/sign-in-result';
+import { Claim } from 'src/models/accounts/claim';
 import { IFetchService } from './interfaces/fetch-service';
 import { IMessagesService } from './interfaces/messages-service';
-import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
+import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { History } from 'history';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
 
 @injectable()
-export class AuthenticateService implements IAuthenticateService {
+export class AccountsService implements IAccountsService {
   constructor(
     @inject('fetchService') private fetchService: IFetchService,
     @inject('messagesService') private messagesService: IMessagesService,
@@ -26,11 +26,11 @@ export class AuthenticateService implements IAuthenticateService {
       return;
     }
     const result = await this.fetchService.fetchAsync<SignInResult>({
-      relativeUrl: Url.authenticateRefresh,
+      relativeUrl: Url.accountsRefresh,
       methodName: 'POST',
       body: claim,
     });
-    this.dispatch(authenticateActionCreators.signIn({ result }));
+    this.dispatch(accountsActionCreators.signIn({ result }));
   };
   public validate = (model: SignInModel) => {
     const { email, password } = model;
@@ -61,7 +61,7 @@ export class AuthenticateService implements IAuthenticateService {
       result: SignInResult;
       errors: string[];
     }>({
-      relativeUrl: Url.authenticateSignIn,
+      relativeUrl: Url.accountsSignIn,
       methodName: 'POST',
       body: model,
     });
@@ -74,7 +74,7 @@ export class AuthenticateService implements IAuthenticateService {
       );
       return;
     }
-    this.dispatch(authenticateActionCreators.signIn({ result }));
+    this.dispatch(accountsActionCreators.signIn({ result }));
     if (result.claim) {
       const { name } = result.claim;
       this.messagesService.appendMessages(({ messages }) => ({

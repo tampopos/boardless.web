@@ -6,8 +6,8 @@ const middlewares = jsonServer.defaults();
 // routes.jsonの内容をここに記載
 server.use(
   jsonServer.rewriter({
-    '/authenticate/refresh': '/authenticate-refresh',
-    '/authenticate/sign-in': '/authenticate-sign-in',
+    '/accounts/refresh': '/accounts-refresh',
+    '/accounts/sign-in': '/accounts-sign-in',
   }),
 );
 

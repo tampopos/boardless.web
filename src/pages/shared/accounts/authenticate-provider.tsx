@@ -1,9 +1,9 @@
 import { DispatchMapper, StateMapper } from 'src/stores/types';
-import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
+import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { connect } from 'react-redux';
 import * as React from 'react';
 import { resolve } from 'src/services/common/service-provider';
-import { Claim } from 'src/models/authenticate/claim';
+import { Claim } from 'src/models/accounts/claim';
 
 interface Events {
   refreshTokenAsync: (claim?: Claim) => Promise<void>;
@@ -20,15 +20,15 @@ const Inner: React.SFC<Props & Events> = props => {
   return <React.Fragment>{!notInitialized && children}</React.Fragment>;
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
-  dispatch(authenticateActionCreators.init({}));
+  dispatch(accountsActionCreators.init({}));
   return {
     refreshTokenAsync: async state => {
-      await resolve('authenticateService').refreshTokenAsync(state);
+      await resolve('accountsService').refreshTokenAsync(state);
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { claim } = authenticateState;
+const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+  const { claim } = accountsState;
   return {
     claim,
   };

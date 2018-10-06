@@ -7,10 +7,10 @@ import { RouteComponentProps, Route } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
 import { withRouter } from 'src/common/routing/routing-helper';
 import { Url } from 'src/common/routing/url';
-import { WorkSpace } from 'src/models/authenticate/work-space';
-import { Claim } from 'src/models/authenticate/claim';
-import { SideMenuContainer } from './side-menu-container';
-import { Bar } from '../bar';
+import { WorkSpace } from 'src/models/accounts/work-space';
+import { Claim } from 'src/models/accounts/claim';
+import { SideMenuContainer } from '../side-menu-container';
+import { Bar } from 'src/pages/bar';
 
 const styles = createStyles({
   root: {},
@@ -48,8 +48,8 @@ const Inner: StyledSFC<
     </SideMenuContainer>
   );
 };
-const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { workSpaces, claims } = authenticateState;
+const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+  const { workSpaces, claims } = accountsState;
   return {
     workSpaces,
     claims,

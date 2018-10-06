@@ -1,8 +1,8 @@
-import { SignInModel } from 'src/models/authenticate/sign-in-model';
-import { Claim } from 'src/models/authenticate/claim';
+import { SignInModel } from 'src/models/accounts/sign-in-model';
+import { Claim } from 'src/models/accounts/claim';
 import { History } from 'history';
 
-export interface IAuthenticateService {
+export interface IAccountsService {
   refreshTokenAsync: (claim?: Claim) => Promise<void>;
   validate: (model: SignInModel) => boolean;
   signInAsync: (

@@ -1,4 +1,4 @@
-import { IAuthenticateService } from 'src/services/interfaces/authenticate-service';
+import { IAccountsService } from 'src/services/interfaces/accounts-service';
 import { IFetchService } from '../interfaces/fetch-service';
 import { Config } from 'src/models/common/config';
 import { IGuidProvider } from '../interfaces/guid-provider';
@@ -9,7 +9,7 @@ import { IValidateService } from '../interfaces/validate-service';
 export interface Services {
   config: Config;
   fetchService: IFetchService;
-  authenticateService: IAuthenticateService;
+  accountsService: IAccountsService;
   dispatchProvider: IDispatchProvider;
   guidProvider: IGuidProvider;
   messagesService: IMessagesService;

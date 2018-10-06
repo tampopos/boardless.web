@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { Services, ServiceKeys } from './services';
 import { FetchService } from '../fetch-service';
-import { AuthenticateService } from '../authenticate-service';
+import { AccountsService } from '../accounts-service';
 import { config } from 'src/common/config';
 import { GuidProvider } from '../guid-provider';
 import { MessagesService } from '../messages-service';
@@ -23,8 +23,8 @@ register('fetchService')
 register('guidProvider')
   .to(GuidProvider)
   .inSingletonScope();
-register('authenticateService')
-  .to(AuthenticateService)
+register('accountsService')
+  .to(AccountsService)
   .inSingletonScope();
 register('messagesService')
   .to(MessagesService)

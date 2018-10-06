@@ -1,12 +1,12 @@
 import { StoredState } from '../stored-state';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import actionCreatorFactory from 'typescript-fsa';
-import { SignInResult } from 'src/models/authenticate/sign-in-result';
-import { AuthenticateState } from './authenticate-state';
+import { SignInResult } from 'src/models/accounts/sign-in-result';
+import { AccountsState } from './accounts-state';
 
-export const authenticateReducer = (storedState: StoredState) =>
-  reducerWithInitialState(storedState.authenticateState)
-    .case(authenticateActionCreators.init, s => {
+export const accountsReducer = (storedState: StoredState) =>
+  reducerWithInitialState(storedState.accountsState)
+    .case(accountsActionCreators.init, s => {
       const newState = Object.assign({}, s);
       if (newState.claim) {
         newState.claim.isInitialized = false;
@@ -16,9 +16,9 @@ export const authenticateReducer = (storedState: StoredState) =>
       });
       return newState;
     })
-    .case(authenticateActionCreators.signIn, (s, { result }) => {
+    .case(accountsActionCreators.signIn, (s, { result }) => {
       const { claim, workSpaces } = result;
-      const newState: AuthenticateState = {
+      const newState: AccountsState = {
         claims: {},
         workSpaces: {},
       };
@@ -49,9 +49,7 @@ export const authenticateReducer = (storedState: StoredState) =>
       return newState;
     });
 const factory = actionCreatorFactory();
-export const authenticateActionCreators = {
-  init: factory<{}>('authenticateActionCreators.init'),
-  signIn: factory<{ result: SignInResult }>(
-    'authenticateActionCreators.signIn',
-  ),
+export const accountsActionCreators = {
+  init: factory<{}>('accountsActionCreators.init'),
+  signIn: factory<{ result: SignInResult }>('accountsActionCreators.signIn'),
 };
