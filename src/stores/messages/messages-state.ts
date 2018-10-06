@@ -4,6 +4,7 @@ import { CultureInfo } from 'src/common/location/culture-infos';
 export interface MessagesState {
   messageGeneratorArgs: MessageGeneratorArgs[];
 }
+export const defaultMessagesState: MessagesState = { messageGeneratorArgs: [] };
 export class MessagesStateGetters implements MessagesState {
   public messageGeneratorArgs: MessageGeneratorArgs[];
   constructor(state: MessagesState) {

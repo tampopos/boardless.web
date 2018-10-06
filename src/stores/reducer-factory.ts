@@ -7,6 +7,7 @@ import { authenticateReducer } from './authenticate/authenticate-reducer';
 import { messagesReducer } from './messages/messages-reducer';
 import { sideMenuReducer } from './side-menu/side-menu-reducer';
 import { createLocalstorageSetting } from './localstorage';
+import { themeReducer } from './theme/theme-reducer';
 
 const createReducers = (initialState: StoredState) =>
   combineReducers<StoredState>({
@@ -15,6 +16,7 @@ const createReducers = (initialState: StoredState) =>
     authenticateState: authenticateReducer(initialState),
     messagesState: messagesReducer(initialState),
     sideMenuState: sideMenuReducer(initialState),
+    themeState: themeReducer(initialState),
   });
 const enhancer = compose(
   createLocalstorageSetting('barListState', 'authenticateState'),

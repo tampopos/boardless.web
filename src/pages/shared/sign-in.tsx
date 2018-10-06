@@ -20,7 +20,7 @@ import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
-import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
+import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
 
 const styles = createStyles({
   root: {
@@ -148,9 +148,8 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
   };
 };
 const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { workSpaces, claims, resources } = new AuthenticateStateGetters(
-    authenticateState,
-  );
+  const { workSpaces, claims } = authenticateState;
+  const { resources } = new AuthenticateGetters(authenticateState);
   return { workSpaces, claims, resources };
 };
 const StyledInner = decorate(styles)(Inner);

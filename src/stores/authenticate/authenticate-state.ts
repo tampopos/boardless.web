@@ -1,19 +1,19 @@
 import { Claim } from 'src/models/authenticate/claim';
 import { WorkSpace } from 'src/models/authenticate/work-space';
 import { cultureInfos } from 'src/common/location/culture-infos';
-
 export interface AuthenticateState {
   claim?: Claim;
   claims: { [index: string]: Claim };
   workSpaces: { [index: string]: WorkSpace };
 }
-export class AuthenticateStateGetters implements AuthenticateState {
-  public claim?: Claim;
-  public claims: { [index: string]: Claim };
-  public workSpaces: { [index: string]: WorkSpace };
-  constructor(state: AuthenticateState) {
-    Object.assign(this, state);
-  }
+
+export const defaultAuthenticateState: AuthenticateState = {
+  claims: {},
+  workSpaces: {},
+};
+
+export class AuthenticateGetters {
+  constructor(private state: AuthenticateState) {}
   public get resources() {
     const { resources } = this.cultureInfo;
     return resources;
@@ -30,9 +30,15 @@ export class AuthenticateStateGetters implements AuthenticateState {
     return cultureInfos[this.cultureName];
   }
   public get cultureName() {
-    return this.claim && this.claim.cultureName ? this.claim.cultureName : 'ja';
+    const { claim } = this.state;
+    return claim && claim.cultureName ? claim.cultureName : 'ja';
   }
   public get authenticated() {
-    return Boolean(this.claim && this.claim.isInitialized);
+    const { claim } = this.state;
+    return Boolean(claim && claim.isInitialized);
+  }
+  public get sideMenuEnabled() {
+    const { workSpaces } = this.state;
+    return Boolean(workSpaces && Object.keys(workSpaces).length > 0);
   }
 }

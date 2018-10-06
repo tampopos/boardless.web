@@ -6,6 +6,7 @@ import { SideMenu } from './side-menu';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
 import { connect } from 'react-redux';
+import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -28,44 +29,49 @@ const styles = (theme: Theme) =>
   });
 interface Props {
   open: boolean;
+  enabled: boolean;
 }
 interface Events {
   handleClose: () => void;
 }
 export const Inner = decorate(styles)<Props & Events>(props => {
-  const { children, theme, open, handleClose } = props;
+  const { children, theme, open, handleClose, enabled } = props;
   const classes = getInjectClasses(props);
   const { drawerPaper, content, toolbarDummy, container } = classes;
   const { direction } = Object.assign({}, theme);
   return (
     <React.Fragment>
-      <Hidden mdUp={true}>
-        <Drawer
-          variant="temporary"
-          anchor={direction === 'rtl' ? 'right' : 'left'}
-          open={open}
-          onClose={handleClose}
-          classes={{
-            paper: drawerPaper,
-          }}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-        >
-          <SideMenu />
-        </Drawer>
-      </Hidden>
-      <Hidden smDown={true} implementation="css">
-        <Drawer
-          variant="permanent"
-          open={true}
-          classes={{
-            paper: drawerPaper,
-          }}
-        >
-          <SideMenu />
-        </Drawer>
-      </Hidden>
+      {enabled && (
+        <React.Fragment>
+          <Hidden mdUp={true}>
+            <Drawer
+              variant="temporary"
+              anchor={direction === 'rtl' ? 'right' : 'left'}
+              open={open}
+              onClose={handleClose}
+              classes={{
+                paper: drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              <SideMenu />
+            </Drawer>
+          </Hidden>
+          <Hidden smDown={true} implementation="css">
+            <Drawer
+              variant="permanent"
+              open={true}
+              classes={{
+                paper: drawerPaper,
+              }}
+            >
+              <SideMenu />
+            </Drawer>
+          </Hidden>
+        </React.Fragment>
+      )}
       <div className={content}>
         <div className={toolbarDummy} />
         <div className={container}>{children}</div>
@@ -80,10 +86,15 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({ sideMenuState }) => {
+const mapStateToProps: StateMapper<Props> = ({
+  sideMenuState,
+  authenticateState,
+}) => {
+  const { sideMenuEnabled } = new AuthenticateGetters(authenticateState);
   const { open } = sideMenuState;
   return {
     open,
+    enabled: sideMenuEnabled,
   };
 };
 export const SideMenuContainer = connect(

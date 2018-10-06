@@ -5,7 +5,7 @@ import { StateMapper } from 'src/stores/types';
 import { connect } from 'react-redux';
 import { SignIn } from './sign-in';
 import { AuthenticatedRoot } from './authenticated-root';
-import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
+import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
 
 interface Props {
   authenticated: boolean;
@@ -33,7 +33,7 @@ export const Inner: React.SFC<Props> = ({ authenticated }) => {
   );
 };
 const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { authenticated } = new AuthenticateStateGetters(authenticateState);
+  const { authenticated } = new AuthenticateGetters(authenticateState);
   return { authenticated };
 };
 export const AppRouter = connect(mapStateToProps)(Inner);

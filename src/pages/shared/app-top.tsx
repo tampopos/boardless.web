@@ -7,7 +7,11 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import {
+  decorate,
+  getInjectClasses,
+  appendClassName,
+} from 'src/common/styles/styles-helper';
 import { StyledComponentBase } from 'src/common/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
@@ -21,12 +25,14 @@ import { Url } from 'src/common/routing/url';
 import { withRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
-import { AuthenticateStateGetters } from 'src/stores/authenticate/authenticate-state';
+import { AuthenticateGetters } from 'src/stores/authenticate/authenticate-state';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       position: 'absolute',
+    },
+    sideMenuEnabledRoot: {
       [theme.breakpoints.up('md')]: {
         marginLeft: theme.shared.drawer.width,
         width: `calc(100% - ${theme.shared.drawer.width}px)`,
@@ -49,6 +55,7 @@ interface State {
 interface Props {
   resources: Resources;
   authenticated: boolean;
+  sideMenuEnabled: boolean;
 }
 interface Events {
   signOut: (history: History) => void;
@@ -80,21 +87,32 @@ class Inner extends StyledComponentBase<
       signOut,
       history,
       handleOpenMenu,
+      sideMenuEnabled,
     } = this.props;
     const { anchorEl } = this.state;
-    const { root, menuButton, grow } = getInjectClasses(this.props);
+    const { root, menuButton, grow, sideMenuEnabledRoot } = getInjectClasses(
+      this.props,
+    );
     const open = Boolean(anchorEl);
     return (
-      <AppBar position="static" className={root}>
+      <AppBar
+        position="static"
+        className={appendClassName(
+          root,
+          sideMenuEnabled ? sideMenuEnabledRoot : '',
+        )}
+      >
         <Toolbar>
-          <IconButton
-            className={menuButton}
-            color="inherit"
-            aria-label="Menu"
-            onClick={handleOpenMenu}
-          >
-            <MenuIcon />
-          </IconButton>
+          {sideMenuEnabled && (
+            <IconButton
+              className={menuButton}
+              color="inherit"
+              aria-label="Menu"
+              onClick={handleOpenMenu}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography variant="title" color="inherit" className={grow}>
             Boardless
           </Typography>
@@ -138,10 +156,10 @@ class Inner extends StyledComponentBase<
 }
 
 const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
-  const { resources, authenticated } = new AuthenticateStateGetters(
+  const { resources, authenticated, sideMenuEnabled } = new AuthenticateGetters(
     authenticateState,
   );
-  return { resources, authenticated };
+  return { resources, authenticated, sideMenuEnabled };
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
