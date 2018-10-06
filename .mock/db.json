@@ -3,6 +3,7 @@
     "claim": {
       "token": "token",
       "userId": "user01",
+      "name": "User 01",
       "email": "user01@example.com"
     },
     "workSpaces": [
@@ -16,6 +17,7 @@
       "claim": {
         "token": "token",
         "userId": "user01",
+        "name": "User 01",
         "email": "user01@example.com"
       },
       "workSpaces": [

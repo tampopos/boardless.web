@@ -1,4 +1,5 @@
 export class Messages {
+  public signIn = (name: string) => `${name}がサインインしました。`;
   public requiredError = (name: string) => `${name}が入力されていません。`;
   public emailFormatError = 'Eメールが不正な形式で入力されています。';
   public passwordMinLengthError = 'パスワードは8文字以上入力してください。';

@@ -75,6 +75,14 @@ export class AuthenticateService implements IAuthenticateService {
       return;
     }
     this.dispatch(authenticateActionCreators.signIn({ result }));
+    if (result.claim) {
+      const { name } = result.claim;
+      this.messagesService.appendMessages(({ messages }) => ({
+        level: 'info' as 'info',
+        text: messages.signIn(name),
+        showDuration: 5000,
+      }));
+    }
     if (workSpaceId) {
       history.push(Url.workSpaceRoot(workSpaceId));
       return;

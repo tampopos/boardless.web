@@ -6,6 +6,7 @@ import { Theme } from 'src/common/styles/theme';
 import { Message } from 'src/models/common/message';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { Close } from '@material-ui/icons';
+import { delay } from 'src/common/async-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,6 +41,7 @@ export interface MessageBarProps {
 }
 export const MessageBar = decorate(styles)<MessageBarProps>(props => {
   const { close, message, anchorOrigin } = props;
+  const { showDuration } = message;
   const {
     root,
     content,
@@ -48,6 +50,9 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
     contentButton,
     closeIcon,
   } = getInjectClasses(props);
+  if (showDuration && close) {
+    delay(showDuration).then(close);
+  }
   return (
     <Snackbar
       className={root}
