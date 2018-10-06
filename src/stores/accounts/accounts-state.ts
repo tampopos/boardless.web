@@ -1,15 +1,15 @@
 import { Claim } from 'src/models/accounts/claim';
-import { WorkSpace } from 'src/models/accounts/work-space';
+import { Workspace } from 'src/models/accounts/workspace';
 import { cultureInfos } from 'src/common/location/culture-infos';
 export interface AccountsState {
   claim?: Claim;
   claims: { [index: string]: Claim };
-  workSpaces: { [index: string]: WorkSpace };
+  workspaces: { [index: string]: Workspace };
 }
 
 export const defaultAccountsState: AccountsState = {
   claims: {},
-  workSpaces: {},
+  workspaces: {},
 };
 
 export class AccountsGetters {
@@ -38,7 +38,7 @@ export class AccountsGetters {
     return Boolean(claim && claim.isInitialized);
   }
   public get sideMenuEnabled() {
-    const { workSpaces } = this.state;
-    return Boolean(workSpaces && Object.keys(workSpaces).length > 0);
+    const { workspaces } = this.state;
+    return Boolean(workspaces && Object.keys(workspaces).length > 0);
   }
 }

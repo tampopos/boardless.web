@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Hidden, Drawer, createStyles } from '@material-ui/core';
 import { Theme } from 'src/common/styles/theme';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
-import { SideMenu } from './side-menu';
+import { SideMenuContent } from './side-menu-content';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
 import { connect } from 'react-redux';
@@ -56,7 +56,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
                 keepMounted: true, // Better open performance on mobile.
               }}
             >
-              <SideMenu />
+              <SideMenuContent />
             </Drawer>
           </Hidden>
           <Hidden smDown={true} implementation="css">
@@ -67,7 +67,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
                 paper: drawerPaper,
               }}
             >
-              <SideMenu />
+              <SideMenuContent />
             </Drawer>
           </Hidden>
         </React.Fragment>

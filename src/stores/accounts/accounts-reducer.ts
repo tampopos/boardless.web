@@ -8,41 +8,42 @@ export const accountsReducer = (storedState: StoredState) =>
   reducerWithInitialState(storedState.accountsState)
     .case(accountsActionCreators.init, s => {
       const newState = Object.assign({}, s);
-      if (newState.claim) {
-        newState.claim.isInitialized = false;
-      }
-      Object.keys(newState.claims).forEach(key => {
-        newState.claims[key].isInitialized = false;
-      });
+      // if (newState.claim) {
+      //   newState.claim.isInitialized = false;
+      // }
+      // Object.keys(newState.claims).forEach(key => {
+      //   newState.claims[key].isInitialized = false;
+      // });
       return newState;
     })
     .case(accountsActionCreators.signIn, (s, { result }) => {
-      const { claim, workSpaces } = result;
+      const { claim, workspaces } = result;
       const newState: AccountsState = {
         claims: {},
-        workSpaces: {},
+        workspaces: {},
       };
       if (s.claim) {
         const oldUserId = s.claim.userId;
         const oldClaims = Object.entries(s.claims).filter(
           x => x[1].userId !== oldUserId,
         );
-        const oldWorkSpaces = Object.entries(s.workSpaces).filter(
+        const oldWorkspaces = Object.entries(s.workspaces).filter(
           x => x[1].userId !== oldUserId,
         );
         oldClaims.forEach(x => {
           newState.claims[x[0]] = x[1];
         });
-        oldWorkSpaces.forEach(x => {
-          newState.workSpaces[x[0]] = x[1];
+        oldWorkspaces.forEach(x => {
+          newState.workspaces[x[0]] = x[1];
         });
       }
       if (claim) {
-        claim.isInitialized = true;
-        newState.claim = claim;
-        if (workSpaces) {
-          workSpaces.forEach(workSpace => {
-            newState.workSpaces[workSpace.id] = workSpace;
+        const newClaim = Object.assign({}, claim, { isInitialized: true });
+        newState.claim = newClaim;
+        newState.claims[claim.userId] = claim;
+        if (workspaces) {
+          workspaces.forEach(workspace => {
+            newState.workspaces[workspace.id] = workspace;
           });
         }
       }

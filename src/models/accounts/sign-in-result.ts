@@ -1,7 +1,7 @@
 import { Claim } from './claim';
-import { WorkSpace } from './work-space';
+import { Workspace } from './workspace';
 
 export interface SignInResult {
   claim?: Claim;
-  workSpaces?: WorkSpace[];
+  workspaces?: Workspace[];
 }

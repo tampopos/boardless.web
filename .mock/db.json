@@ -6,7 +6,7 @@
       "name": "User 01",
       "email": "user01@example.com"
     },
-    "workSpaces": [
+    "workspaces": [
       { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
       { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
     ]
@@ -20,7 +20,7 @@
         "name": "User 01",
         "email": "user01@example.com"
       },
-      "workSpaces": [
+      "workspaces": [
         { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
         { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
       ]

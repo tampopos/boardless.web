@@ -8,6 +8,6 @@ export interface IAccountsService {
   signInAsync: (
     model: SignInModel,
     history: History,
-    workSpaceId?: string,
+    workspaceId?: string,
   ) => Promise<void>;
 }

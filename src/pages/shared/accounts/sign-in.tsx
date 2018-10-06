@@ -13,14 +13,14 @@ import { decorate } from 'src/common/styles/styles-helper';
 import { withRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
-import { WorkSpace } from 'src/models/accounts/work-space';
+import { Workspace } from 'src/models/accounts/workspace';
 import { Claim } from 'src/models/accounts/claim';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
-import { SideMenuContainer } from '../side-menu-container';
+import { SideMenuContainer } from '../side-menu/side-menu-container';
 
 const styles = createStyles({
   root: {
@@ -44,18 +44,18 @@ const styles = createStyles({
 });
 interface Props {
   resources: Resources;
-  workSpaces: { [index: string]: WorkSpace };
+  workspaces: { [index: string]: Workspace };
   claims: { [index: string]: Claim };
 }
 interface Events {
-  signIn: (state: SignInModel, history: History, workSpaceId?: string) => void;
+  signIn: (state: SignInModel, history: History, workspaceId?: string) => void;
 }
 interface State {
   model: SignInModel;
 }
 class Inner extends StyledComponentBase<
   typeof styles,
-  Props & Events & RouteComponentProps<{ workSpaceId: string }>,
+  Props & Events & RouteComponentProps<{ workspaceId: string }>,
   State
 > {
   constructor(props: any) {
@@ -65,19 +65,17 @@ class Inner extends StyledComponentBase<
     };
   }
   private getDefaultEmail = () => {
-    const { match, workSpaces, claims, history } = this.props;
-    const { workSpaceId } = match.params;
-    if (!workSpaceId) {
+    const { match, workspaces, claims } = this.props;
+    const { workspaceId } = match.params;
+    if (!workspaceId) {
       return '';
     }
-    const workSpace = workSpaces[workSpaceId];
-    if (!workSpace) {
-      history.push(Url.root);
+    const workspace = workspaces[workspaceId];
+    if (!workspace) {
       return '';
     }
-    const claim = claims[workSpace.userId];
+    const claim = claims[workspace.userId];
     if (!claim) {
-      history.push(Url.root);
       return '';
     }
     return claim.email;
@@ -92,8 +90,22 @@ class Inner extends StyledComponentBase<
     });
   };
   public render() {
-    const { signIn, resources, history, match, classes } = this.props;
-    const { workSpaceId } = match.params;
+    const {
+      signIn,
+      resources,
+      history,
+      match,
+      classes,
+      workspaces,
+      claims,
+      location,
+    } = this.props;
+    const { workspaceId } = match.params;
+    const workspace = workspaces[workspaceId];
+    const existsClaim = workspace && claims[workspace.id];
+    if (!existsClaim && location.pathname !== Url.root) {
+      history.push(Url.root);
+    }
     const { email, password } = this.state.model;
     const { form, row, container, root } = classes;
     return (
@@ -101,7 +113,7 @@ class Inner extends StyledComponentBase<
         <div className={root}>
           <Typography variant="display1">{resources.SignIn}</Typography>
           <Form
-            onSubmit={() => signIn(this.state.model, history, workSpaceId)}
+            onSubmit={() => signIn(this.state.model, history, workspaceId)}
             className={form}
           >
             <Container className={container}>
@@ -138,19 +150,19 @@ class Inner extends StyledComponentBase<
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   return {
-    signIn: async (model, history, workSpaceId) => {
+    signIn: async (model, history, workspaceId) => {
       const accountsService = resolve('accountsService');
       if (!(await accountsService.validate(model))) {
         return;
       }
-      await accountsService.signInAsync(model, history, workSpaceId);
+      await accountsService.signInAsync(model, history, workspaceId);
     },
   };
 };
 const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
-  const { workSpaces, claims } = accountsState;
+  const { workspaces, claims } = accountsState;
   const { resources } = new AccountsGetters(accountsState);
-  return { workSpaces, claims, resources };
+  return { workspaces, claims, resources };
 };
 const StyledInner = decorate(styles)(Inner);
 const RoutingInner = withRouter(StyledInner);

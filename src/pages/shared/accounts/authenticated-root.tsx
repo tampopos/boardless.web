@@ -7,51 +7,51 @@ import { RouteComponentProps, Route } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
 import { withRouter } from 'src/common/routing/routing-helper';
 import { Url } from 'src/common/routing/url';
-import { WorkSpace } from 'src/models/accounts/work-space';
+import { Workspace } from 'src/models/accounts/workspace';
 import { Claim } from 'src/models/accounts/claim';
-import { SideMenuContainer } from '../side-menu-container';
+import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { Bar } from 'src/pages/bar';
 
 const styles = createStyles({
   root: {},
 });
 interface Props {
-  workSpaces: { [index: string]: WorkSpace };
+  workspaces: { [index: string]: Workspace };
   claims: { [index: string]: Claim };
 }
 const Inner: StyledSFC<
   typeof styles,
-  Props & RouteComponentProps<{ workSpaceId: string }>
+  Props & RouteComponentProps<{ workspaceId: string }>
 > = props => {
-  const { history, match, workSpaces, claims } = props;
-  const { workSpaceId } = match.params;
-  const checkWorkSpace = () => {
-    if (!workSpaceId) {
+  const { history, match, workspaces, claims } = props;
+  const { workspaceId } = match.params;
+  const checkWorkspace = () => {
+    if (!workspaceId) {
       return;
     }
-    const workSpace = workSpaces[workSpaceId];
-    if (!workSpace) {
+    const workspace = workspaces[workspaceId];
+    if (!workspace) {
       history.push(Url.root);
       return;
     }
-    const claim = claims[workSpace.userId];
+    const claim = claims[workspace.userId];
     if (!claim) {
       history.push(Url.root);
       return;
     }
   };
-  checkWorkSpace();
+  checkWorkspace();
   return (
     <SideMenuContainer>
-      <Route exact={true} path={Url.workSpaceRootTemplate} component={Bar} />
+      <Route exact={true} path={Url.workspaceRootTemplate} component={Bar} />
       <Route exact={true} path={Url.root} component={Bar} />
     </SideMenuContainer>
   );
 };
 const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
-  const { workSpaces, claims } = accountsState;
+  const { workspaces, claims } = accountsState;
   return {
-    workSpaces,
+    workspaces,
     claims,
   };
 };
