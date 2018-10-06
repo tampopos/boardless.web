@@ -29,6 +29,10 @@ const styles = createStyles({
       paddingBottom: 0,
     },
   },
+  cell: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
 });
 interface Events {
   add: (friend: Friend, friends: Friend[]) => Promise<any>;
@@ -117,7 +121,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
       color,
       classes,
     } = props;
-    const { row } = classes;
+    const { row, cell } = classes;
     return (
       <Container>
         <BarForm themeColor={color}>
@@ -125,7 +129,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
             <Typography variant="headline">{title}</Typography>
           </Row>
           <Row className={row}>
-            <Cell xs={6}>
+            <Cell xs={6} className={cell}>
               <TextBox
                 themeColor={color}
                 maxLength={4}
@@ -135,7 +139,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
                 onChange={e => changeFriend('name', e.target.value)}
               />
             </Cell>
-            <Cell xs={6}>
+            <Cell xs={6} className={cell}>
               {isAddMode ? (
                 <Select
                   label="しょくぎょう"
@@ -155,7 +159,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
             </Cell>
           </Row>
           <Row className={row}>
-            <Cell xs={6}>
+            <Cell xs={6} className={cell}>
               <RadioGroup
                 label="せいべつ"
                 readOnly={!isAddMode}
@@ -169,7 +173,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
               />
             </Cell>
             {!isAddMode && (
-              <Cell xs={6}>
+              <Cell xs={6} className={cell}>
                 <TextBox
                   value={friend.personality}
                   InputProps={{ readOnly: !isAddMode }}
@@ -207,7 +211,7 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
           )}
           <Row className={row}>
             <Cell xs={10} />
-            <Cell xs={2}>
+            <Cell xs={2} className={cell}>
               <OutlinedButton
                 themeColor={color}
                 disabled={!isValid}

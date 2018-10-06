@@ -9,7 +9,6 @@ import { createPropagationProps } from 'src/common/component-helper';
 const styles = createStyles({
   root: {
     width: '100%',
-    marginRight: 10,
   },
 });
 export interface ButtonProps {

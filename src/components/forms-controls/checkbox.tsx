@@ -11,12 +11,8 @@ import { ThemeColorScope } from '../styles/theme-color-scope';
 import * as React from 'react';
 
 const styles = createStyles({
-  root: {
-    marginRight: 10,
-  },
-  checkbox: {
-    marginLeft: 10,
-  },
+  root: {},
+  checkbox: {},
 });
 interface CheckboxProps {
   themeColor?: keyof Colors;
