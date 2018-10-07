@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { MessageContainer } from '../../components/messages/message-container';
-import { connect } from 'react-redux';
 import { Message } from 'src/models/common/message';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 import { MessagesStateGetters } from 'src/stores/messages/messages-state';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 interface Events {
   clear: () => void;
@@ -44,7 +44,7 @@ const mapStateToProps: StateMapper<Props> = ({
     messages: getMessages(cultureInfo),
   };
 };
-export const AppMessages = connect(
+export const AppMessages = withConnectedRouter(
   mapStateToProps,
   mapDispatchToProps,
 )(Inner);

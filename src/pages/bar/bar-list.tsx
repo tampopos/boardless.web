@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DispatchMapper, StateMapper } from '../../stores/types';
-import { connect } from 'react-redux';
 import Friend, { createEmptyFriend } from '../../models/bar/friend';
 import { getSexName } from '../../services/friend-service';
 import { Table } from '../../components/tables/table';
@@ -13,6 +12,7 @@ import { barFormActionCreators } from '../../stores/bar/bar-form-reducer';
 import { Container } from 'src/components/layout/container';
 import { Typography, createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 const styles = createStyles({
   root: {},
@@ -66,7 +66,9 @@ const decoratedComponent = decorate(styles)<BarListProps & Events>(props => {
       </Row>
       <Row className={row}>
         <Cell xs={2}>
-          <OutlinedButton onClick={() => toAddMode()}>なかまをくわえる</OutlinedButton>
+          <OutlinedButton onClick={() => toAddMode()}>
+            なかまをくわえる
+          </OutlinedButton>
         </Cell>
       </Row>
       <Row className={row}>
@@ -100,7 +102,6 @@ const decoratedComponent = decorate(styles)<BarListProps & Events>(props => {
   );
 });
 
-export const BarList = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(decoratedComponent);
+export const BarList = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+  decoratedComponent,
+);

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import { Url } from 'src/common/routing/url';
 import { StateMapper } from 'src/stores/types';
-import { connect } from 'react-redux';
 import { SignIn } from './accounts/sign-in';
 import { AuthenticatedRoot } from './accounts/authenticated-root';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 interface Props {
   authenticated: boolean;
@@ -36,4 +36,4 @@ const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
   const { authenticated } = new AccountsGetters(accountsState);
   return { authenticated };
 };
-export const AppRouter = connect(mapStateToProps)(Inner);
+export const AppRouter = withConnectedRouter(mapStateToProps)(Inner);

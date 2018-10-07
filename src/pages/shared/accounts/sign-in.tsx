@@ -2,7 +2,6 @@ import { StyledComponentBase } from 'src/common/styles/types';
 import { createStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { OutlinedTextBox } from 'src/components/forms-controls/text-box';
-import { connect } from 'react-redux';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { SignInModel } from 'src/models/accounts/sign-in-model';
 import { resolve } from 'src/services/common/service-provider';
@@ -10,7 +9,7 @@ import { Resources } from 'src/common/location/resources';
 import { Form } from 'src/components/forms-controls/form';
 import { RouteComponentProps } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
-import { withRouter } from 'src/common/routing/routing-helper';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
 import { Workspace } from 'src/models/accounts/workspace';
@@ -165,8 +164,6 @@ const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
   return { workspaces, claims, resources };
 };
 const StyledInner = decorate(styles)(Inner);
-const RoutingInner = withRouter(StyledInner);
-export const SignIn = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RoutingInner);
+export const SignIn = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+  StyledInner,
+);

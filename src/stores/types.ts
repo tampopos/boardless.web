@@ -3,8 +3,7 @@ import { ActionCreator } from 'typescript-fsa';
 import { StoredState } from './stored-state';
 import { RouteComponentProps } from 'react-router';
 
-export type StateMapper<TState> = ((state: StoredState) => Partial<TState>);
-export type StateMapperWithRouter<TState, TParam = {}> = ((
+export type StateMapper<TState, TParam = {}> = ((
   state: StoredState,
   props: RouteComponentProps<TParam>,
 ) => Partial<TState>);

@@ -16,13 +16,12 @@ import { StyledComponentBase } from 'src/common/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
 import { StateMapper, DispatchMapper } from 'src/stores/types';
-import { connect } from 'react-redux';
 import { Resources } from 'src/common/location/resources';
 import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { History } from 'history';
 import { RouteComponentProps } from 'react-router';
 import { Url } from 'src/common/routing/url';
-import { withRouter } from 'src/common/routing/routing-helper';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
@@ -173,8 +172,6 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   };
 };
 const StyledInner = decorate(styles)(Inner);
-const RoutingInner = withRouter(StyledInner);
-export const AppTop = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RoutingInner);
+export const AppTop = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+  StyledInner,
+);

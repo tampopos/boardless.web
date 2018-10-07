@@ -1,9 +1,9 @@
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
-import { connect } from 'react-redux';
 import * as React from 'react';
 import { resolve } from 'src/services/common/service-provider';
 import { Claim } from 'src/models/accounts/claim';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 interface Events {
   refreshTokenAsync: (claim?: Claim) => Promise<void>;
@@ -33,7 +33,7 @@ const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
     claim,
   };
 };
-export const AuthenticateProvider = connect(
+export const AuthenticateProvider = withConnectedRouter(
   mapStateToProps,
   mapDispatchToProps,
 )(Inner);

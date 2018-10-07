@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { createStyles, AppBar } from '@material-ui/core';
 import { StyledSFC } from 'src/common/styles/types';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
+import { RouteComponentProps } from 'react-router';
+import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { decorate, appendClassName } from 'src/common/styles/styles-helper';
-import { connect } from 'react-redux';
 import { Workspace } from 'src/models/accounts/workspace';
 import { WorkspaceIcon } from './workspace-icon';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
 import { delay } from 'src/common/async-helper';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 const styles = createStyles({
   root: {},
@@ -26,7 +26,7 @@ interface Props {
 interface RouteParams {
   workspaceId: string;
 }
-const mapStateToProps: StateMapperWithRouter<Props, RouteParams> = (
+const mapStateToProps: StateMapper<Props, RouteParams> = (
   { accountsState },
   { match, history, location },
 ) => {
@@ -45,7 +45,7 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
       const url = Url.workspaceRoot(id);
       history.push(url);
     },
-    getSrc: async workspace => {
+    getSrc: async () => {
       await delay(1000);
       return 'https://material-ui.com/static/images/grid-list/breakfast.jpg';
     },
@@ -102,8 +102,7 @@ const Inner: StyledSFC<typeof styles, Props & Events & RouteComponentProps> = ({
   );
 };
 const StyledInner = decorate(styles)(Inner);
-const ConnectedInner = connect(
+export const SideMenuContent = withConnectedRouter(
   mapStateToProps,
   mapDispatchToProps,
 )(StyledInner);
-export const SideMenuContent = withRouter(ConnectedInner);

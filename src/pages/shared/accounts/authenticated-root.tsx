@@ -1,11 +1,10 @@
 import { StyledSFC } from 'src/common/styles/types';
 import { createStyles } from '@material-ui/core';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { StateMapper } from 'src/stores/types';
 import { RouteComponentProps, Route } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
-import { withRouter } from 'src/common/routing/routing-helper';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Url } from 'src/common/routing/url';
 import { Workspace } from 'src/models/accounts/workspace';
 import { Claim } from 'src/models/accounts/claim';
@@ -56,5 +55,6 @@ const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
   };
 };
 const StyledInner = decorate(styles)(Inner);
-const RoutingInner = withRouter(StyledInner);
-export const AuthenticatedRoot = connect(mapStateToProps)(RoutingInner);
+export const AuthenticatedRoot = withConnectedRouter(mapStateToProps)(
+  StyledInner,
+);

@@ -5,8 +5,8 @@ import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { SideMenuContent } from './side-menu-content';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
-import { connect } from 'react-redux';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -100,7 +100,7 @@ const mapStateToProps: StateMapper<Props> = ({
     enabled: sideMenuEnabled,
   };
 };
-export const SideMenuContainer = connect(
+export const SideMenuContainer = withConnectedRouter(
   mapStateToProps,
   mapDispatchToProps,
 )(Inner);

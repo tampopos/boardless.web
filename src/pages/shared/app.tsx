@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StateMapper, DispatchMapper } from '../../stores/types';
+import { DispatchMapper } from '../../stores/types';
 import { Theme } from '../../common/styles/theme';
 import { Router } from 'react-router-dom';
 import { ThemeProvider } from 'src/components/styles/theme-provider';
 import { StoreProvider } from 'src/pages/shared/store-provider';
 import { AppTop } from './app-top';
 import { AuthenticateProvider } from './accounts/authenticate-provider';
-import { getInitialStoredState } from 'src/stores/stored-state';
+import { getInitialStoredState, StoredState } from 'src/stores/stored-state';
 import { AppBody } from './app-body';
 import { ThemeGetters } from 'src/stores/theme/theme-state';
 import { createBrowserHistory } from 'history';
-import { Xxx } from '../bar/test';
 
 interface Props {
   theme: Theme;
@@ -22,7 +21,6 @@ const Inner: React.SFC<Props> = ({ theme }) => {
     <ThemeProvider theme={theme}>
       <Router history={history}>
         <React.Fragment>
-          <Xxx />
           <AuthenticateProvider>
             <AppTop />
             <AppBody />
@@ -35,7 +33,7 @@ const Inner: React.SFC<Props> = ({ theme }) => {
 const mapDispatchToProps: DispatchMapper<{}> = () => {
   return {};
 };
-const mapStateToProps: StateMapper<Props> = ({ themeState }) => {
+const mapStateToProps = ({ themeState }: StoredState) => {
   const { createTheme } = new ThemeGetters(themeState);
   return {
     theme: createTheme(),
