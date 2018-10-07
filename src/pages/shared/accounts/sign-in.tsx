@@ -2,12 +2,11 @@ import { StyledComponentBase } from 'src/common/styles/types';
 import { createStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { OutlinedTextBox } from 'src/components/forms-controls/text-box';
-import { DispatchMapper, StateMapper } from 'src/stores/types';
+import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { SignInModel } from 'src/models/accounts/sign-in-model';
 import { resolve } from 'src/services/common/service-provider';
 import { Resources } from 'src/common/location/resources';
 import { Form } from 'src/components/forms-controls/form';
-import { RouteComponentProps } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
@@ -45,6 +44,9 @@ interface Props {
   resources: Resources;
   workspaces: { [index: string]: Workspace };
   claims: { [index: string]: Claim };
+  workspaceId: string;
+  pathname: string;
+  history: History;
 }
 interface Events {
   signIn: (state: SignInModel, history: History, workspaceId?: string) => void;
@@ -52,11 +54,7 @@ interface Events {
 interface State {
   model: SignInModel;
 }
-class Inner extends StyledComponentBase<
-  typeof styles,
-  Props & Events & RouteComponentProps<{ workspaceId: string }>,
-  State
-> {
+class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -64,8 +62,7 @@ class Inner extends StyledComponentBase<
     };
   }
   private getDefaultEmail = () => {
-    const { match, workspaces, claims } = this.props;
-    const { workspaceId } = match.params;
+    const { workspaceId, workspaces, claims } = this.props;
     if (!workspaceId) {
       return '';
     }
@@ -93,16 +90,15 @@ class Inner extends StyledComponentBase<
       signIn,
       resources,
       history,
-      match,
+      workspaceId,
       classes,
       workspaces,
       claims,
-      location,
+      pathname,
     } = this.props;
-    const { workspaceId } = match.params;
     const workspace = workspaces[workspaceId];
     const existsClaim = workspace && claims[workspace.id];
-    if (!existsClaim && location.pathname !== Url.root) {
+    if (!existsClaim && pathname !== Url.root) {
       history.push(Url.root);
     }
     const { email, password } = this.state.model;
@@ -158,10 +154,15 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+const mapStateToProps: StateMapperWithRouter<Props, { workspaceId: string }> = (
+  { accountsState },
+  { match, history, location },
+) => {
   const { workspaces, claims } = accountsState;
+  const { workspaceId } = match.params;
   const { resources } = new AccountsGetters(accountsState);
-  return { workspaces, claims, resources };
+  const { pathname } = location;
+  return { workspaces, claims, resources, workspaceId, history, pathname };
 };
 const StyledInner = decorate(styles)(Inner);
 export const SignIn = withConnectedRouter(mapStateToProps, mapDispatchToProps)(

@@ -4,6 +4,8 @@ export class Resources {
   public SignIn = 'サインイン';
   public Profile = 'プロフィール';
   public SignOut = 'サインアウト';
+  public AddWorkspace = 'ワークスペースを追加する';
+  public CloseWorkspace = 'ワークスペースを閉じる';
 }
 export class ResourcesEn extends Resources {
   public Email = 'Email';
@@ -11,4 +13,5 @@ export class ResourcesEn extends Resources {
   public SignIn = 'Sign In';
   public Profile = 'Profile';
   public SignOut = 'Sign Out';
+  public AddWorkspace = 'Add Workspace';
 }

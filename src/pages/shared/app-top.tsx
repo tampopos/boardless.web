@@ -15,11 +15,10 @@ import {
 import { StyledComponentBase } from 'src/common/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
-import { StateMapper, DispatchMapper } from 'src/stores/types';
+import { StateMapperWithRouter, DispatchMapper } from 'src/stores/types';
 import { Resources } from 'src/common/location/resources';
 import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { History } from 'history';
-import { RouteComponentProps } from 'react-router';
 import { Url } from 'src/common/routing/url';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
@@ -55,16 +54,13 @@ interface Props {
   resources: Resources;
   authenticated: boolean;
   sideMenuEnabled: boolean;
+  history: History;
 }
 interface Events {
   signOut: (history: History) => void;
   handleOpenMenu: () => void;
 }
-class Inner extends StyledComponentBase<
-  typeof styles,
-  Props & Events & RouteComponentProps<{}>,
-  State
-> {
+class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
     this.state = {};
@@ -154,11 +150,14 @@ class Inner extends StyledComponentBase<
   }
 }
 
-const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+const mapStateToProps: StateMapperWithRouter<Props> = (
+  { accountsState },
+  { history },
+) => {
   const { resources, authenticated, sideMenuEnabled } = new AccountsGetters(
     accountsState,
   );
-  return { resources, authenticated, sideMenuEnabled };
+  return { resources, authenticated, sideMenuEnabled, history };
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {

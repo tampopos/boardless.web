@@ -86,6 +86,9 @@ export class AccountsService implements IAccountsService {
     if (workspaceId) {
       history.push(Url.workspaceRoot(workspaceId));
       return;
+    } else if (result.workspaces && result.workspaces.length > 0) {
+      history.push(Url.workspaceRoot(result.workspaces[0].id));
+      return;
     }
     history.push(Url.root);
   };

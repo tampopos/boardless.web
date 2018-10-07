@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MessageContainer } from '../../components/messages/message-container';
 import { Message } from 'src/models/common/message';
-import { DispatchMapper, StateMapper } from 'src/stores/types';
+import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 import { MessagesStateGetters } from 'src/stores/messages/messages-state';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
@@ -34,7 +34,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     clear: () => dispatch(messagesActionCreators.clear()),
   };
 };
-const mapStateToProps: StateMapper<Props> = ({
+const mapStateToProps: StateMapperWithRouter<Props> = ({
   messagesState,
   accountsState,
 }) => {

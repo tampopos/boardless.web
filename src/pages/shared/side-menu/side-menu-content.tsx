@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { createStyles, Toolbar, Typography } from '@material-ui/core';
 import { StyledSFC } from 'src/common/styles/types';
-import { RouteComponentProps } from 'react-router';
-import { DispatchMapper, StateMapper } from 'src/stores/types';
+import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { decorate } from 'src/common/styles/styles-helper';
 import { Workspace } from 'src/models/accounts/workspace';
-import { WorkspaceIcon } from './workspace-icon';
+import { WorkspaceIcon, WorkspaceIconBase } from './workspace-icon';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
-import { delay } from 'src/common/async-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
+import { Add } from '@material-ui/icons';
+import { Resources } from 'src/common/location/resources';
+import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -32,42 +33,38 @@ const styles = (theme: Theme) =>
 interface Props {
   workspaceId: string;
   workspaces: { [index: string]: Workspace };
+  resources: Resources;
+  history: History;
 }
 interface RouteParams {
   workspaceId: string;
 }
-const mapStateToProps: StateMapper<Props, RouteParams> = (
+const mapStateToProps: StateMapperWithRouter<Props, RouteParams> = (
   { accountsState },
-  { match, history, location },
+  { match, history },
 ) => {
   const { workspaceId } = match.params;
   const { workspaces } = accountsState;
-  return { workspaces, workspaceId, history, location };
+  const { resources } = new AccountsGetters(accountsState);
+  return { workspaces, workspaceId, resources, history };
 };
 interface Events {
-  selectWorkspace: (history: History) => (workspace: Workspace) => void;
-  getSrc: (workspace: Workspace) => Promise<string>;
+  addWorkspace: (history: History) => () => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   return {
-    selectWorkspace: history => workspace => {
-      const { id } = workspace;
-      const url = Url.workspaceRoot(id);
-      history.push(url);
-    },
-    getSrc: async () => {
-      await delay(1000);
-      return 'https://material-ui.com/static/images/grid-list/breakfast.jpg';
+    addWorkspace: history => () => {
+      history.push(Url.root);
     },
   };
 };
-const Inner: StyledSFC<typeof styles, Props & Events & RouteComponentProps> = ({
+const Inner: StyledSFC<typeof styles, Props & Events> = ({
   classes,
   workspaces,
-  selectWorkspace,
   history,
-  getSrc,
   workspaceId,
+  resources,
+  addWorkspace,
 }) => {
   const currentWorkspace = workspaces[workspaceId];
   const {
@@ -90,8 +87,6 @@ const Inner: StyledSFC<typeof styles, Props & Events & RouteComponentProps> = ({
             <div key={key} className={workspaceBtn}>
               <WorkspaceIcon
                 workspace={workspace}
-                onClick={selectWorkspace(history)}
-                getSrc={getSrc}
                 injectClasses={{
                   btn: isSelected ? selectedWorkspaceBtn : undefined,
                 }}
@@ -99,6 +94,14 @@ const Inner: StyledSFC<typeof styles, Props & Events & RouteComponentProps> = ({
             </div>
           );
         })}
+        <div className={workspaceBtn}>
+          <WorkspaceIconBase
+            onClick={addWorkspace(history)}
+            title={resources.AddWorkspace}
+          >
+            <Add />
+          </WorkspaceIconBase>
+        </div>
       </div>
       <div className={contentAria}>
         <div className={contentHeader}>

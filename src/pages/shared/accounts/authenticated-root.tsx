@@ -1,8 +1,8 @@
 import { StyledSFC } from 'src/common/styles/types';
 import { createStyles } from '@material-ui/core';
 import * as React from 'react';
-import { StateMapper } from 'src/stores/types';
-import { RouteComponentProps, Route } from 'react-router';
+import { StateMapperWithRouter } from 'src/stores/types';
+import { Route } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Url } from 'src/common/routing/url';
@@ -10,6 +10,7 @@ import { Workspace } from 'src/models/accounts/workspace';
 import { Claim } from 'src/models/accounts/claim';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { Bar } from 'src/pages/bar';
+import { History } from 'history';
 
 const styles = createStyles({
   root: {},
@@ -17,13 +18,11 @@ const styles = createStyles({
 interface Props {
   workspaces: { [index: string]: Workspace };
   claims: { [index: string]: Claim };
+  workspaceId: string;
+  history: History;
 }
-const Inner: StyledSFC<
-  typeof styles,
-  Props & RouteComponentProps<{ workspaceId: string }>
-> = props => {
-  const { history, match, workspaces, claims } = props;
-  const { workspaceId } = match.params;
+const Inner: StyledSFC<typeof styles, Props> = props => {
+  const { workspaceId, workspaces, claims, history } = props;
   const checkWorkspace = () => {
     if (!workspaceId) {
       return;
@@ -47,11 +46,17 @@ const Inner: StyledSFC<
     </SideMenuContainer>
   );
 };
-const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+const mapStateToProps: StateMapperWithRouter<Props, { workspaceId: string }> = (
+  { accountsState },
+  { match, history },
+) => {
   const { workspaces, claims } = accountsState;
+  const { workspaceId } = match.params;
   return {
     workspaces,
     claims,
+    history,
+    workspaceId,
   };
 };
 const StyledInner = decorate(styles)(Inner);

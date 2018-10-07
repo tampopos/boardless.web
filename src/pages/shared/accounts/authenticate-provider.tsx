@@ -1,4 +1,4 @@
-import { DispatchMapper, StateMapper } from 'src/stores/types';
+import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import * as React from 'react';
 import { resolve } from 'src/services/common/service-provider';
@@ -27,7 +27,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+const mapStateToProps: StateMapperWithRouter<Props> = ({ accountsState }) => {
   const { claim } = accountsState;
   return {
     claim,

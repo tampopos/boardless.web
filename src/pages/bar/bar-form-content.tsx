@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DispatchMapper, StateMapper } from '../../stores/types';
+import { DispatchMapper, StateMapperWithRouter } from '../../stores/types';
 import Friend, { createEmptyFriend } from '../../models/bar/friend';
 import { createNewFriend } from '../../services/friend-service';
 import { BarForm } from './bar-form';
@@ -70,7 +70,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<BarFormContentProps> = ({
+const mapStateToProps: StateMapperWithRouter<BarFormContentProps> = ({
   barFormState,
   barListState,
 }) => {

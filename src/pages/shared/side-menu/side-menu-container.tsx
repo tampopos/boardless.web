@@ -3,7 +3,7 @@ import { Hidden, Drawer, createStyles } from '@material-ui/core';
 import { Theme } from 'src/common/styles/theme';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { SideMenuContent } from './side-menu-content';
-import { DispatchMapper, StateMapper } from 'src/stores/types';
+import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
@@ -100,7 +100,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<Props> = ({
+const mapStateToProps: StateMapperWithRouter<Props> = ({
   sideMenuState,
   accountsState,
 }) => {

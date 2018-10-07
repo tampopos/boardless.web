@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DispatchMapper, StateMapper } from '../../stores/types';
+import { DispatchMapper, StateMapperWithRouter } from '../../stores/types';
 import Friend, { createEmptyFriend } from '../../models/bar/friend';
 import { getSexName } from '../../services/friend-service';
 import { Table } from '../../components/tables/table';
@@ -43,7 +43,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<BarListProps> = ({
+const mapStateToProps: StateMapperWithRouter<BarListProps> = ({
   barListState,
   barFormState,
 }) => {
