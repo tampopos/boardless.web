@@ -1,8 +1,13 @@
 import { Dispatch } from 'redux';
 import { ActionCreator } from 'typescript-fsa';
 import { StoredState } from './stored-state';
+import { RouteComponentProps } from 'react-router';
 
-export type StateMapper<TState> = (state: StoredState) => Partial<TState>;
+export type StateMapper<TState> = ((state: StoredState) => Partial<TState>);
+export type StateMapperWithRouter<TState, TParam = {}> = ((
+  state: StoredState,
+  props: RouteComponentProps<TParam>,
+) => Partial<TState>);
 export type DispatchMapper<TDispatches> = (
   dispatch: Dispatch,
 ) => Partial<TDispatches>;

@@ -1,8 +1,32 @@
 import { createStyles, ButtonBase, CircularProgress } from '@material-ui/core';
 import { StyledComponentBase } from 'src/common/styles/types';
-import { decorate } from 'src/common/styles/styles-helper';
+import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import * as React from 'react';
 import { Workspace } from 'src/models/accounts/workspace';
+import { Theme } from 'src/common/styles/theme';
+
+const baseStyles = (theme: Theme) =>
+  createStyles({ root: {}, btn: { ...theme.shared.workspaceIcon } });
+interface BaseProps {
+  title: string;
+  onClick: () => void;
+}
+export const WorkspaceIconBase = decorate(baseStyles)<BaseProps>(props => {
+  const { children, onClick, title } = props;
+  const { root, btn } = getInjectClasses(props);
+  return (
+    <div className={root}>
+      <ButtonBase
+        className={btn}
+        focusRipple={true}
+        title={title}
+        onClick={onClick}
+      >
+        {children}
+      </ButtonBase>
+    </div>
+  );
+});
 
 interface Props {
   workspace: Workspace;
@@ -14,11 +38,12 @@ interface Events {
 interface State {
   src?: string;
 }
-const styles = createStyles({
-  root: {},
-  btn: {},
-  image: {},
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    btn: {},
+    image: { ...theme.shared.workspaceIcon },
+  });
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
@@ -35,20 +60,17 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     const { src } = this.state;
     const { root, btn, image } = classes;
     return (
-      <div className={root}>
-        <ButtonBase
-          className={btn}
-          focusRipple={true}
-          title={name}
-          onClick={() => onClick(workspace)}
-        >
-          {src ? (
-            <img src={src} className={image} />
-          ) : (
-            <CircularProgress className={image} />
-          )}
-        </ButtonBase>
-      </div>
+      <WorkspaceIconBase
+        title={name}
+        onClick={() => onClick(workspace)}
+        injectClasses={{ root, btn }}
+      >
+        {src ? (
+          <img src={src} className={image} />
+        ) : (
+          <CircularProgress className={image} />
+        )}
+      </WorkspaceIconBase>
     );
   }
 }

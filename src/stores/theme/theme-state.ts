@@ -29,6 +29,10 @@ const customThemeOption = {
       },
     },
     drawer: { width: 240 },
+    workspaceIcon: {
+      width: 32,
+      height: 32,
+    },
   },
 };
 const muiThemeOption = { palette: { primary: grey, type } };

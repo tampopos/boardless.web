@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStyles, AppBar } from '@material-ui/core';
 import { StyledSFC } from 'src/common/styles/types';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { DispatchMapper, StateMapper } from 'src/stores/types';
+import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { decorate, appendClassName } from 'src/common/styles/styles-helper';
 import { connect } from 'react-redux';
 import { Workspace } from 'src/models/accounts/workspace';
@@ -20,11 +20,19 @@ const styles = createStyles({
   selectedWorkspaceBtn: {},
 });
 interface Props {
+  workspaceId: string;
   workspaces: { [index: string]: Workspace };
 }
-const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
+interface RouteParams {
+  workspaceId: string;
+}
+const mapStateToProps: StateMapperWithRouter<Props, RouteParams> = (
+  { accountsState },
+  { match, history, location },
+) => {
+  const { workspaceId } = match.params;
   const { workspaces } = accountsState;
-  return { workspaces };
+  return { workspaces, workspaceId, history, location };
 };
 interface Events {
   selectWorkspace: (history: History) => (workspace: Workspace) => void;
@@ -43,11 +51,14 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
     },
   };
 };
-const Inner: StyledSFC<
-  typeof styles,
-  Props & Events & RouteComponentProps<{ workspaceId: string }>
-> = ({ match, classes, workspaces, selectWorkspace, history, getSrc }) => {
-  const { workspaceId } = match.params;
+const Inner: StyledSFC<typeof styles, Props & Events & RouteComponentProps> = ({
+  classes,
+  workspaces,
+  selectWorkspace,
+  history,
+  getSrc,
+  workspaceId,
+}) => {
   const currentWorkspace = workspaces[workspaceId];
   const {
     root,
@@ -91,8 +102,8 @@ const Inner: StyledSFC<
   );
 };
 const StyledInner = decorate(styles)(Inner);
-const RoutingInner = withRouter(StyledInner);
-export const SideMenuContent = connect(
+const ConnectedInner = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RoutingInner);
+)(StyledInner);
+export const SideMenuContent = withRouter(ConnectedInner);

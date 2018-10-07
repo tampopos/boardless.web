@@ -34,6 +34,9 @@ interface Props {
 interface Events {
   handleClose: () => void;
 }
+const Content: React.SFC = () => {
+  return <SideMenuContent />;
+};
 export const Inner = decorate(styles)<Props & Events>(props => {
   const { children, theme, open, handleClose, enabled } = props;
   const classes = getInjectClasses(props);
@@ -56,7 +59,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
                 keepMounted: true, // Better open performance on mobile.
               }}
             >
-              <SideMenuContent />
+              <Content />
             </Drawer>
           </Hidden>
           <Hidden smDown={true} implementation="css">
@@ -67,7 +70,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
                 paper: drawerPaper,
               }}
             >
-              <SideMenuContent />
+              <Content />
             </Drawer>
           </Hidden>
         </React.Fragment>

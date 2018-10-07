@@ -4,6 +4,10 @@ import { StyleRulesCallback } from '@material-ui/core';
 import { ClassNameMap } from '@material-ui/core/styles/withStyles';
 import { Theme } from './theme';
 
+export type StyledComponentType<
+  TStyles extends Styles,
+  TProps = {}
+> = React.ComponentType<InjectableStylesProps<TStyles> & TProps>;
 export class StyledComponentBase<
   TStyles extends Styles,
   TProps = {},

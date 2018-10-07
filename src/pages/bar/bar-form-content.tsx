@@ -20,6 +20,7 @@ import { MenuItemProps } from '@material-ui/core/MenuItem';
 import { Container } from 'src/components/layout/container';
 import { RadioGroup } from 'src/components/forms-controls/radio-group';
 import { decorate } from 'src/common/styles/styles-helper';
+import { Xxx } from './test';
 
 const styles = createStyles({
   root: {},
@@ -127,6 +128,9 @@ const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
         <BarForm themeColor={color}>
           <Row className={row}>
             <Typography variant="headline">{title}</Typography>
+            <Typography variant="headline">
+              <Xxx />
+            </Typography>
           </Row>
           <Row className={row}>
             <Cell xs={6} className={cell}>
