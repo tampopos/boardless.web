@@ -1,19 +1,29 @@
 import { createMuiTheme, colors, MuiThemeProvider } from '@material-ui/core';
 import * as React from 'react';
-import { Colors } from 'src/common/styles/theme';
+import { Colors, Theme } from 'src/common/styles/theme';
+import { decorate } from 'src/common/styles/styles-helper';
 
 interface ThemeColorScopeProps {
   themeColor?: keyof Colors;
 }
-export const ThemeColorScope: React.SFC<ThemeColorScopeProps> = props => {
-  const { themeColor, children } = props;
+
+export const ThemeColorScope = decorate((theme: Theme) => ({}))<
+  ThemeColorScopeProps
+>(props => {
+  const { themeColor, children, theme } = props;
   if (!themeColor) {
     return <React.Fragment>{children}</React.Fragment>;
   }
-  const theme = createMuiTheme({
+  const appendOption = {
     palette: {
       primary: themeColor ? colors[themeColor] : undefined,
     },
-  });
-  return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>;
-};
+  };
+  const option = theme
+    ? Object.assign({}, theme, {
+        palette: Object.assign({}, theme.palette, appendOption.palette),
+      })
+    : appendOption;
+  const newTheme = createMuiTheme(option);
+  return <MuiThemeProvider theme={newTheme}>{children}</MuiThemeProvider>;
+});

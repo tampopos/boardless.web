@@ -32,31 +32,35 @@ export type Colors = typeof colors;
 export namespace CommonColors {
   export const { white, black } = MuiColors.common;
 }
-const { grey, indigo, yellow, red } = colors;
-const type = 'light';
+const { grey, indigo, yellow, red, blueGrey } = colors;
+const isLight = true;
+const type = isLight ? 'light' : 'dark';
 const customThemeOption = {
   shared: {
     fontWeight: { bold: 'bold' as FontWeightProperty },
     borderWidth: { thick: 4 },
     table: {
-      headerBackgroundColor: grey['900'],
-      borderColor: grey['400'],
-      headerColor: CommonColors.white,
+      headerBackgroundColor: isLight ? grey['900'] : grey['50'],
+      borderColor: isLight ? grey['400'] : grey['500'],
+      headerColor: isLight ? CommonColors.white : CommonColors.black,
+      oddBackgroundColor: isLight ? grey['200'] : grey['900'],
+      hoverBackgroundColor: isLight ? grey['300'] : grey['800'],
+      selectedBackgroundColor: isLight ? blueGrey['100'] : blueGrey['700'],
     },
     messages: {
       info: {
-        color: type === 'light' ? indigo['700'] : indigo['300'],
+        color: isLight ? indigo['700'] : indigo['300'],
       },
       warning: {
-        color: type === 'light' ? yellow['800'] : yellow['500'],
+        color: isLight ? yellow['800'] : yellow['500'],
       },
       error: {
-        color: type === 'light' ? red['700'] : red['500'],
+        color: isLight ? red['700'] : red['500'],
       },
     },
   },
 };
-const muiThemeOption: ThemeOptions = { palette: { primary: grey } };
+const muiThemeOption: ThemeOptions = { palette: { primary: grey, type } };
 const themeOption = Object.assign(muiThemeOption, customThemeOption);
 export type Theme = typeof customThemeOption & MuiTheme;
 export const createTheme = () => {
