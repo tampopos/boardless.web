@@ -6,7 +6,7 @@ import { Workspace } from 'src/models/accounts/workspace';
 import { Theme } from 'src/common/styles/theme';
 
 const baseStyles = (theme: Theme) =>
-  createStyles({ root: {}, btn: { ...theme.shared.workspaceIcon } });
+  createStyles({ root: {}, btn: { ...theme.shared.workspaceIcon.button } });
 interface BaseProps {
   title: string;
   onClick: () => void;
@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     btn: {},
-    image: { ...theme.shared.workspaceIcon },
+    image: { ...theme.shared.workspaceIcon.image },
   });
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
@@ -55,10 +55,10 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     this.setState({ src });
   }
   public render() {
-    const { workspace, onClick, classes } = this.props;
+    const { workspace, onClick } = this.props;
     const { name } = workspace;
     const { src } = this.state;
-    const { root, btn, image } = classes;
+    const { root, btn, image } = getInjectClasses(this.props);
     return (
       <WorkspaceIconBase
         title={name}

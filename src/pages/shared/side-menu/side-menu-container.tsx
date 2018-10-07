@@ -10,6 +10,9 @@ import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
+    drawerDocked: {
+      height: '100%',
+    },
     drawerPaper: {
       width: theme.shared.drawer.width,
       [theme.breakpoints.up('md')]: {
@@ -40,7 +43,13 @@ const Content: React.SFC = () => {
 export const Inner = decorate(styles)<Props & Events>(props => {
   const { children, theme, open, handleClose, enabled } = props;
   const classes = getInjectClasses(props);
-  const { drawerPaper, content, toolbarDummy, container } = classes;
+  const {
+    drawerDocked,
+    drawerPaper,
+    content,
+    toolbarDummy,
+    container,
+  } = classes;
   const { direction } = Object.assign({}, theme);
   return (
     <React.Fragment>
@@ -53,6 +62,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
               open={open}
               onClose={handleClose}
               classes={{
+                docked: drawerDocked,
                 paper: drawerPaper,
               }}
               ModalProps={{
@@ -67,6 +77,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
               variant="permanent"
               open={true}
               classes={{
+                docked: drawerDocked,
                 paper: drawerPaper,
               }}
             >

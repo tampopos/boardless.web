@@ -29,12 +29,14 @@ export type Styles = string | StyleRules | StyleRulesCallback;
 export interface InjectableStylesProps<T extends Styles> {
   theme?: Theme;
   className?: string;
-  injectClasses?: ClassNameMap<
-    T extends string
-      ? T
-      : T extends StyleRulesCallback<infer K>
-        ? K
-        : T extends StyleRules<infer L> ? L : never
+  injectClasses?: Partial<
+    ClassNameMap<
+      T extends string
+        ? T
+        : T extends StyleRulesCallback<infer K>
+          ? K
+          : T extends StyleRules<infer L> ? L : never
+    >
   >;
 }
 export type WithStyleProps<TStyles extends Styles, TProps = {}> = WithStyles<

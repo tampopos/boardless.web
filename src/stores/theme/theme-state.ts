@@ -2,19 +2,22 @@ import { FontWeightProperty } from 'csstype';
 import { colors, CommonColors, Theme } from 'src/common/styles/theme';
 import { createMuiTheme } from '@material-ui/core';
 
-const { grey, indigo, yellow, red, blueGrey } = colors;
+const { grey, indigo, yellow, red, blueGrey, pink } = colors;
 const isLight = true;
+const primary = grey;
+const secondary = pink;
 const type = isLight ? 'light' : 'dark';
+const muiThemeOption = { palette: { primary, secondary, type } };
 const customThemeOption = {
   shared: {
     fontWeight: { bold: 'bold' as FontWeightProperty },
     borderWidth: { thick: 4 },
     table: {
-      headerBackgroundColor: isLight ? grey['900'] : grey['50'],
-      borderColor: isLight ? grey['400'] : grey['500'],
+      headerBackgroundColor: isLight ? primary['900'] : primary['50'],
+      borderColor: isLight ? primary['400'] : primary['500'],
       headerColor: isLight ? CommonColors.white : CommonColors.black,
-      oddBackgroundColor: isLight ? grey['200'] : grey['900'],
-      hoverBackgroundColor: isLight ? grey['300'] : grey['800'],
+      oddBackgroundColor: isLight ? primary['200'] : primary['900'],
+      hoverBackgroundColor: isLight ? primary['300'] : primary['800'],
       selectedBackgroundColor: isLight ? blueGrey['100'] : blueGrey['700'],
     },
     messages: {
@@ -28,14 +31,29 @@ const customThemeOption = {
         color: isLight ? red['700'] : red['500'],
       },
     },
-    drawer: { width: 240 },
+    drawer: { width: 320 },
     workspaceIcon: {
-      width: 32,
-      height: 32,
+      image: {
+        width: 40,
+        height: 40,
+      },
+      button: {
+        width: 52,
+        height: 52,
+        borderStyle: 'solid',
+        borderWidth: 4,
+        padding: 2,
+        borderRadius: 8,
+        borderColor: isLight ? grey['300'] : grey['700'],
+        backgroundColor: isLight ? grey['50'] : grey['300'],
+      },
+      selectedButton: {
+        borderColor: isLight ? secondary['500'] : secondary['200'],
+        borderWidth: 4,
+      },
     },
   },
 };
-const muiThemeOption = { palette: { primary: grey, type } };
 export const defaultThemeState = Object.assign(
   muiThemeOption,
   customThemeOption,
