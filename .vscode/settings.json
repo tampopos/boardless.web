@@ -16,6 +16,7 @@
     "Guid",
     "Injectable",
     "Snackbar",
+    "Unmount",
     "appbar",
     "boardless",
     "clickaway",

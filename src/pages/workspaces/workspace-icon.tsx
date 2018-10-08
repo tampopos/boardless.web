@@ -92,10 +92,16 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     super(props);
     this.state = {};
   }
-  public async componentWillMount() {
+  private disposing = false;
+  public async componentDidMount() {
     const { getSrc, workspace } = this.props;
     const src = await getSrc(workspace);
-    this.setState({ src });
+    if (!this.disposing) {
+      this.setState({ src });
+    }
+  }
+  public componentWillUnmount() {
+    this.disposing = true;
   }
   private handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({

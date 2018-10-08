@@ -70,7 +70,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     super(props);
     this.state = {};
   }
-  public async componentWillMount() {
+  public async componentDidMount() {
     const { getInvitedWorkspaces, claims, workspaces } = this.props;
     getInvitedWorkspaces(claims, workspaces);
   }
