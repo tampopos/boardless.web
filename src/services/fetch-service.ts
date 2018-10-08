@@ -8,7 +8,10 @@ export class FetchService implements IFetchService {
   private token: string;
   constructor(@inject('config') private config: Config) {}
   public setCredential = (token: string) => (this.token = token);
-  public fetchAsync = async <TResult>(request: FetchRequest) => {
+  public fetchAsync = async <TResult>(
+    request: FetchRequest,
+    token?: string,
+  ) => {
     const url = this.config.apiUrl + request.relativeUrl;
     const req = {
       body:
@@ -21,7 +24,9 @@ export class FetchService implements IFetchService {
           : {},
       ),
     } as Request;
-    if (this.token) {
+    if (token) {
+      // req.credentials.=token;
+    } else if (this.token) {
       // req.credentials.=this.token;
     }
     const response = await fetch(url, req);

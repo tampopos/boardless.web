@@ -8,12 +8,12 @@ export const accountsReducer = (storedState: StoredState) =>
   reducerWithInitialState(storedState.accountsState)
     .case(accountsActionCreators.init, s => {
       const newState = Object.assign({}, s);
-      // if (newState.claim) {
-      //   newState.claim.isInitialized = false;
-      // }
-      // Object.keys(newState.claims).forEach(key => {
-      //   newState.claims[key].isInitialized = false;
-      // });
+      if (newState.claim) {
+        newState.claim.isInitialized = false;
+      }
+      Object.keys(newState.claims).forEach(key => {
+        newState.claims[key].isInitialized = false;
+      });
       return newState;
     })
     .case(accountsActionCreators.signIn, (s, { result }) => {
@@ -48,9 +48,19 @@ export const accountsReducer = (storedState: StoredState) =>
         }
       }
       return newState;
+    })
+    .case(accountsActionCreators.removeWorkspace, (s, { id }) => {
+      const workspaces = {};
+      Object.entries(s.workspaces)
+        .filter(x => x[0] !== id)
+        .forEach(x => (workspaces[x[0]] = x[1]));
+      return { ...s, workspaces };
     });
 const factory = actionCreatorFactory();
 export const accountsActionCreators = {
   init: factory<{}>('accountsActionCreators.init'),
   signIn: factory<{ result: SignInResult }>('accountsActionCreators.signIn'),
+  removeWorkspace: factory<{ id: string }>(
+    'accountsActionCreators.removeWorkspace',
+  ),
 };

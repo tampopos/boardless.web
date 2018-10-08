@@ -13,10 +13,9 @@ import { Button } from 'src/components/forms-controls/button';
 import { Resources } from 'src/common/location/resources';
 import { StateMapperWithRouter, DispatchMapper } from 'src/stores/types';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
-import { delay } from 'src/common/async-helper';
-import { Url } from 'src/common/routing/url';
 import { History } from 'history';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
+import { resolve } from 'src/services/common/service-provider';
 
 const baseStyles = (theme: Theme) =>
   createStyles({ root: {}, btn: { ...theme.shared.workspaceIcon.button } });
@@ -69,19 +68,13 @@ interface Events {
   getSrc: (workspace: Workspace) => Promise<string>;
 }
 const mapDispatchToProps: DispatchMapper<Events, OwnProps> = () => {
+  const { onClick, getSrc, onCloseWorkspaceClick } = resolve(
+    'workspaceService',
+  );
   return {
-    onClick: (history, workspace) => {
-      const { id } = workspace;
-      const url = Url.workspaceRoot(id);
-      history.push(url);
-    },
-    getSrc: async () => {
-      await delay(1000);
-      return 'https://material-ui.com/static/images/grid-list/breakfast.jpg';
-    },
-    onCloseWorkspaceClick: (history, workspace) => {
-      history.push(Url.root);
-    },
+    onClick,
+    getSrc,
+    onCloseWorkspaceClick,
   };
 };
 interface State {

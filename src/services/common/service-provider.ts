@@ -7,6 +7,7 @@ import { GuidProvider } from '../guid-provider';
 import { MessagesService } from '../messages-service';
 import { DispatchProvider } from '../dispatch-provider';
 import { ValidateService } from '../validate-service';
+import { WorkspaceService } from '../workspace-service';
 
 const container = new Container({ autoBindInjectable: true });
 export const register = <TKey extends ServiceKeys>(key: TKey) =>
@@ -34,4 +35,7 @@ register('dispatchProvider')
   .inSingletonScope();
 register('validateService')
   .to(ValidateService)
+  .inSingletonScope();
+register('workspaceService')
+  .to(WorkspaceService)
   .inSingletonScope();

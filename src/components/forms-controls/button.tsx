@@ -22,9 +22,9 @@ export const Button = decorate(styles)<ButtonProps & MuiButtonProps>(props => {
   return (
     <ThemeColorScope themeColor={themeColor}>
       <MuiButton
+        color={themeColor ? 'primary' : 'default'}
         {...pProps}
         className={root}
-        color={themeColor ? 'primary' : 'default'}
       />
     </ThemeColorScope>
   );

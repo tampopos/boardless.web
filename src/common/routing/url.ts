@@ -4,4 +4,5 @@ export namespace Url {
   export const workspaceRoot = (workspaceId: string) => `/${workspaceId}`;
   export const accountsRefresh = '/accounts/refresh';
   export const accountsSignIn = '/accounts/sign-in';
+  export const workspacesInvited = '/workspaces/invited';
 }

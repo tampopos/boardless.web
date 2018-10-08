@@ -8,6 +8,7 @@ server.use(
   jsonServer.rewriter({
     '/accounts/refresh': '/accounts-refresh',
     '/accounts/sign-in': '/accounts-sign-in',
+    '/workspaces/invited': '/workspaces-invited',
   }),
 );
 

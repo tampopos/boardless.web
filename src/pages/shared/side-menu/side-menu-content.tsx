@@ -4,7 +4,10 @@ import { StyledSFC } from 'src/common/styles/types';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { decorate } from 'src/common/styles/styles-helper';
 import { Workspace } from 'src/models/accounts/workspace';
-import { WorkspaceIcon, WorkspaceIconBase } from './workspace-icon';
+import {
+  WorkspaceIcon,
+  WorkspaceIconBase,
+} from '../../workspaces/workspace-icon';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';

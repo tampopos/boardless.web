@@ -8,6 +8,11 @@ import { createPropagationProps } from 'src/common/component-helper';
 const styles = createStyles({
   root: {
     display: 'flex',
+    flexWrap: 'wrap',
+    paddingBottom: 10,
+    '&:last-child': {
+      paddingBottom: 0,
+    },
   },
 });
 interface RowProps {}

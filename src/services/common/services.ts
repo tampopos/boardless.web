@@ -5,6 +5,7 @@ import { IGuidProvider } from '../interfaces/guid-provider';
 import { IMessagesService } from '../interfaces/messages-service';
 import { IDispatchProvider } from '../interfaces/dispatch-provider';
 import { IValidateService } from '../interfaces/validate-service';
+import { IWorkspaceService } from '../interfaces/workspace-service';
 
 export interface Services {
   config: Config;
@@ -14,5 +15,6 @@ export interface Services {
   guidProvider: IGuidProvider;
   messagesService: IMessagesService;
   validateService: IValidateService;
+  workspaceService: IWorkspaceService;
 }
 export type ServiceKeys = keyof Services;

@@ -25,5 +25,13 @@
         { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
       ]
     }
+  },
+  "workspaces-invited": {
+    "result": [
+      { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
+      { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" },
+      { "id": "workspace03", "name": "ワークスペース03", "userId": "user01" },
+      { "id": "workspace04", "name": "ワークスペース04", "userId": "user01" }
+    ]
   }
 }

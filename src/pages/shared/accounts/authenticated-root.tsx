@@ -11,6 +11,7 @@ import { Claim } from 'src/models/accounts/claim';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { Bar } from 'src/pages/bar';
 import { History } from 'history';
+import { WorkspaceIndex } from 'src/pages/workspaces';
 
 const styles = createStyles({
   root: {},
@@ -42,7 +43,7 @@ const Inner: StyledSFC<typeof styles, Props> = props => {
   return (
     <SideMenuContainer>
       <Route exact={true} path={Url.workspaceRootTemplate} component={Bar} />
-      <Route exact={true} path={Url.root} component={Bar} />
+      <Route exact={true} path={Url.root} component={WorkspaceIndex} />
     </SideMenuContainer>
   );
 };
