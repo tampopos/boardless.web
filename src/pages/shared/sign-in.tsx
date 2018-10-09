@@ -10,6 +10,7 @@ import { resolve } from 'src/common/di/service-provider';
 import { Resources } from 'src/common/location/resources';
 import { getCultureInfo } from 'src/common/location/localize-provider';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
+import { Form } from 'src/components/forms-controls/form';
 
 const styles = createStyles({
   root: {},
@@ -41,7 +42,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     const { signIn, resources } = this.props;
     const { email, password } = this.state.model;
     return (
-      <form>
+      <Form onSubmit={e => signIn(this.state.model)}>
         <TextBox
           value={email}
           type="email"
@@ -54,10 +55,8 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           type="password"
           onChange={this.onChange('password')}
         />
-        <Button onClick={e => signIn(this.state.model)}>
-          {resources.SignIn}
-        </Button>
-      </form>
+        <Button type="submit">{resources.SignIn}</Button>
+      </Form>
     );
   }
 }
