@@ -40,7 +40,7 @@ export const TextBox = decorate(styles)<TextBoxProps & TextFieldProps>(
                 : onChange(e)
               : null
           }
-          color={themeColor ? 'primary' : 'inherit'}
+          color={themeColor ? 'primary' : 'default'}
         />
       </ThemeColorScope>
     );

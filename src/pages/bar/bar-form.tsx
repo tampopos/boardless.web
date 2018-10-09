@@ -21,8 +21,8 @@ const styles = (theme: Theme) =>
       borderRadius: 15,
     },
     ...resolve('objectHelper').mapObject(colors, color => ({
-      color: color['500'],
-      borderColor: color['500'],
+      color: theme.palette.type === 'light' ? color['600'] : color['400'],
+      borderColor: theme.palette.type === 'light' ? color['400'] : color['600'],
     })),
   });
 interface BarFormProps {

@@ -50,7 +50,7 @@ interface BarFormContentProps {
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
     add: async (friend, friends) => {
-      const newFriend = await createNewFriend(friends.length, friend);
+      const newFriend = await createNewFriend(friends, friend);
       dispatch(barListActionCreators.add({ friend: newFriend }));
       return dispatch(barFormActionCreators.setFriend({ friend: newFriend }));
     },

@@ -102,13 +102,15 @@ const getRandomPersonality = (sex: string) => {
   return personalities[i];
 };
 export const createNewFriend = async (
-  id: number,
+  friends: Friend[],
   p: {
     name: string;
     job: string;
     sex: string;
   },
 ) => {
+  const id =
+    friends && friends.length > 0 ? Math.max(...friends.map(x => x.id)) + 1 : 0;
   await resolve('asyncHelper').delay(100);
   return Object.assign({}, p, {
     id,

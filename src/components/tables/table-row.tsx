@@ -7,27 +7,29 @@ import * as React from 'react';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
 import { resolve } from 'src/common/di/service-provider';
+import { Theme } from 'src/common/styles/theme';
 
-const styles = createStyles({
-  root: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    display: 'table-row',
-    '&:nth-child(odd)': {
-      backgroundColor: '#f6f6f6',
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+      borderCollapse: 'collapse',
+      display: 'table-row',
+      '&:nth-child(odd)': {
+        backgroundColor: theme.shared.table.oddBackgroundColor,
+      },
     },
-  },
-  selectableRow: {
-    '&:hover': {
-      backgroundColor: '#f0f0f0',
+    selectableRow: {
+      '&:hover': {
+        backgroundColor: theme.shared.table.hoverBackgroundColor,
+      },
     },
-  },
-  selectedRow: {
-    '&$root$selectableRow': {
-      backgroundColor: '#ddd',
+    selectedRow: {
+      '&$root$selectableRow': {
+        backgroundColor: theme.shared.table.selectedBackgroundColor,
+      },
     },
-  },
-});
+  });
 interface TableRowProps {
   selectable?: boolean;
   selected?: boolean;

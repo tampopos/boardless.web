@@ -27,7 +27,7 @@ export const Button = decorate(styles)<ButtonProps & MuiButtonProps>(props => {
         {...pProps}
         className={root}
         variant="outlined"
-        color={themeColor ? 'primary' : 'inherit'}
+        color={themeColor ? 'primary' : 'default'}
       />
     </ThemeColorScope>
   );
