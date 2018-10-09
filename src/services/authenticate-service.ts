@@ -1,15 +1,13 @@
 import { AuthenticateState } from 'src/stores/authenticate/authenticate-state';
-import { IAsyncHelper } from 'src/common/async-helper';
+import { IAsyncHelper } from 'src/common/interfaces/async-helper';
 import { SignInModel } from 'src/models/sign-in-model';
+import { injectable } from 'inversify';
+import { IAuthenticateService } from './interfaces/authenticate-service';
+import { inject } from 'src/common/di/inject';
 
-export interface IAuthenticateService {
-  isAuthenticated: (state: AuthenticateState) => boolean;
-  refreshTokenAsync: (state: AuthenticateState) => Promise<AuthenticateState>;
-  validate: (model: SignInModel) => string[];
-  signInAsync: (model: SignInModel) => Promise<string>;
-}
+@injectable()
 export class AuthenticateService implements IAuthenticateService {
-  constructor(private asyncHelper: IAsyncHelper) {}
+  constructor(@inject('asyncHelper') private asyncHelper: IAsyncHelper) {}
   public isAuthenticated = (state: AuthenticateState) => {
     const { selectedToken, tokens, isInitialized } = state;
     return isInitialized && selectedToken >= 0 && tokens.length > selectedToken;
