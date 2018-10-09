@@ -3,8 +3,8 @@ import { DivProps } from '../types';
 import * as React from 'react';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
-import { Theme } from 'src/common/styles/theme';
 import { resolve } from 'src/common/di/service-provider';
+import { Theme } from 'src/common/styles/theme';
 
 const styles = (theme: Theme) =>
   createStyles({
