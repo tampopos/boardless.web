@@ -7,32 +7,60 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import {
+  decorate,
+  getInjectClasses,
+  appendClassName,
+} from 'src/common/styles/styles-helper';
 import { StyledComponentBase } from 'src/common/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
-
 import * as React from 'react';
-import { StateMapper } from 'src/stores/types';
-import { connect } from 'react-redux';
-import { resolve } from 'src/common/di/service-provider';
+import { StateMapperWithRouter, DispatchMapper } from 'src/stores/types';
+import { Resources } from 'src/common/location/resources';
+import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
+import { History } from 'history';
+import { Url } from 'src/common/routing/url';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
+import { Theme } from 'src/common/styles/theme';
+import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
+import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 
-const styles = createStyles({
-  root: {},
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      position: 'absolute',
+    },
+    sideMenuEnabledRoot: {
+      [theme.breakpoints.up('md')]: {
+        marginLeft: theme.shared.drawer.width,
+        width: `calc(100% - ${theme.shared.drawer.width}px)`,
+      },
+    },
+    grow: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginLeft: -12,
+      marginRight: 20,
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+    },
+  });
 interface State {
   anchorEl?: EventTarget & HTMLElement;
 }
 interface Props {
+  resources: Resources;
   authenticated: boolean;
+  sideMenuEnabled: boolean;
+  history: History;
 }
-class Inner extends StyledComponentBase<typeof styles, Props, State> {
+interface Events {
+  signOut: (history: History) => void;
+  handleOpenMenu: () => void;
+}
+class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
     this.state = {};
@@ -41,22 +69,47 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  public handleClose = () => {
+  public handleClose = (func?: () => void) => () => {
+    if (func) {
+      func();
+    }
     this.setState({ anchorEl: undefined });
   };
   public render() {
-    const { authenticated } = this.props;
+    const {
+      authenticated,
+      resources,
+      signOut,
+      history,
+      handleOpenMenu,
+      sideMenuEnabled,
+    } = this.props;
     const { anchorEl } = this.state;
-    const { root, menuButton, grow } = getInjectClasses(this.props);
+    const { root, menuButton, grow, sideMenuEnabledRoot } = getInjectClasses(
+      this.props,
+    );
     const open = Boolean(anchorEl);
     return (
-      <AppBar position="static" className={root}>
+      <AppBar
+        position="static"
+        className={appendClassName(
+          root,
+          sideMenuEnabled ? sideMenuEnabledRoot : '',
+        )}
+      >
         <Toolbar>
-          <IconButton className={menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
+          {sideMenuEnabled && (
+            <IconButton
+              className={menuButton}
+              color="inherit"
+              aria-label="Menu"
+              onClick={handleOpenMenu}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography variant="title" color="inherit" className={grow}>
-            Photos
+            Boardless
           </Typography>
           {authenticated && (
             <div>
@@ -80,10 +133,14 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
                   horizontal: 'right',
                 }}
                 open={open}
-                onClose={this.handleClose}
+                onClose={this.handleClose()}
               >
-                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                <MenuItem onClick={this.handleClose()}>
+                  {resources.Profile}
+                </MenuItem>
+                <MenuItem onClick={this.handleClose(() => signOut(history))}>
+                  {resources.SignOut}
+                </MenuItem>
               </Menu>
             </div>
           )}
@@ -93,12 +150,27 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
   }
 }
 
-const StyledInner = decorate(styles)(Inner);
-const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => {
+const mapStateToProps: StateMapperWithRouter<Props> = (
+  { accountsState },
+  { history },
+) => {
+  const { resources, authenticated, sideMenuEnabled } = new AccountsGetters(
+    accountsState,
+  );
+  return { resources, authenticated, sideMenuEnabled, history };
+};
+const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
-    authenticated: resolve('authenticateService').isAuthenticated(
-      authenticateState,
-    ),
+    signOut: (history: History) => {
+      dispatch(accountsActionCreators.signIn({ result: {} }));
+      history.push(Url.root);
+    },
+    handleOpenMenu: () => {
+      dispatch(sideMenuActionCreators.handleOpen());
+    },
   };
 };
-export const AppTop = connect(mapStateToProps)(StyledInner);
+const StyledInner = decorate(styles)(Inner);
+export const AppTop = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+  StyledInner,
+);

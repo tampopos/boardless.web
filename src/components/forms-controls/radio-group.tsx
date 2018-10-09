@@ -13,13 +13,11 @@ import { RadioGroupProps as MuiRadioGroupProps } from '@material-ui/core/RadioGr
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { FormControlLabelProps } from '@material-ui/core/FormControlLabel';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/di/service-provider';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = createStyles({
   root: {
     width: '100%',
-    marginLeft: 10,
-    marginRight: 10,
   },
   group: { flexDirection: 'row' },
 });
@@ -35,12 +33,7 @@ export const RadioGroup = decorate(styles)<
   const { themeColor, label, items, readOnly } = props;
   const classes = getInjectClasses(props);
   const { root, group } = classes;
-  const pProps = resolve('componentHelper').createPropagationProps(
-    props,
-    'themeColor',
-    'label',
-    'items',
-  );
+  const pProps = createPropagationProps(props, 'themeColor', 'label', 'items');
   const color = themeColor ? 'primary' : 'default';
   const radioColor = themeColor ? 'primary' : 'default';
   return (

@@ -6,8 +6,8 @@ import { DivProps } from '../types';
 import * as React from 'react';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/di/service-provider';
 import { Theme } from 'src/common/styles/theme';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -37,11 +37,7 @@ interface TableRowProps {
 export const TableRow = decorate(styles)<TableRowProps & DivProps>(props => {
   const { selectable, selected } = props;
   const { root, selectableRow, selectedRow } = getInjectClasses(props);
-  const pProps = resolve('componentHelper').createPropagationProps(
-    props,
-    'selectable',
-    'selected',
-  );
+  const pProps = createPropagationProps(props, 'selectable', 'selected');
   const className = appendClassName(
     root,
     selectable ? selectableRow : '',

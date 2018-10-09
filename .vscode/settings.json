@@ -13,8 +13,10 @@
   "tslint.alwaysShowRuleFailuresAsWarnings": true,
   "tslint.alwaysShowStatus": true,
   "cSpell.words": [
+    "Guid",
     "Injectable",
     "Snackbar",
+    "Unmount",
     "appbar",
     "boardless",
     "clickaway",
@@ -23,9 +25,12 @@
     "inversify",
     "localstorage",
     "middlewares",
+    "mixins",
     "roboto",
     "selectable",
-    "tmpps"
+    "tmpps",
+    "workspaces",
+    "yxxx"
   ],
   "cSpell.ignoreRegExpList": ["/.*ー/"],
   "editor.formatOnSave": true,

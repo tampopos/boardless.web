@@ -3,9 +3,10 @@ import { MessageField } from './message-field';
 import { createStyles, Snackbar, IconButton } from '@material-ui/core';
 import { SnackbarOrigin } from '@material-ui/core/Snackbar';
 import { Theme } from 'src/common/styles/theme';
-import { Message } from 'src/models/message';
+import { Message } from 'src/models/common/message';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { Close } from '@material-ui/icons';
+import { delay } from 'src/common/async-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -33,12 +34,14 @@ const styles = (theme: Theme) =>
     },
   });
 export interface MessageBarProps {
-  onClose?: () => void;
+  clear?: () => void;
+  close?: () => void;
   message: Message;
   anchorOrigin?: SnackbarOrigin;
 }
 export const MessageBar = decorate(styles)<MessageBarProps>(props => {
-  const { onClose, message, anchorOrigin } = props;
+  const { close, message, anchorOrigin } = props;
+  const { showDuration } = message;
   const {
     root,
     content,
@@ -47,6 +50,9 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
     contentButton,
     closeIcon,
   } = getInjectClasses(props);
+  if (showDuration && close) {
+    delay(showDuration).then(close);
+  }
   return (
     <Snackbar
       className={root}
@@ -60,8 +66,8 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
       anchorOrigin={anchorOrigin}
       open={true}
       onClose={(event, reason) => {
-        if (reason !== 'clickaway' && onClose) {
-          onClose();
+        if (reason !== 'clickaway' && close) {
+          close();
         }
       }}
       message={<MessageField message={message} />}
@@ -71,7 +77,7 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
           color="inherit"
           disableRipple={true}
           className={contentButton}
-          onClick={onClose}
+          onClick={close}
         >
           <Close className={closeIcon} />
         </IconButton>,

@@ -1,37 +1,12 @@
 import * as React from 'react';
 import { AppRouter } from './app-router';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { createStyles } from '@material-ui/core';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { AppMessages } from './app-message';
-import { SignIn } from './sign-in';
-import { StateMapper } from 'src/stores/types';
-import { resolve } from 'src/common/di/service-provider';
 
-const styles = createStyles({
-  root: {
-    position: 'relative',
-  },
-});
-interface Props {
-  authenticated: boolean;
-}
-const Inner = decorate(styles)<Props & RouteComponentProps<{}>>(props => {
-  const { authenticated } = props;
-  const { root } = getInjectClasses(props);
+export const AppBody: React.SFC = () => {
   return (
-    <div className={root}>
+    <React.Fragment>
       <AppMessages />
-      {authenticated ? <AppRouter /> : <SignIn />}
-    </div>
+      <AppRouter />
+    </React.Fragment>
   );
-});
-const mapStateToProps: StateMapper<Props> = ({ authenticateState }) => ({
-  authenticated: resolve('authenticateService').isAuthenticated(
-    authenticateState,
-  ),
-});
-export const AppBody = withRouter<RouteComponentProps<{}>>(
-  connect(mapStateToProps)(Inner),
-);
+};

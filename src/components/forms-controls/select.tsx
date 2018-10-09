@@ -11,13 +11,11 @@ import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import { SelectProps as MuiSelectProps } from '@material-ui/core/Select';
 import { ThemeColorScope } from '../styles/theme-color-scope';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/di/service-provider';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = createStyles({
   root: {
     width: '100%',
-    marginLeft: 10,
-    marginRight: 10,
   },
   select: {},
 });
@@ -30,12 +28,7 @@ export const Select = decorate(styles)<SelectProps & MuiSelectProps>(props => {
   const { items, themeColor, label } = props;
   const classes = getInjectClasses(props);
   const { root, select } = classes;
-  const pProps = resolve('componentHelper').createPropagationProps(
-    props,
-    'items',
-    'themeColor',
-    'label',
-  );
+  const pProps = createPropagationProps(props, 'items', 'themeColor', 'label');
   return (
     <ThemeColorScope themeColor={themeColor}>
       <FormControl className={root}>

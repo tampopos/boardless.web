@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { DispatchMapper, StateMapper } from '../../stores/types';
-import { connect } from 'react-redux';
-import Friend, { createEmptyFriend } from '../../models/friend';
+import { DispatchMapper, StateMapperWithRouter } from '../../stores/types';
+import Friend, { createEmptyFriend } from '../../models/bar/friend';
 import { getSexName } from '../../services/friend-service';
 import { Table } from '../../components/tables/table';
 import { TableRow } from '../../components/tables/table-row';
 import { TableCell } from '../../components/tables/table-cell';
 import { Row } from '../../components/layout/row';
 import { Cell } from '../../components/layout/cell';
-import { Button } from '../../components/forms-controls/button';
+import { OutlinedButton } from '../../components/forms-controls/button';
 import { barFormActionCreators } from '../../stores/bar/bar-form-reducer';
 import { Container } from 'src/components/layout/container';
 import { Typography, createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 const styles = createStyles({
   root: {},
@@ -43,7 +43,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<BarListProps> = ({
+const mapStateToProps: StateMapperWithRouter<BarListProps> = ({
   barListState,
   barFormState,
 }) => {
@@ -66,7 +66,9 @@ const decoratedComponent = decorate(styles)<BarListProps & Events>(props => {
       </Row>
       <Row className={row}>
         <Cell xs={2}>
-          <Button onClick={() => toAddMode()}>なかまをくわえる</Button>
+          <OutlinedButton onClick={() => toAddMode()}>
+            なかまをくわえる
+          </OutlinedButton>
         </Cell>
       </Row>
       <Row className={row}>
@@ -100,7 +102,6 @@ const decoratedComponent = decorate(styles)<BarListProps & Events>(props => {
   );
 });
 
-export const BarList = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(decoratedComponent);
+export const BarList = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+  decoratedComponent,
+);

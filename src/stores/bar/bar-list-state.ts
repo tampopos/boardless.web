@@ -1,5 +1,8 @@
-import Friend from "../../models/friend";
+import Friend from '../../models/bar/friend';
 
-export interface BarListState{
-  friends:Friend[];
+export interface BarListState {
+  friends: Friend[];
 }
+export const defaultBarListState: BarListState = {
+  friends: [],
+};

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { DispatchMapper, StateMapper } from '../../stores/types';
-import { connect } from 'react-redux';
-import Friend, { createEmptyFriend } from '../../models/friend';
+import { DispatchMapper, StateMapperWithRouter } from '../../stores/types';
+import Friend, { createEmptyFriend } from '../../models/bar/friend';
 import { createNewFriend } from '../../services/friend-service';
 import { BarForm } from './bar-form';
 import { Row } from '../../components/layout/row';
 import { Cell } from '../../components/layout/cell';
-import { Button } from '../../components/forms-controls/button';
+import { OutlinedButton } from '../../components/forms-controls/button';
 import { Table } from '../../components/tables/table';
 import { TableRow } from '../../components/tables/table-row';
 import { TableCell } from '../../components/tables/table-cell';
@@ -20,6 +19,8 @@ import { MenuItemProps } from '@material-ui/core/MenuItem';
 import { Container } from 'src/components/layout/container';
 import { RadioGroup } from 'src/components/forms-controls/radio-group';
 import { decorate } from 'src/common/styles/styles-helper';
+import { withConnectedRouter } from 'src/common/routing/routing-helper';
+import { RoutingProps } from 'src/common/routing/types';
 
 const styles = createStyles({
   root: {},
@@ -28,6 +29,10 @@ const styles = createStyles({
     '&:last-child': {
       paddingBottom: 0,
     },
+  },
+  cell: {
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });
 interface Events {
@@ -65,7 +70,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     },
   };
 };
-const mapStateToProps: StateMapper<BarFormContentProps> = ({
+const mapStateToProps: StateMapperWithRouter<BarFormContentProps> = ({
   barFormState,
   barListState,
 }) => {
@@ -102,130 +107,128 @@ const jobs = [
   'あそびにん',
 ].map(x => ({ key: x, value: x, children: x } as MenuItemProps));
 
-const decoratedComponent = decorate(styles)<BarFormContentProps & Events>(
-  props => {
-    const {
-      remove,
-      add,
-      friend,
-      friends,
-      title,
-      isAddMode,
-      changeFriend,
-      isValid,
-      buttonLabel,
-      color,
-      classes,
-    } = props;
-    const { row } = classes;
-    return (
-      <Container>
-        <BarForm themeColor={color}>
-          <Row className={row}>
-            <Typography variant="headline">{title}</Typography>
-          </Row>
-          <Row className={row}>
-            <Cell xs={6}>
+const decoratedComponent = decorate(styles)<
+  RoutingProps<BarFormContentProps & Events>
+>(props => {
+  const {
+    remove,
+    add,
+    friend,
+    friends,
+    title,
+    isAddMode,
+    changeFriend,
+    isValid,
+    buttonLabel,
+    color,
+    classes,
+  } = props;
+  const { row, cell } = classes;
+  return (
+    <Container>
+      <BarForm themeColor={color}>
+        <Row className={row}>
+          <Typography variant="headline">{title}</Typography>
+        </Row>
+        <Row className={row}>
+          <Cell xs={6} className={cell}>
+            <TextBox
+              themeColor={color}
+              maxLength={4}
+              InputProps={{ readOnly: !isAddMode }}
+              value={friend.name}
+              label="なまえ"
+              onChange={e => changeFriend('name', e.target.value)}
+            />
+          </Cell>
+          <Cell xs={6} className={cell}>
+            {isAddMode ? (
+              <Select
+                label="しょくぎょう"
+                themeColor={color}
+                value={friend.job}
+                onChange={e => changeFriend('job', e.target.value)}
+                items={jobs}
+              />
+            ) : (
               <TextBox
-                themeColor={color}
-                maxLength={4}
+                label="しょくぎょう"
                 InputProps={{ readOnly: !isAddMode }}
-                value={friend.name}
-                label="なまえ"
-                onChange={e => changeFriend('name', e.target.value)}
-              />
-            </Cell>
-            <Cell xs={6}>
-              {isAddMode ? (
-                <Select
-                  label="しょくぎょう"
-                  themeColor={color}
-                  value={friend.job}
-                  onChange={e => changeFriend('job', e.target.value)}
-                  items={jobs}
-                />
-              ) : (
-                <TextBox
-                  label="しょくぎょう"
-                  InputProps={{ readOnly: !isAddMode }}
-                  value={friend.job}
-                  themeColor={color}
-                />
-              )}
-            </Cell>
-          </Row>
-          <Row className={row}>
-            <Cell xs={6}>
-              <RadioGroup
-                label="せいべつ"
-                readOnly={!isAddMode}
-                value={friend.sex}
+                value={friend.job}
                 themeColor={color}
-                onChange={({}, v) => changeFriend('sex', v)}
-                items={[
-                  { value: 'male', label: 'おとこ' },
-                  { value: 'female', label: 'おんな' },
-                ]}
               />
-            </Cell>
-            {!isAddMode && (
-              <Cell xs={6}>
-                <TextBox
-                  value={friend.personality}
-                  InputProps={{ readOnly: !isAddMode }}
-                  themeColor={color}
-                  label="せいかく"
-                />
-              </Cell>
             )}
-          </Row>
+          </Cell>
+        </Row>
+        <Row className={row}>
+          <Cell xs={6} className={cell}>
+            <RadioGroup
+              label="せいべつ"
+              readOnly={!isAddMode}
+              value={friend.sex}
+              themeColor={color}
+              onChange={({}, v) => changeFriend('sex', v)}
+              items={[
+                { value: 'male', label: 'おとこ' },
+                { value: 'female', label: 'おんな' },
+              ]}
+            />
+          </Cell>
           {!isAddMode && (
-            <Row className={row}>
-              <Table>
-                <TableRow>
-                  <TableCell isHeader={true}>ちから</TableCell>
-                  <TableCell isHeader={true}>すばやさ</TableCell>
-                  <TableCell isHeader={true}>たいりょく</TableCell>
-                  <TableCell isHeader={true}>かしこさ</TableCell>
-                  <TableCell isHeader={true}>うんのよさ</TableCell>
-                  <TableCell isHeader={true}>さいだいHP</TableCell>
-                  <TableCell isHeader={true}>さいだいMP</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell themeColor={color}>{friend.attack}</TableCell>
-                  <TableCell themeColor={color}>{friend.agility}</TableCell>
-                  <TableCell themeColor={color}>{friend.physical}</TableCell>
-                  <TableCell themeColor={color}>
-                    {friend.intelligence}
-                  </TableCell>
-                  <TableCell themeColor={color}>{friend.luck}</TableCell>
-                  <TableCell themeColor={color}>{friend.maxHp}</TableCell>
-                  <TableCell themeColor={color}>{friend.maxMp}</TableCell>
-                </TableRow>
-              </Table>
-            </Row>
-          )}
-          <Row className={row}>
-            <Cell xs={10} />
-            <Cell xs={2}>
-              <Button
+            <Cell xs={6} className={cell}>
+              <TextBox
+                value={friend.personality}
+                InputProps={{ readOnly: !isAddMode }}
                 themeColor={color}
-                disabled={!isValid}
-                onClick={() =>
-                  isAddMode ? add(friend, friends) : remove(friend.id)
-                }
-              >
-                {buttonLabel}
-              </Button>
+                label="せいかく"
+              />
             </Cell>
+          )}
+        </Row>
+        {!isAddMode && (
+          <Row className={row}>
+            <Table>
+              <TableRow>
+                <TableCell isHeader={true}>ちから</TableCell>
+                <TableCell isHeader={true}>すばやさ</TableCell>
+                <TableCell isHeader={true}>たいりょく</TableCell>
+                <TableCell isHeader={true}>かしこさ</TableCell>
+                <TableCell isHeader={true}>うんのよさ</TableCell>
+                <TableCell isHeader={true}>さいだいHP</TableCell>
+                <TableCell isHeader={true}>さいだいMP</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell themeColor={color}>{friend.attack}</TableCell>
+                <TableCell themeColor={color}>{friend.agility}</TableCell>
+                <TableCell themeColor={color}>{friend.physical}</TableCell>
+                <TableCell themeColor={color}>{friend.intelligence}</TableCell>
+                <TableCell themeColor={color}>{friend.luck}</TableCell>
+                <TableCell themeColor={color}>{friend.maxHp}</TableCell>
+                <TableCell themeColor={color}>{friend.maxMp}</TableCell>
+              </TableRow>
+            </Table>
           </Row>
-        </BarForm>
-      </Container>
-    );
-  },
-);
+        )}
+        <Row className={row}>
+          <Cell xs={10} />
+          <Cell xs={2} className={cell}>
+            <OutlinedButton
+              themeColor={color}
+              disabled={!isValid}
+              onClick={() =>
+                isAddMode ? add(friend, friends) : remove(friend.id)
+              }
+            >
+              {buttonLabel}
+            </OutlinedButton>
+          </Cell>
+        </Row>
+      </BarForm>
+    </Container>
+  );
+});
 
-export const BarFormContent = connect(
+export const BarFormContent = withConnectedRouter(
   mapStateToProps,
   mapDispatchToProps,
 )(decoratedComponent);

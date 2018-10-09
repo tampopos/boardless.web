@@ -1,6 +1,8 @@
 export namespace Url {
   export const root = '/';
-  export const help = '/help';
-  export const authenticateRefresh = '/authenticate/refresh';
-  export const authenticateSignIn = '/authenticate/sign-in';
+  export const workspaceRootTemplate = '/:workspaceId';
+  export const workspaceRoot = (workspaceId: string) => `/${workspaceId}`;
+  export const accountsRefresh = '/accounts/refresh';
+  export const accountsSignIn = '/accounts/sign-in';
+  export const workspacesInvited = '/workspaces/invited';
 }
