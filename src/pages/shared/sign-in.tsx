@@ -66,7 +66,10 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     signIn: async model => {
       const authenticateService = resolve('authenticateService');
       const errors = authenticateService.validate(model);
-      if (errors.length > 0) {
+      const writeMessages = (e: string[]) => {
+        if (!errors || errors.length === 0) {
+          return false;
+        }
         errors.forEach(error => {
           dispatch(
             messagesActionCreators.showMessage({
@@ -74,10 +77,16 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
             }),
           );
         });
+        return true;
+      };
+      if (writeMessages(errors)) {
         return;
       }
-      const token = await authenticateService.signInAsync(model);
-      dispatch(authenticateActionCreators.add({ token }));
+      const res = await authenticateService.signInAsync(model);
+      if (writeMessages(res.errors)) {
+        return;
+      }
+      dispatch(authenticateActionCreators.add({ token: res.token }));
     },
   };
 };
