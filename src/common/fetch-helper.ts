@@ -1,38 +1,32 @@
-import { IConfig } from './config';
-import { IAsyncHelper } from './async-helper';
+import { IConfig } from './interfaces/config';
 import { FetchRequest } from 'src/models/fetch-request';
+import { injectable } from 'inversify';
+import { IFetchHelper } from './interfaces/fetch-helper';
+import { inject } from './di/inject';
 
-export interface IFetchHelper {
-  setCredential: (token: string) => void;
-  fetchAsync: <TRequest extends {}, TResult extends {}>(
-    request: FetchRequest<TRequest>,
-  ) => Promise<TResult>;
-}
+@injectable()
 export class FetchHelper implements IFetchHelper {
   private token: string;
-  constructor(private config: IConfig) {}
+  constructor(@inject('config') private config: IConfig) {}
   public setCredential = (token: string) => (this.token = token);
-  public fetchAsync = async <TRequest, TResult>(
-    request: FetchRequest<TRequest>,
-  ) => {
-    const response = await fetch({
-      credentials: this.token,
-      url: this.config.apiUrl,
-    } as Request);
-    return (await response.json()) as TResult;
-  };
-}
-export class FetchHelperDummy implements IFetchHelper {
-  constructor(private asyncHelper: IAsyncHelper) {}
-  public setCredential = (token: string) => {
-    console.info(token);
-  };
-  public fetchAsync = async <TRequest, TResult>(
-    request: FetchRequest<TRequest>,
-  ) => {
-    await this.asyncHelper.delay(100);
-    switch (request.relativeUrl) {
+  public fetchAsync = async <TResult>(request: FetchRequest) => {
+    const url = this.config.apiUrl + request.relativeUrl;
+    const req = {
+      body:
+        request.body && !this.config.isMockMode
+          ? JSON.stringify(request.body)
+          : null,
+      headers: new Headers(
+        request.methodName !== 'GET'
+          ? { Accept: 'application/json', 'Content-Type': 'application/json' }
+          : {},
+      ),
+    } as Request;
+    if (this.token) {
+      // req.credentials.=this.token;
     }
-    return {} as TResult;
+    const response = await fetch(url, req);
+    const json = await response.json();
+    return json as TResult;
   };
 }

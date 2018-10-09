@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { DispatchMapper, StateMapper } from 'src/stores/types';
 import { authenticateActionCreators } from 'src/stores/authenticate/authenticate-reducer';
 import { SignInModel } from 'src/models/sign-in-model';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 import { Resources } from 'src/common/location/resources';
 import { getCultureInfo } from 'src/common/location/localize-provider';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
@@ -65,7 +65,10 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
     signIn: async model => {
       const authenticateService = resolve('authenticateService');
       const errors = authenticateService.validate(model);
-      if (errors.length > 0) {
+      const writeMessages = (e: string[]) => {
+        if (!errors || errors.length === 0) {
+          return false;
+        }
         errors.forEach(error => {
           dispatch(
             messagesActionCreators.showMessage({
@@ -73,10 +76,16 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
             }),
           );
         });
+        return true;
+      };
+      if (writeMessages(errors)) {
         return;
       }
-      const token = await authenticateService.signInAsync(model);
-      dispatch(authenticateActionCreators.add({ token }));
+      const res = await authenticateService.signInAsync(model);
+      if (writeMessages(res.errors)) {
+        return;
+      }
+      dispatch(authenticateActionCreators.add({ token: res.token }));
     },
   };
 };

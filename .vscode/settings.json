@@ -20,7 +20,9 @@
     "clickaway",
     "csstype",
     "haspopup",
+    "inversify",
     "localstorage",
+    "middlewares",
     "roboto",
     "selectable",
     "tmpps"

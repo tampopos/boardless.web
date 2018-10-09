@@ -1,5 +1,5 @@
 import Friend from '../models/friend';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const malePersonalities = [
   'ごうけつ',

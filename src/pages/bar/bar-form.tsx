@@ -7,7 +7,7 @@ import {
 import { Container, ContainerProps } from 'src/components/layout/container';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
-import { resolve } from 'src/common/service-provider';
+import { resolve } from 'src/common/di/service-provider';
 
 const styles = (theme: Theme) =>
   createStyles({
