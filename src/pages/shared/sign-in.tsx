@@ -11,6 +11,11 @@ import { Resources } from 'src/common/location/resources';
 import { getCultureInfo } from 'src/common/location/localize-provider';
 import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
 import { Form } from 'src/components/forms-controls/form';
+import { RouteComponentProps } from 'react-router';
+import { decorate } from 'src/common/styles/styles-helper';
+import { withRouter } from 'src/common/routing/routing-helper';
+import { History } from 'history';
+import { Url } from 'src/common/routing/url';
 
 const styles = createStyles({
   root: {},
@@ -19,12 +24,16 @@ interface Props {
   resources: Resources;
 }
 interface Events {
-  signIn: (state: SignInModel) => void;
+  signIn: (state: SignInModel, history: History) => void;
 }
 interface State {
   model: SignInModel;
 }
-class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
+class Inner extends StyledComponentBase<
+  typeof styles,
+  Props & Events & RouteComponentProps<{}>,
+  State
+> {
   constructor(props: any) {
     super(props);
     this.state = { model: { email: '', password: '' } };
@@ -39,10 +48,10 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   public render() {
-    const { signIn, resources } = this.props;
+    const { signIn, resources, history } = this.props;
     const { email, password } = this.state.model;
     return (
-      <Form onSubmit={e => signIn(this.state.model)}>
+      <Form onSubmit={e => signIn(this.state.model, history)}>
         <TextBox
           value={email}
           type="email"
@@ -62,7 +71,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 }
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
-    signIn: async model => {
+    signIn: async (model, history) => {
       const authenticateService = resolve('authenticateService');
       const errors = authenticateService.validate(model);
       const writeMessages = (e: string[]) => {
@@ -86,6 +95,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
         return;
       }
       dispatch(authenticateActionCreators.add({ token: res.token }));
+      history.push(Url.root);
     },
   };
 };
@@ -95,7 +105,9 @@ const mapStateToProps: StateMapper<Props> = ({ locationState }) => {
     resources,
   };
 };
+const StyledInner = decorate(styles)(Inner);
+const RoutingInner = withRouter(StyledInner);
 export const SignIn = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Inner);
+)(RoutingInner);

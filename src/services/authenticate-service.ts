@@ -3,7 +3,7 @@ import { SignInModel } from 'src/models/sign-in-model';
 import { injectable } from 'inversify';
 import { IAuthenticateService } from './interfaces/authenticate-service';
 import { IFetchHelper } from 'src/common/interfaces/fetch-helper';
-import { Url } from 'src/common/statics/url';
+import { Url } from 'src/common/routing/url';
 import { inject } from 'src/common/di/inject';
 
 @injectable()
