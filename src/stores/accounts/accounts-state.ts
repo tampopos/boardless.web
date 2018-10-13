@@ -1,11 +1,11 @@
 import { Claim } from 'src/models/accounts/claim';
-import { Workspace } from 'src/models/accounts/workspace';
+import { UserWorkspace } from 'src/models/accounts/workspace';
 import { cultureInfos } from 'src/common/location/culture-infos';
 import { ReservedWords } from 'src/common/statics/reserved-words';
 export interface AccountsState {
   claim?: Claim;
   claims: { [index: string]: Claim };
-  workspaces: { [index: string]: Workspace };
+  workspaces: { [index: string]: UserWorkspace };
 }
 
 export const defaultAccountsState: AccountsState = {
@@ -62,5 +62,23 @@ export class AccountsGetters {
       return;
     }
     return filtered[0][1];
+  };
+  public validateWorkspaceUrl = (workspaceUrl: string) => {
+    if (!workspaceUrl || ReservedWords.WorkspaceUrl.isReserved(workspaceUrl)) {
+      return true;
+    }
+    const { workspaces, claim } = this.state;
+    if (!claim) {
+      return false;
+    }
+    return (
+      Object.entries(workspaces).filter(x => {
+        const workspace = x[1];
+        return (
+          workspace.workspaceUrl === workspaceUrl &&
+          workspace.userId === claim.userId
+        );
+      }).length > 0
+    );
   };
 }

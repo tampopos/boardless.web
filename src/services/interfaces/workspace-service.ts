@@ -1,14 +1,15 @@
-import { Workspace } from 'src/models/accounts/workspace';
+import { UserWorkspace, WorkspaceBase } from 'src/models/accounts/workspace';
 import { History } from 'history';
 import { Claim } from 'src/models/accounts/claim';
 
 export interface IWorkspaceService {
-  onClick: (history: History, workspace: Workspace) => void;
-  onCloseWorkspaceClick: (history: History, workspace: Workspace) => void;
-  getSrc: (workspace: Workspace) => Promise<string>;
+  onClick: (history: History, workspace: UserWorkspace) => void;
+  onCloseWorkspaceClick: (history: History, workspace: UserWorkspace) => void;
+  getSrc: (workspace: WorkspaceBase) => Promise<string>;
   getInvitedWorkspaces: (
     claims: { [index: string]: Claim },
-    workspaces: { [index: string]: Workspace },
+    workspaces: { [index: string]: UserWorkspace },
   ) => void;
-  join: (workspace: Workspace, history: History) => void;
+  getJoinableWorkspaces: (searchKeyword: string) => void;
+  join: (workspace: UserWorkspace, history: History) => void;
 }

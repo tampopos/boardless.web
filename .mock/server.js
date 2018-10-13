@@ -10,6 +10,7 @@ server.use(
     '/accounts/sign-in': '/accounts-sign-in',
     '/workspaces/invited': '/workspaces-invited',
     '/workspaces/icon': '/workspaces-icon',
+    '/workspaces/public': '/workspaces-public',
   }),
 );
 

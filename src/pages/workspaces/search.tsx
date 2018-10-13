@@ -6,7 +6,7 @@ import { Resources } from 'src/common/location/resources';
 import { decorate, appendClassName } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
-import { UserWorkspace } from 'src/models/accounts/workspace';
+import { Workspace } from 'src/models/accounts/workspace';
 import { Claim } from 'src/models/accounts/claim';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 import { OutlinedButton } from 'src/components/forms-controls/button';
@@ -15,7 +15,7 @@ import { Row } from 'src/components/layout/row';
 import { resolve } from 'src/services/common/service-provider';
 import { Cell } from 'src/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
-import { Url } from 'src/common/routing/url';
+import { TextBox } from 'src/components/forms-controls/text-box';
 
 const styles = createStyles({
   root: { padding: 10, alignSelf: 'flex-start' },
@@ -26,15 +26,13 @@ const styles = createStyles({
     },
   },
   actionButtonRow: { justifyContent: 'center', marginTop: 50 },
-  btn: { width: 200, marginRight: 20, marginLeft: 20 },
   listRow: { marginTop: 30, paddingLeft: 30, paddingRight: 30 },
 });
 interface Props {
-  resources: Resources;
-  workspaces: { [index: string]: UserWorkspace };
   claims: { [index: string]: Claim };
+  resources: Resources;
   history: History;
-  invitedWorkspaces: UserWorkspace[];
+  joinableWorkspaces: Workspace[];
 }
 interface Params {
   workspaceUrl: string;
@@ -43,92 +41,74 @@ const mapStateToProps: StateMapperWithRouter<Props, Params> = (
   { accountsState, workspacesState },
   { history },
 ) => {
-  const { workspaces, claims } = accountsState;
-  const { invitedWorkspaces } = workspacesState;
+  const { claims } = accountsState;
+  const { joinableWorkspaces } = workspacesState;
   const { resources } = new AccountsGetters(accountsState);
   return {
-    workspaces,
     claims,
     resources,
     history,
-    invitedWorkspaces,
+    joinableWorkspaces,
   };
 };
 interface Events {
-  getInvitedWorkspaces: (
-    claims: { [index: string]: Claim },
-    workspaces: { [index: string]: UserWorkspace },
-  ) => void;
-  join: (workspace: UserWorkspace, history: History) => void;
+  getJoinableWorkspaces: (searchKeyword: string) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { getInvitedWorkspaces, join } = resolve('workspaceService');
-  return { getInvitedWorkspaces, join };
+  const { getJoinableWorkspaces } = resolve('workspaceService');
+  return { getJoinableWorkspaces };
 };
-interface State {}
+interface State {
+  searchKeyword: string;
+}
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
-    this.state = {};
+    this.state = { searchKeyword: '' };
   }
   public async componentDidMount() {
-    const { getInvitedWorkspaces, claims, workspaces } = this.props;
-    getInvitedWorkspaces(claims, workspaces);
+    const { getJoinableWorkspaces } = this.props;
+    const { searchKeyword } = this.state;
+    getJoinableWorkspaces(searchKeyword);
+  }
+  private changeSearchKeyword(searchKeyword: string) {
+    this.setState({ searchKeyword });
   }
   public render() {
-    const {
-      classes,
-      resources,
-      invitedWorkspaces,
-      claims,
-      join,
-      history,
-    } = this.props;
-    const { root, row, actionButtonRow, btn, listRow } = classes;
+    const { classes, resources, joinableWorkspaces } = this.props;
+    const { searchKeyword } = this.state;
+    const { root, row, actionButtonRow, listRow } = classes;
     return (
       <Container className={root}>
         <Row className={row}>
-          <Typography variant="display1">
-            {resources.AddingWorkspace}
-          </Typography>
+          <Typography variant="display1">{resources.JoinWorkspace}</Typography>
         </Row>
         <Row className={appendClassName(row, actionButtonRow)}>
-          <OutlinedButton color="primary" className={btn}>
-            {resources.AddNewWorkspace}
-          </OutlinedButton>
-          <OutlinedButton
-            color="secondary"
-            className={btn}
-            onClick={() => history.push(Url.searchWorkspaces)}
-          >
-            {resources.JoinWorkspace}
-          </OutlinedButton>
+          <TextBox
+            color="primary"
+            value={searchKeyword}
+            onChange={e => this.changeSearchKeyword(e.currentTarget.value)}
+          />
         </Row>
         <Row className={appendClassName(row, listRow)}>
           <Row>
             <Typography variant="title">
-              {resources.InvitedWorkspace}
+              {resources.JoinableWorkspace}
             </Typography>
           </Row>
           <Row>
-            {invitedWorkspaces.map(w => {
-              const { userWorkspaceId, userId, name } = w;
-              const claim = claims[userId];
+            {joinableWorkspaces.map(w => {
+              const { workspaceUrl, name } = w;
               return (
-                <Row key={userWorkspaceId}>
-                  <Cell xs={3}>
+                <Row key={workspaceUrl}>
+                  <Cell xs={4}>
                     <WorkspaceIcon workspace={w} />
                   </Cell>
-                  <Cell xs={3}>
+                  <Cell xs={4}>
                     <Typography>{name}</Typography>
                   </Cell>
-                  <Cell xs={3}>
-                    <Typography>{claim.name}</Typography>
-                  </Cell>
-                  <Cell xs={3}>
-                    <OutlinedButton onClick={() => join(w, history)}>
-                      {resources.Join}
-                    </OutlinedButton>
+                  <Cell xs={4}>
+                    <OutlinedButton>{resources.Join}</OutlinedButton>
                   </Cell>
                 </Row>
               );
@@ -140,7 +120,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   }
 }
 const StyledInner = decorate(styles)(Inner);
-export const WorkspaceIndex = withConnectedRouter(
+export const WorkspaceSearch = withConnectedRouter(
   mapStateToProps,
   mapDispatchToProps,
 )(StyledInner);

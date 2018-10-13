@@ -11,6 +11,7 @@ import { Bar } from 'src/pages/bar';
 import { History } from 'history';
 import { WorkspaceIndex } from 'src/pages/workspaces';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { WorkspaceSearch } from 'src/pages/workspaces/search';
 
 const styles = createStyles({
   root: {},
@@ -30,6 +31,11 @@ class Inner extends StyledComponentBase<typeof styles, Props> {
     return (
       <SideMenuContainer>
         <Switch>
+          <Route
+            exact={true}
+            path={Url.searchWorkspaces}
+            component={WorkspaceSearch}
+          />
           <Route path={Url.workspaceRootTemplate} component={Bar} />
           <Route path={Url.root} component={WorkspaceIndex} />
         </Switch>
@@ -44,10 +50,9 @@ const mapStateToProps: StateMapperWithRouter<Props, Params> = (
   { accountsState },
   { match, history },
 ) => {
-  const { getCurrentWorkspace } = new AccountsGetters(accountsState);
+  const { validateWorkspaceUrl } = new AccountsGetters(accountsState);
   const { workspaceUrl } = match.params;
-  const workspace = getCurrentWorkspace(workspaceUrl);
-  const redirectRoot = Boolean(workspaceUrl && !workspace);
+  const redirectRoot = !validateWorkspaceUrl(workspaceUrl);
   return {
     history,
     redirectRoot,

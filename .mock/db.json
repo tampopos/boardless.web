@@ -76,5 +76,25 @@
         "userId": "user01"
       }
     ]
+  },
+  "workspaces-public": {
+    "result": [
+      {
+        "workspaceUrl": "public-workspace01",
+        "name": "公開ワークスペース01"
+      },
+      {
+        "workspaceUrl": "public-workspace02",
+        "name": "公開ワークスペース02"
+      },
+      {
+        "workspaceUrl": "public-workspace03",
+        "name": "公開ワークスペース03"
+      },
+      {
+        "workspaceUrl": "public-workspace04",
+        "name": "公開ワークスペース04"
+      }
+    ]
   }
 }

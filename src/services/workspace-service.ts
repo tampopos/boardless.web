@@ -1,7 +1,7 @@
 import { IWorkspaceService } from './interfaces/workspace-service';
 import { injectable } from 'inversify';
 import { History } from 'history';
-import { Workspace } from 'src/models/accounts/workspace';
+import { UserWorkspace } from 'src/models/accounts/workspace';
 import { Url, ApiUrl } from 'src/common/routing/url';
 import { inject } from './common/inject';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
@@ -19,13 +19,13 @@ export class WorkspaceService implements IWorkspaceService {
   private get dispatch() {
     return this.dispatchProvider.dispatch;
   }
-  public onClick = (history: History, workspace: Workspace) => {
+  public onClick = (history: History, workspace: UserWorkspace) => {
     const { userWorkspaceId, workspaceUrl } = workspace;
     this.dispatch(accountsActionCreators.changeWorkspace({ userWorkspaceId }));
     const relativeUrl = Url.workspaceRoot(workspaceUrl);
     history.push(relativeUrl);
   };
-  public getSrc = async (workspace: Workspace) => {
+  public getSrc = async (workspace: UserWorkspace) => {
     const { url } = await this.fetchService.fetchAsync<{
       url: string;
     }>({
@@ -35,21 +35,24 @@ export class WorkspaceService implements IWorkspaceService {
     });
     return url;
   };
-  public onCloseWorkspaceClick = (history: History, workspace: Workspace) => {
+  public onCloseWorkspaceClick = (
+    history: History,
+    workspace: UserWorkspace,
+  ) => {
     const { userWorkspaceId } = workspace;
     this.dispatch(accountsActionCreators.removeWorkspace({ userWorkspaceId }));
     history.push(Url.root);
   };
   public getInvitedWorkspaces = (
     claims: { [index: string]: Claim },
-    workspaces: { [index: string]: Workspace },
+    workspaces: { [index: string]: UserWorkspace },
   ) => {
     this.dispatch(workspacesActionCreators.clearInvitedWorkspaces());
     const joined = Object.entries(workspaces).map(x => x[1]);
     Object.entries(claims).forEach(async x => {
       const { token } = x[1];
       const { result } = await this.fetchService.fetchAsync<{
-        result: Workspace[];
+        result: UserWorkspace[];
       }>(
         {
           relativeUrl: ApiUrl.workspacesInvited,
@@ -71,7 +74,21 @@ export class WorkspaceService implements IWorkspaceService {
       );
     });
   };
-  public join = (workspace: Workspace, history: History) => {
+  public getJoinableWorkspaces = async (searchKeyword: string) => {
+    this.dispatch(workspacesActionCreators.clearJoinableWorkspaces());
+    const { result } = await this.fetchService.fetchAsync<{
+      result: UserWorkspace[];
+    }>({
+      relativeUrl: ApiUrl.workspacesPublic,
+      methodName: 'GET',
+    });
+    this.dispatch(
+      workspacesActionCreators.addJoinableWorkspaces({
+        joinableWorkspaces: result,
+      }),
+    );
+  };
+  public join = (workspace: UserWorkspace, history: History) => {
     this.dispatch(
       accountsActionCreators.addWorkspace({
         workspace,
