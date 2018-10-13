@@ -1,9 +1,4 @@
-import {
-  createStyles,
-  ButtonBase,
-  CircularProgress,
-  Popover,
-} from '@material-ui/core';
+import { createStyles, ButtonBase, CircularProgress } from '@material-ui/core';
 import { StyledComponentBase } from 'src/common/styles/types';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import * as React from 'react';
@@ -16,6 +11,7 @@ import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 import { History } from 'history';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { resolve } from 'src/services/common/service-provider';
+import { ContextMenu } from 'src/components/extensions/context-menu';
 
 const baseStyles = (theme: Theme) =>
   createStyles({ root: {}, btn: { ...theme.shared.workspaceIcon.button } });
@@ -138,23 +134,11 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
         ) : (
           <CircularProgress className={image} />
         )}
-        <Popover
-          open={open}
-          anchorEl={anchorEl}
-          onClose={this.handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
+        <ContextMenu open={open} anchorEl={anchorEl} onClose={this.handleClose}>
           <Button onClick={this.handleCloseWorkspaceClick}>
             {resources.CloseWorkspace}
           </Button>
-        </Popover>
+        </ContextMenu>
       </WorkspaceIconBase>
     );
   }
