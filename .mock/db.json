@@ -7,8 +7,18 @@
       "email": "user01@example.com"
     },
     "workspaces": [
-      { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
-      { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
+      {
+        "userWorkspaceId": "workspace01/user01",
+        "workspaceUrl": "workspace01",
+        "name": "ワークスペース01",
+        "userId": "user01"
+      },
+      {
+        "userWorkspaceId": "workspace02/user01",
+        "workspaceUrl": "workspace02",
+        "name": "ワークスペース02",
+        "userId": "user01"
+      }
     ]
   },
   "accounts-sign-in": {
@@ -21,17 +31,47 @@
         "email": "user01@example.com"
       },
       "workspaces": [
-        { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
-        { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" }
+        {
+          "userWorkspaceId": "workspace01/user01",
+          "workspaceUrl": "workspace01",
+          "name": "ワークスペース01",
+          "userId": "user01"
+        },
+        {
+          "userWorkspaceId": "workspace02/user01",
+          "workspaceUrl": "workspace02",
+          "name": "ワークスペース02",
+          "userId": "user01"
+        }
       ]
     }
   },
   "workspaces-invited": {
     "result": [
-      { "id": "workspace01", "name": "ワークスペース01", "userId": "user01" },
-      { "id": "workspace02", "name": "ワークスペース02", "userId": "user01" },
-      { "id": "workspace03", "name": "ワークスペース03", "userId": "user01" },
-      { "id": "workspace04", "name": "ワークスペース04", "userId": "user01" }
+      {
+        "userWorkspaceId": "workspace01/user01",
+        "workspaceUrl": "workspace01",
+        "name": "ワークスペース01",
+        "userId": "user01"
+      },
+      {
+        "userWorkspaceId": "workspace02/user01",
+        "workspaceUrl": "workspace02",
+        "name": "ワークスペース02",
+        "userId": "user01"
+      },
+      {
+        "userWorkspaceId": "workspace03/user01",
+        "workspaceUrl": "workspace03",
+        "name": "ワークスペース03",
+        "userId": "user01"
+      },
+      {
+        "userWorkspaceId": "workspace04/user01",
+        "workspaceUrl": "workspace04",
+        "name": "ワークスペース04",
+        "userId": "user01"
+      }
     ]
   }
 }

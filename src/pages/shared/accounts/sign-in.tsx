@@ -11,15 +11,12 @@ import { decorate } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
-import { Workspace } from 'src/models/accounts/workspace';
-import { Claim } from 'src/models/accounts/claim';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
-import { ReservedWords } from 'src/common/statics/reserved-words';
 
 const styles = createStyles({
   root: {
@@ -43,14 +40,13 @@ const styles = createStyles({
 });
 interface Props {
   resources: Resources;
-  workspaces: { [index: string]: Workspace };
-  claims: { [index: string]: Claim };
-  workspaceId: string;
-  pathname: string;
+  workspaceUrl: string;
   history: History;
+  getDefaultEmail: () => string;
+  redirectRoot: boolean;
 }
 interface Events {
-  signIn: (state: SignInModel, history: History, workspaceId?: string) => void;
+  signIn: (state: SignInModel, history: History, workspaceUrl?: string) => void;
 }
 interface State {
   model: SignInModel;
@@ -58,25 +54,17 @@ interface State {
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
+    const { getDefaultEmail } = this.props;
     this.state = {
-      model: { email: this.getDefaultEmail(), password: '' },
+      model: { email: getDefaultEmail(), password: '' },
     };
   }
-  private getDefaultEmail = () => {
-    const { workspaceId, workspaces, claims } = this.props;
-    if (!workspaceId) {
-      return '';
+  public componentDidMount() {
+    const { redirectRoot, history } = this.props;
+    if (redirectRoot) {
+      history.push(Url.root);
     }
-    const workspace = workspaces[workspaceId];
-    if (!workspace) {
-      return '';
-    }
-    const claim = claims[workspace.userId];
-    if (!claim) {
-      return '';
-    }
-    return claim.email;
-  };
+  }
   public onChange = (name: keyof SignInModel) => (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -87,25 +75,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   public render() {
-    const {
-      signIn,
-      resources,
-      history,
-      workspaceId,
-      classes,
-      workspaces,
-      claims,
-      pathname,
-    } = this.props;
-    const workspace = workspaces[workspaceId];
-    const existsClaim = workspace && claims[workspace.id];
-    if (
-      !existsClaim &&
-      pathname !== Url.root &&
-      workspaceId !== ReservedWords.WorkspaceId.system
-    ) {
-      history.push(Url.root);
-    }
+    const { signIn, resources, history, workspaceUrl, classes } = this.props;
     const { email, password } = this.state.model;
     const { form, row, container, root } = classes;
     return (
@@ -113,7 +83,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
         <div className={root}>
           <Typography variant="display1">{resources.SignIn}</Typography>
           <Form
-            onSubmit={() => signIn(this.state.model, history, workspaceId)}
+            onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
             className={form}
           >
             <Container className={container}>
@@ -150,24 +120,34 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   return {
-    signIn: async (model, history, workspaceId) => {
+    signIn: async (model, history, workspaceUrl) => {
       const accountsService = resolve('accountsService');
       if (!(await accountsService.validate(model))) {
         return;
       }
-      await accountsService.signInAsync(model, history, workspaceId);
+      await accountsService.signInAsync(model, history, workspaceUrl);
     },
   };
 };
-const mapStateToProps: StateMapperWithRouter<Props, { workspaceId: string }> = (
+interface Params {
+  workspaceUrl: string;
+}
+const mapStateToProps: StateMapperWithRouter<Props, Params> = (
   { accountsState },
-  { match, history, location },
+  { match, history },
 ) => {
-  const { workspaces, claims } = accountsState;
-  const { workspaceId } = match.params;
-  const { resources } = new AccountsGetters(accountsState);
-  const { pathname } = location;
-  return { workspaces, claims, resources, workspaceId, history, pathname };
+  const { claim } = accountsState;
+  const { getCurrentWorkspace, resources } = new AccountsGetters(accountsState);
+  const { workspaceUrl } = match.params;
+  const workspace = getCurrentWorkspace(workspaceUrl);
+  const redirectRoot = Boolean(workspaceUrl && !workspace);
+  const getDefaultEmail = () => {
+    if (!redirectRoot && claim) {
+      return claim.email;
+    }
+    return '';
+  };
+  return { resources, getDefaultEmail, history, redirectRoot };
 };
 const StyledInner = decorate(styles)(Inner);
 export const SignIn = withConnectedRouter(mapStateToProps, mapDispatchToProps)(

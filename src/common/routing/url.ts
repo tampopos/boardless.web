@@ -2,8 +2,9 @@ export namespace Url {
   export const root = '/';
   export const system = `${root}system`;
   export const signIn = `${system}/sign-in`;
-  export const workspaceRootTemplate = `${root}:workspaceId`;
-  export const workspaceRoot = (workspaceId: string) => `${root}${workspaceId}`;
+  export const workspaceRootTemplate = `${root}:workspaceUrl`;
+  export const workspaceRoot = (workspaceUrl: string) =>
+    `${root}${workspaceUrl}`;
 }
 export namespace ApiUrl {
   export const accountsRefresh = '/accounts/refresh';

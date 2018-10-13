@@ -34,22 +34,23 @@ const styles = (theme: Theme) =>
     selectedWorkspaceBtn: theme.shared.workspaceIcon.selectedButton,
   });
 interface Props {
-  workspaceId: string;
   workspaces: { [index: string]: Workspace };
+  currentWorkspace?: Workspace;
   resources: Resources;
   history: History;
 }
 interface RouteParams {
-  workspaceId: string;
+  workspaceUrl: string;
 }
 const mapStateToProps: StateMapperWithRouter<Props, RouteParams> = (
   { accountsState },
   { match, history },
 ) => {
-  const { workspaceId } = match.params;
+  const { workspaceUrl } = match.params;
   const { workspaces } = accountsState;
-  const { resources } = new AccountsGetters(accountsState);
-  return { workspaces, workspaceId, resources, history };
+  const { getCurrentWorkspace, resources } = new AccountsGetters(accountsState);
+  const currentWorkspace = getCurrentWorkspace(workspaceUrl);
+  return { workspaces, workspaceUrl, resources, history, currentWorkspace };
 };
 interface Events {
   addWorkspace: (history: History) => () => void;
@@ -65,11 +66,10 @@ const Inner: StyledSFC<typeof styles, Props & Events> = ({
   classes,
   workspaces,
   history,
-  workspaceId,
   resources,
   addWorkspace,
+  currentWorkspace,
 }) => {
-  const currentWorkspace = workspaces[workspaceId];
   const {
     root,
     workspaceAria,
@@ -84,12 +84,13 @@ const Inner: StyledSFC<typeof styles, Props & Events> = ({
       <div className={workspaceAria}>
         {Object.entries(workspaces).map(x => {
           const key = x[0];
-          const workspace = x[1];
-          const isSelected = key === workspaceId;
+          const w = x[1];
+          const isSelected =
+            currentWorkspace && key === currentWorkspace.userWorkspaceId;
           return (
             <div key={key} className={workspaceBtn}>
               <WorkspaceIcon
-                workspace={workspace}
+                workspace={w}
                 injectClasses={{
                   btn: isSelected ? selectedWorkspaceBtn : undefined,
                 }}

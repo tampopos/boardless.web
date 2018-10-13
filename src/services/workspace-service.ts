@@ -21,8 +21,9 @@ export class WorkspaceService implements IWorkspaceService {
     return this.dispatchProvider.dispatch;
   }
   public onClick = (history: History, workspace: Workspace) => {
-    const { id } = workspace;
-    const relativeUrl = Url.workspaceRoot(id);
+    const { userWorkspaceId, workspaceUrl } = workspace;
+    this.dispatch(accountsActionCreators.changeWorkspace({ userWorkspaceId }));
+    const relativeUrl = Url.workspaceRoot(workspaceUrl);
     history.push(relativeUrl);
   };
   public getSrc = async (workspace: Workspace) => {
@@ -30,8 +31,8 @@ export class WorkspaceService implements IWorkspaceService {
     return 'https://material-ui.com/static/images/grid-list/breakfast.jpg';
   };
   public onCloseWorkspaceClick = (history: History, workspace: Workspace) => {
-    const { id } = workspace;
-    this.dispatch(accountsActionCreators.removeWorkspace({ id }));
+    const { userWorkspaceId } = workspace;
+    this.dispatch(accountsActionCreators.removeWorkspace({ userWorkspaceId }));
     history.push(Url.root);
   };
   public getInvitedWorkspaces = (
@@ -53,8 +54,10 @@ export class WorkspaceService implements IWorkspaceService {
       );
       const invitedWorkspaces = result.filter(
         r =>
-          joined.filter(y => y.id === r.id && y.userId === r.userId).length ===
-          0,
+          joined.filter(
+            y =>
+              y.userWorkspaceId === r.userWorkspaceId && y.userId === r.userId,
+          ).length === 0,
       );
       this.dispatch(
         workspacesActionCreators.addInvitedWorkspaces({

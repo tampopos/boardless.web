@@ -51,6 +51,7 @@ interface Props {
   workspace: Workspace;
   resources: Resources;
   history: History;
+  title: string;
 }
 interface OwnProps {
   workspace: Workspace;
@@ -59,8 +60,10 @@ const mapStateToProps: StateMapperWithRouter<Props, {}, OwnProps> = (
   { accountsState },
   { history, workspace },
 ) => {
+  const { claims } = accountsState;
   const { resources } = new AccountsGetters(accountsState);
-  return { resources, history, workspace };
+  const title = `${workspace.name}/${claims[workspace.userId].name}`;
+  return { resources, history, workspace, title };
 };
 interface Events {
   onClick: (history: History, workspace: Workspace) => void;
@@ -121,14 +124,13 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   public render() {
-    const { workspace, onClick, resources, history } = this.props;
-    const { name } = workspace;
+    const { workspace, onClick, resources, history, title } = this.props;
     const { src, anchorEl } = this.state;
     const { root, btn, image } = getInjectClasses(this.props);
     const open = Boolean(anchorEl);
     return (
       <WorkspaceIconBase
-        title={name}
+        title={title}
         onClick={() => onClick(history, workspace)}
         injectClasses={{ root, btn }}
         onContextMenu={this.handleClick}
