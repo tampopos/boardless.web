@@ -5,7 +5,7 @@ export class Throttle {
   private lock = false;
   public execute = async () => {
     if (this.lock) {
-      return false;
+      return;
     }
     this.lock = true;
     await delay(this.interval);
@@ -14,23 +14,21 @@ export class Throttle {
     } finally {
       this.lock = false;
     }
-    return true;
   };
 }
-export class ThrottleAsync {
-  constructor(private func: () => Promise<{}>, private interval: number) {}
+export class ThrottleAsync<T = void> {
+  constructor(private func: () => Promise<T>, private interval: number) {}
   private lock = false;
   public execute = async () => {
     if (this.lock) {
-      return false;
+      return;
     }
     this.lock = true;
     await delay(this.interval);
     try {
-      await this.func();
+      return await this.func();
     } finally {
       this.lock = false;
     }
-    return true;
   };
 }

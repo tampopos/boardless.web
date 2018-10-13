@@ -18,25 +18,39 @@ import { WorkspaceIcon } from './workspace-icon';
 import { TextBox } from 'src/components/forms-controls/text-box';
 import { parse } from 'query-string';
 import { Url } from 'src/common/routing/url';
-import { Throttle } from 'src/common/throttle';
+import { ThrottleAsync } from 'src/common/throttle';
+import { InfinityLoading } from 'src/components/extensions/infinity-loading';
+import { Theme } from 'src/common/styles/theme';
 
-const styles = createStyles({
-  root: { padding: 10, alignSelf: 'flex-start' },
-  row: {
-    paddingBottom: 10,
-    '&:last-child': {
-      paddingBottom: 0,
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: 10,
+      display: 'block',
+      height: `100%`,
     },
-  },
-  actionButtonRow: { justifyContent: 'center', marginTop: 50 },
-  listRow: { marginTop: 30, paddingLeft: 30, paddingRight: 30 },
-});
+    row: {
+      paddingBottom: 10,
+      '&:last-child': {
+        paddingBottom: 0,
+      },
+    },
+    actionButtonRow: {
+      justifyContent: 'center',
+      marginTop: 25,
+      marginBottom: 25,
+    },
+    infinity: {
+      height: `calc(100% - ${176}px)`,
+    },
+  });
 interface Props {
   claims: { [index: string]: Claim };
   resources: Resources;
   history: History;
-  joinableWorkspaces: Workspace[];
+  joinableWorkspaces: { [index: string]: Workspace };
   searchKeyword?: string;
+  fetchCount: number;
 }
 interface Params {
   workspaceUrl: string;
@@ -55,10 +69,16 @@ const mapStateToProps: StateMapperWithRouter<Props, Params> = (
     history,
     joinableWorkspaces,
     searchKeyword: searchKeyword ? searchKeyword.toString() : undefined,
+    fetchCount: 50,
   };
 };
 interface Events {
-  getJoinableWorkspaces: (searchKeyword?: string) => void;
+  getJoinableWorkspaces: (
+    searchKeyword: string | undefined,
+    clear: boolean,
+    count: number,
+    fetchCount: number,
+  ) => Promise<boolean>;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   const { getJoinableWorkspaces } = resolve('workspaceService');
@@ -66,26 +86,43 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
 };
 interface State {
   searchKeyword?: string;
+  loadCompleted: boolean;
 }
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
-    this.state = { searchKeyword: this.props.searchKeyword };
+    this.state = {
+      searchKeyword: this.props.searchKeyword,
+      loadCompleted: false,
+    };
   }
-  private redirect = () => {
-    const { history, getJoinableWorkspaces } = this.props;
+  private redirect = async () => {
+    const { history } = this.props;
     const { searchKeyword } = this.state;
     if (this.props.searchKeyword !== searchKeyword) {
       history.push(Url.searchWorkspaces(searchKeyword));
-      getJoinableWorkspaces(searchKeyword);
+      await this.nextWorkspacesAsync(true);
     }
   };
-  private searchKeywordThrottle = new Throttle(this.redirect, 500);
-  public async componentDidMount() {
-    const { getJoinableWorkspaces } = this.props;
-    const { searchKeyword } = this.state;
-    getJoinableWorkspaces(searchKeyword);
-  }
+  private nextWorkspacesAsync = async (init: boolean) => {
+    const {
+      getJoinableWorkspaces,
+      fetchCount,
+      joinableWorkspaces,
+    } = this.props;
+    const { searchKeyword, loadCompleted } = this.state;
+    const joinableWorkspacesArray = Object.entries(joinableWorkspaces);
+    const completed = await getJoinableWorkspaces(
+      searchKeyword,
+      init,
+      init ? 0 : joinableWorkspacesArray.length,
+      fetchCount,
+    );
+    if (completed || (init && !completed && loadCompleted)) {
+      this.setState({ loadCompleted: completed });
+    }
+  };
+  private searchKeywordThrottle = new ThrottleAsync(this.redirect, 500);
   private changeSearchKeyword(searchKeyword: string) {
     this.setState({ searchKeyword });
   }
@@ -99,8 +136,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   }
   public render() {
     const { classes, resources, joinableWorkspaces } = this.props;
-    const { searchKeyword } = this.state;
-    const { root, row, actionButtonRow, listRow } = classes;
+    const { searchKeyword, loadCompleted } = this.state;
+    const { root, row, actionButtonRow, infinity } = classes;
+    const joinableWorkspacesArray = Object.entries(joinableWorkspaces);
     return (
       <Container className={root}>
         <Row className={row}>
@@ -113,31 +151,32 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
             onChange={e => this.changeSearchKeyword(e.currentTarget.value)}
           />
         </Row>
-        <Row className={appendClassName(row, listRow)}>
-          <Row>
-            <Typography variant="title">
-              {resources.JoinableWorkspace}
-            </Typography>
-          </Row>
-          <Row>
-            {joinableWorkspaces.map(w => {
-              const { workspaceUrl, name } = w;
-              return (
-                <Row key={workspaceUrl}>
-                  <Cell xs={4}>
-                    <WorkspaceIcon workspace={w} />
-                  </Cell>
-                  <Cell xs={4}>
-                    <Typography>{name}</Typography>
-                  </Cell>
-                  <Cell xs={4}>
-                    <OutlinedButton>{resources.Join}</OutlinedButton>
-                  </Cell>
-                </Row>
-              );
-            })}
-          </Row>
+        <Row>
+          <Typography variant="title">{resources.JoinableWorkspace}</Typography>
         </Row>
+        <InfinityLoading
+          loadCompleted={loadCompleted}
+          next={async () => await this.nextWorkspacesAsync(false)}
+          className={infinity}
+        >
+          {joinableWorkspacesArray.map(x => {
+            const w = x[1];
+            const { workspaceUrl, name } = w;
+            return (
+              <Row key={workspaceUrl}>
+                <Cell xs={4}>
+                  <WorkspaceIcon workspace={w} />
+                </Cell>
+                <Cell xs={4}>
+                  <Typography>{name}</Typography>
+                </Cell>
+                <Cell xs={4}>
+                  <OutlinedButton>{resources.Join}</OutlinedButton>
+                </Cell>
+              </Row>
+            );
+          })}
+        </InfinityLoading>
       </Container>
     );
   }

@@ -74,19 +74,30 @@ export class WorkspaceService implements IWorkspaceService {
       );
     });
   };
-  public getJoinableWorkspaces = async (searchKeyword?: string) => {
-    this.dispatch(workspacesActionCreators.clearJoinableWorkspaces());
-    const { result } = await this.fetchService.fetchAsync<{
+  public getJoinableWorkspaces = async (
+    searchKeyword: string | undefined,
+    clear: boolean,
+    count: number,
+    fetchCount: number,
+  ) => {
+    if (clear) {
+      this.dispatch(workspacesActionCreators.clearJoinableWorkspaces());
+    }
+    const { result, completed } = await this.fetchService.fetchAsync<{
       result: UserWorkspace[];
+      completed: boolean;
     }>({
-      relativeUrl: ApiUrl.workspacesPublic,
+      relativeUrl: ApiUrl.workspacesPublic(count),
       methodName: 'GET',
     });
-    this.dispatch(
-      workspacesActionCreators.addJoinableWorkspaces({
-        joinableWorkspaces: result,
-      }),
-    );
+    if (result.length) {
+      this.dispatch(
+        workspacesActionCreators.addJoinableWorkspaces({
+          joinableWorkspaces: result,
+        }),
+      );
+    }
+    return completed;
   };
   public join = (workspace: UserWorkspace, history: History) => {
     this.dispatch(

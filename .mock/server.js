@@ -10,7 +10,13 @@ server.use(
     '/accounts/sign-in': '/accounts-sign-in',
     '/workspaces/invited': '/workspaces-invited',
     '/workspaces/icon': '/workspaces-icon',
-    '/workspaces/public': '/workspaces-public',
+    '/workspaces/public/0': '/workspaces-public-0',
+    '/workspaces/public/10': '/workspaces-public-10',
+    '/workspaces/public/20': '/workspaces-public-20',
+    '/workspaces/public/30': '/workspaces-public-30',
+    '/workspaces/public/60': '/workspaces-public-60',
+    '/workspaces/public/90': '/workspaces-public-90',
+    '/workspaces/public/99': '/workspaces-public-99',
   }),
 );
 

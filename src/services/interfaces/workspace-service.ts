@@ -10,6 +10,11 @@ export interface IWorkspaceService {
     claims: { [index: string]: Claim },
     workspaces: { [index: string]: UserWorkspace },
   ) => void;
-  getJoinableWorkspaces: (searchKeyword?: string) => void;
+  getJoinableWorkspaces: (
+    searchKeyword: string | undefined,
+    clear: boolean,
+    count: number,
+    fetchCount: number,
+  ) => Promise<boolean>;
   join: (workspace: UserWorkspace, history: History) => void;
 }

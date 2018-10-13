@@ -34,7 +34,7 @@ interface Props {
   workspaces: { [index: string]: UserWorkspace };
   claims: { [index: string]: Claim };
   history: History;
-  invitedWorkspaces: UserWorkspace[];
+  invitedWorkspaces: { [index: string]: UserWorkspace };
 }
 interface Params {
   workspaceUrl: string;
@@ -111,7 +111,8 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
             </Typography>
           </Row>
           <Row>
-            {invitedWorkspaces.map(w => {
+            {Object.entries(invitedWorkspaces).map(x => {
+              const w = x[1];
               const { userWorkspaceId, userId, name } = w;
               const claim = claims[userId];
               return (

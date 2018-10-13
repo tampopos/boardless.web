@@ -19,6 +19,7 @@ export namespace ApiUrl {
   export const accountsRefresh = '/accounts/refresh';
   export const accountsSignIn = '/accounts/sign-in';
   export const workspacesInvited = '/workspaces/invited';
-  export const workspacesPublic = '/workspaces/public';
+  export const workspacesPublic = (count: number) =>
+    `/workspaces/public/${count}`;
   export const workspacesIcon = '/workspaces/icon';
 }
