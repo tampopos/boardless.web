@@ -9,24 +9,7 @@ export interface AccountsState {
 }
 
 export const defaultAccountsState: AccountsState = {
-  claims: {
-    user01: {
-      token: 'token',
-      userId: 'user01',
-      name: 'User 01',
-      email: 'user01@example.com',
-      isInitialized: true,
-      cultureName: 'ja',
-    },
-    user02: {
-      token: 'token',
-      userId: 'user02',
-      name: 'User 02',
-      email: 'user02@example.com',
-      isInitialized: true,
-      cultureName: 'ja',
-    },
-  },
+  claims: {},
   workspaces: {},
 };
 
