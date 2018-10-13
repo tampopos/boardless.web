@@ -9,6 +9,7 @@ server.use(
     '/accounts/refresh': '/accounts-refresh',
     '/accounts/sign-in': '/accounts-sign-in',
     '/workspaces/invited': '/workspaces-invited',
+    '/workspaces/icon': '/workspaces-icon',
   }),
 );
 

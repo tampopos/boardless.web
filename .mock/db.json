@@ -46,6 +46,9 @@
       ]
     }
   },
+  "workspaces-icon": {
+    "url": "https://material-ui.com/static/images/grid-list/breakfast.jpg"
+  },
   "workspaces-invited": {
     "result": [
       {
