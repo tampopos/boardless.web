@@ -2,6 +2,7 @@ import { Claim } from 'src/models/accounts/claim';
 import { UserWorkspace } from 'src/models/accounts/workspace';
 import { cultureInfos } from 'src/common/location/culture-infos';
 import { ReservedWords } from 'src/common/statics/reserved-words';
+
 export interface AccountsState {
   claim?: Claim;
   claims: { [index: string]: Claim };

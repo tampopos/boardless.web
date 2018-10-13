@@ -16,6 +16,9 @@ import { resolve } from 'src/services/common/service-provider';
 import { Cell } from 'src/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
 import { TextBox } from 'src/components/forms-controls/text-box';
+import { parse } from 'query-string';
+import { Url } from 'src/common/routing/url';
+import { Throttle } from 'src/common/throttle';
 
 const styles = createStyles({
   root: { padding: 10, alignSelf: 'flex-start' },
@@ -33,39 +36,51 @@ interface Props {
   resources: Resources;
   history: History;
   joinableWorkspaces: Workspace[];
+  searchKeyword?: string;
 }
 interface Params {
   workspaceUrl: string;
 }
 const mapStateToProps: StateMapperWithRouter<Props, Params> = (
   { accountsState, workspacesState },
-  { history },
+  { history, location },
 ) => {
   const { claims } = accountsState;
   const { joinableWorkspaces } = workspacesState;
   const { resources } = new AccountsGetters(accountsState);
+  const { searchKeyword } = parse(location.search);
   return {
     claims,
     resources,
     history,
     joinableWorkspaces,
+    searchKeyword: searchKeyword ? searchKeyword.toString() : undefined,
   };
 };
 interface Events {
-  getJoinableWorkspaces: (searchKeyword: string) => void;
+  getJoinableWorkspaces: (searchKeyword?: string) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   const { getJoinableWorkspaces } = resolve('workspaceService');
   return { getJoinableWorkspaces };
 };
 interface State {
-  searchKeyword: string;
+  searchKeyword?: string;
 }
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
-    this.state = { searchKeyword: '' };
+    this.state = { searchKeyword: this.props.searchKeyword };
   }
+  private redirect = () => {
+    const { history, getJoinableWorkspaces } = this.props;
+    const { searchKeyword } = this.state;
+    if (this.props.searchKeyword !== searchKeyword) {
+      history.push(Url.searchWorkspaces(searchKeyword));
+      getJoinableWorkspaces(searchKeyword);
+    }
+  };
+  private searchKeywordThrottle = new Throttle(this.redirect, 500);
   public async componentDidMount() {
     const { getJoinableWorkspaces } = this.props;
     const { searchKeyword } = this.state;
@@ -73,6 +88,14 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   }
   private changeSearchKeyword(searchKeyword: string) {
     this.setState({ searchKeyword });
+  }
+  public componentDidUpdate?(
+    prevProps: Readonly<Props & Events>,
+    prevState: Readonly<State>,
+  ) {
+    if (prevState.searchKeyword !== this.state.searchKeyword) {
+      this.searchKeywordThrottle.execute();
+    }
   }
   public render() {
     const { classes, resources, joinableWorkspaces } = this.props;

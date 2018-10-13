@@ -31,11 +31,7 @@ class Inner extends StyledComponentBase<typeof styles, Props> {
     return (
       <SideMenuContainer>
         <Switch>
-          <Route
-            exact={true}
-            path={Url.searchWorkspaces}
-            component={WorkspaceSearch}
-          />
+          <Route path={Url.searchWorkspaces()} component={WorkspaceSearch} />
           <Route path={Url.workspaceRootTemplate} component={Bar} />
           <Route path={Url.root} component={WorkspaceIndex} />
         </Switch>

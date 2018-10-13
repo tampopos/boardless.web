@@ -74,7 +74,7 @@ export class WorkspaceService implements IWorkspaceService {
       );
     });
   };
-  public getJoinableWorkspaces = async (searchKeyword: string) => {
+  public getJoinableWorkspaces = async (searchKeyword?: string) => {
     this.dispatch(workspacesActionCreators.clearJoinableWorkspaces());
     const { result } = await this.fetchService.fetchAsync<{
       result: UserWorkspace[];

@@ -99,7 +99,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           <OutlinedButton
             color="secondary"
             className={btn}
-            onClick={() => history.push(Url.searchWorkspaces)}
+            onClick={() => history.push(Url.searchWorkspaces())}
           >
             {resources.JoinWorkspace}
           </OutlinedButton>

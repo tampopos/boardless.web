@@ -10,6 +10,6 @@ export interface IWorkspaceService {
     claims: { [index: string]: Claim },
     workspaces: { [index: string]: UserWorkspace },
   ) => void;
-  getJoinableWorkspaces: (searchKeyword: string) => void;
+  getJoinableWorkspaces: (searchKeyword?: string) => void;
   join: (workspace: UserWorkspace, history: History) => void;
 }
