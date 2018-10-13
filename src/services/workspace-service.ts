@@ -71,4 +71,12 @@ export class WorkspaceService implements IWorkspaceService {
       );
     });
   };
+  public join = (workspace: Workspace, history: History) => {
+    this.dispatch(
+      accountsActionCreators.addWorkspace({
+        workspace,
+      }),
+    );
+    history.push(Url.workspaceRoot(workspace.workspaceUrl));
+  };
 }
