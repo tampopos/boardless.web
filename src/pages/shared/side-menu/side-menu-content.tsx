@@ -5,8 +5,8 @@ import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { decorate } from 'src/common/styles/styles-helper';
 import { Workspace } from 'src/models/accounts/workspace';
 import {
-  WorkspaceIcon,
-  WorkspaceIconBase,
+  WorkspaceIconButton,
+  WorkspaceIconButtonBase,
 } from '../../workspaces/workspace-icon';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
@@ -89,22 +89,22 @@ const Inner: StyledSFC<typeof styles, Props & Events> = ({
             currentWorkspace && key === currentWorkspace.userWorkspaceId;
           return (
             <div key={key} className={workspaceBtn}>
-              <WorkspaceIcon
+              <WorkspaceIconButton
                 workspace={w}
                 injectClasses={{
-                  btn: isSelected ? selectedWorkspaceBtn : undefined,
+                  root: isSelected ? selectedWorkspaceBtn : undefined,
                 }}
               />
             </div>
           );
         })}
         <div className={workspaceBtn}>
-          <WorkspaceIconBase
+          <WorkspaceIconButtonBase
             onClick={addWorkspace(history)}
             title={resources.AddWorkspace}
           >
             <Add />
-          </WorkspaceIconBase>
+          </WorkspaceIconButtonBase>
         </div>
       </div>
       <div className={contentAria}>

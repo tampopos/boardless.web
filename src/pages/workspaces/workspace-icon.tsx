@@ -14,35 +14,146 @@ import { resolve } from 'src/services/common/service-provider';
 import { ContextMenu } from 'src/components/extensions/context-menu';
 
 const baseStyles = (theme: Theme) =>
-  createStyles({ root: {}, btn: { ...theme.shared.workspaceIcon.button } });
+  createStyles({ root: { ...theme.shared.workspaceIcon.base } });
 interface BaseProps {
+  title: string;
+}
+export const WorkspaceIconBase = decorate(baseStyles)<BaseProps>(props => {
+  const { children, title } = props;
+  const { root } = getInjectClasses(props);
+  return (
+    <div className={root} title={title}>
+      {children}
+    </div>
+  );
+});
+const buttonBaseStyles = (theme: Theme) =>
+  createStyles({ root: { ...theme.shared.workspaceIcon.base } });
+interface ButtonBaseProps {
   title: string;
   onClick: () => void;
   onContextMenu?: (event: React.MouseEvent<HTMLElement>) => void;
 }
-export const WorkspaceIconBase = decorate(baseStyles)<BaseProps>(props => {
+export const WorkspaceIconButtonBase = decorate(buttonBaseStyles)<
+  ButtonBaseProps
+>(props => {
   const { children, onClick, onContextMenu, title } = props;
-  const { root, btn } = getInjectClasses(props);
+  const { root } = getInjectClasses(props);
   return (
-    <div className={root}>
-      <ButtonBase
-        className={btn}
-        focusRipple={true}
-        title={title}
-        onClick={onClick}
-        onContextMenu={e => {
-          if (onContextMenu) {
-            e.preventDefault();
-            onContextMenu(e);
-          }
-        }}
-      >
-        {children}
-      </ButtonBase>
-    </div>
+    <ButtonBase
+      className={root}
+      title={title}
+      focusRipple={true}
+      onClick={onClick}
+      onContextMenu={e => {
+        if (onContextMenu) {
+          e.preventDefault();
+          onContextMenu(e);
+        }
+      }}
+    >
+      {children}
+    </ButtonBase>
   );
 });
 
+const iconInnerStyles = (theme: Theme) =>
+  createStyles({
+    image: { ...theme.shared.workspaceIcon.image },
+  });
+interface IconInnerProps {}
+interface IconInnerOwnProps {
+  workspace: Workspace;
+}
+const mapStateToPropsIconInner: StateMapperWithRouter<
+  IconInnerProps,
+  {},
+  IconInnerOwnProps
+> = ({}, { workspace }) => {
+  return { workspace };
+};
+interface IconInnerEvents {
+  getSrc: (workspace: Workspace) => Promise<string>;
+}
+const mapDispatchToPropsIconInner: DispatchMapper<
+  IconInnerEvents,
+  IconInnerOwnProps
+> = () => {
+  const { getSrc } = resolve('workspaceService');
+  return {
+    getSrc,
+  };
+};
+
+interface IconInnerState {
+  src?: string;
+}
+
+const WorkspaceIconInner = withConnectedRouter(
+  mapStateToPropsIconInner,
+  mapDispatchToPropsIconInner,
+)(
+  decorate(iconInnerStyles)<IconInnerProps>(
+    class extends StyledComponentBase<
+      typeof iconInnerStyles,
+      IconInnerProps & IconInnerOwnProps & IconInnerEvents,
+      IconInnerState
+    > {
+      constructor(props: any) {
+        super(props);
+        this.state = {};
+      }
+      public async componentDidMount() {
+        const { getSrc, workspace } = this.props;
+        const src = await getSrc(workspace);
+        if (!this.disposing) {
+          this.setState({ src });
+        }
+      }
+      private disposing = false;
+      public componentWillUnmount() {
+        this.disposing = true;
+      }
+      public render() {
+        const { src } = this.state;
+        const { image } = getInjectClasses(this.props);
+        return src ? (
+          <img src={src} className={image} />
+        ) : (
+          <CircularProgress className={image} />
+        );
+      }
+    },
+  ),
+);
+const iconStyles = createStyles({
+  image: {},
+});
+interface IconProps {
+  title: string;
+}
+interface IconOwnProps {
+  workspace: Workspace;
+}
+const mapStateToPropsIcon: StateMapperWithRouter<
+  IconProps,
+  {},
+  IconOwnProps
+> = ({ accountsState }, { workspace }) => {
+  const { claims } = accountsState;
+  const title = `${workspace.name}/${claims[workspace.userId].name}`;
+  return { workspace, title };
+};
+export const WorkspaceIcon = withConnectedRouter(mapStateToPropsIcon)(
+  decorate(iconStyles)<IconProps & IconOwnProps>(props => {
+    const { title, workspace } = props;
+    return (
+      <WorkspaceIconBase title={title}>
+        <WorkspaceIconInner workspace={workspace} />
+      </WorkspaceIconBase>
+    );
+  }),
+);
 interface Props {
   workspace: Workspace;
   resources: Resources;
@@ -64,43 +175,25 @@ const mapStateToProps: StateMapperWithRouter<Props, {}, OwnProps> = (
 interface Events {
   onClick: (history: History, workspace: Workspace) => void;
   onCloseWorkspaceClick: (history: History, workspace: Workspace) => void;
-  getSrc: (workspace: Workspace) => Promise<string>;
 }
 const mapDispatchToProps: DispatchMapper<Events, OwnProps> = () => {
-  const { onClick, getSrc, onCloseWorkspaceClick } = resolve(
-    'workspaceService',
-  );
+  const { onClick, onCloseWorkspaceClick } = resolve('workspaceService');
   return {
     onClick,
-    getSrc,
     onCloseWorkspaceClick,
   };
 };
 interface State {
-  src?: string;
   anchorEl?: HTMLElement;
 }
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    btn: {},
-    image: { ...theme.shared.workspaceIcon.image },
   });
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
     this.state = {};
-  }
-  private disposing = false;
-  public async componentDidMount() {
-    const { getSrc, workspace } = this.props;
-    const src = await getSrc(workspace);
-    if (!this.disposing) {
-      this.setState({ src });
-    }
-  }
-  public componentWillUnmount() {
-    this.disposing = true;
   }
   private handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({
@@ -121,32 +214,28 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   };
   public render() {
     const { workspace, onClick, resources, history, title } = this.props;
-    const { src, anchorEl } = this.state;
-    const { root, btn, image } = getInjectClasses(this.props);
+    const { anchorEl } = this.state;
+    const { root } = getInjectClasses(this.props);
     const open = Boolean(anchorEl);
     return (
-      <WorkspaceIconBase
+      <WorkspaceIconButtonBase
         title={title}
         onClick={() => onClick(history, workspace)}
-        injectClasses={{ root, btn }}
+        injectClasses={{ root }}
         onContextMenu={this.handleClick}
       >
-        {src ? (
-          <img src={src} className={image} />
-        ) : (
-          <CircularProgress className={image} />
-        )}
+        <WorkspaceIconInner workspace={workspace} />
         <ContextMenu open={open} anchorEl={anchorEl} onClose={this.handleClose}>
           <Button onClick={this.handleCloseWorkspaceClick}>
             {resources.CloseWorkspace}
           </Button>
         </ContextMenu>
-      </WorkspaceIconBase>
+      </WorkspaceIconButtonBase>
     );
   }
 }
 const StyledInner = decorate(styles)(Inner);
-export const WorkspaceIcon = withConnectedRouter(
+export const WorkspaceIconButton = withConnectedRouter(
   mapStateToProps,
   mapDispatchToProps,
 )(StyledInner);
