@@ -46,6 +46,8 @@ export const accountsReducer = (storedState: StoredState) =>
             newState.workspaces[workspace.id] = workspace;
           });
         }
+      } else if (Object.keys(newState.claims).length > 0) {
+        newState.claim = Object.entries(newState.claims)[0][1];
       }
       return newState;
     })

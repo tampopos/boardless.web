@@ -2,7 +2,7 @@ import { IWorkspaceService } from './interfaces/workspace-service';
 import { injectable } from 'inversify';
 import { History } from 'history';
 import { Workspace } from 'src/models/accounts/workspace';
-import { Url } from 'src/common/routing/url';
+import { Url, ApiUrl } from 'src/common/routing/url';
 import { delay } from 'src/common/async-helper';
 import { inject } from './common/inject';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
@@ -22,8 +22,8 @@ export class WorkspaceService implements IWorkspaceService {
   }
   public onClick = (history: History, workspace: Workspace) => {
     const { id } = workspace;
-    const url = Url.workspaceRoot(id);
-    history.push(url);
+    const relativeUrl = Url.workspaceRoot(id);
+    history.push(relativeUrl);
   };
   public getSrc = async (workspace: Workspace) => {
     await delay(1000);
@@ -46,7 +46,7 @@ export class WorkspaceService implements IWorkspaceService {
         result: Workspace[];
       }>(
         {
-          relativeUrl: Url.workspacesInvited,
+          relativeUrl: ApiUrl.workspacesInvited,
           methodName: 'GET',
         },
         token,
