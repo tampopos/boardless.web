@@ -605,5 +605,13 @@
   "workspaces-public-99": {
     "completed": true,
     "result": []
+  },
+  "workspaces-join": {
+    "userWorkspace": {
+      "userWorkspaceId": "public-workspace01/user01",
+      "workspaceUrl": "public-workspace01",
+      "name": "公開ワークスペース01",
+      "userId": "user01"
+    }
   }
 }

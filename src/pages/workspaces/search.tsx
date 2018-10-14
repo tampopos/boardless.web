@@ -1,5 +1,5 @@
 import { StyledComponentBase } from 'src/common/styles/types';
-import { createStyles, Typography } from '@material-ui/core';
+import { createStyles, Typography, Button } from '@material-ui/core';
 import * as React from 'react';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { Resources } from 'src/common/location/resources';
@@ -21,6 +21,7 @@ import { Url } from 'src/common/routing/url';
 import { ThrottleAsync } from 'src/common/throttle';
 import { InfinityLoading } from 'src/components/extensions/infinity-loading';
 import { Theme } from 'src/common/styles/theme';
+import { ContextMenu } from 'src/components/extensions/context-menu';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -79,14 +80,16 @@ interface Events {
     count: number,
     fetchCount: number,
   ) => Promise<boolean>;
+  join: (workspace: Workspace, claim: Claim, history: History) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { getJoinableWorkspaces } = resolve('workspaceService');
-  return { getJoinableWorkspaces };
+  const { getJoinableWorkspaces, join } = resolve('workspaceService');
+  return { getJoinableWorkspaces, join };
 };
 interface State {
   searchKeyword?: string;
   loadCompleted: boolean;
+  openJoinContextMenu?: { targetWorkspace: Workspace; anchorEl: HTMLElement };
 }
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
@@ -134,10 +137,39 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       this.searchKeywordThrottle.execute();
     }
   }
+  private handleClose = () => {
+    this.setState({
+      openJoinContextMenu: undefined,
+    });
+  };
+  private clickJoin = (workspace: Workspace) => (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
+    const { claims, join, history } = this.props;
+    const claimsArray = Object.entries(claims);
+    if (claimsArray.length === 1) {
+      join(workspace, claimsArray[0][1], history);
+    } else if (claimsArray.length > 1) {
+      this.setState({
+        openJoinContextMenu: {
+          targetWorkspace: workspace,
+          anchorEl: event.currentTarget,
+        },
+      });
+    }
+  };
   public render() {
-    const { classes, resources, joinableWorkspaces } = this.props;
-    const { searchKeyword, loadCompleted } = this.state;
+    const {
+      classes,
+      resources,
+      joinableWorkspaces,
+      claims,
+      join,
+      history,
+    } = this.props;
+    const { searchKeyword, loadCompleted, openJoinContextMenu } = this.state;
     const { root, row, actionButtonRow, infinity } = classes;
+    const claimsArray = Object.entries(claims);
     const joinableWorkspacesArray = Object.entries(joinableWorkspaces);
     return (
       <Container className={root}>
@@ -171,12 +203,38 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   <Typography>{name}</Typography>
                 </Cell>
                 <Cell xs={4}>
-                  <OutlinedButton>{resources.Join}</OutlinedButton>
+                  <OutlinedButton onClick={this.clickJoin(w)}>
+                    {resources.Join}
+                  </OutlinedButton>
                 </Cell>
               </Row>
             );
           })}
         </InfinityLoading>
+        {claimsArray.length > 0 && (
+          <ContextMenu
+            open={Boolean(openJoinContextMenu)}
+            anchorEl={openJoinContextMenu && openJoinContextMenu.anchorEl}
+            onClose={this.handleClose}
+          >
+            {claimsArray.map(c => {
+              const claim = c[1];
+              return (
+                <Button
+                  key={claim.userId}
+                  onClick={() => {
+                    if (openJoinContextMenu) {
+                      join(openJoinContextMenu.targetWorkspace, claim, history);
+                    }
+                    this.handleClose();
+                  }}
+                >
+                  {resources.JoinAs(claim.name)}
+                </Button>
+              );
+            })}
+          </ContextMenu>
+        )}
       </Container>
     );
   }

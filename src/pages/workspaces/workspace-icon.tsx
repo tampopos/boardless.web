@@ -192,14 +192,14 @@ const mapStateToProps: StateMapperWithRouter<Props, {}, OwnProps> = (
   return { resources, history, workspace, title };
 };
 interface Events {
-  onClick: (history: History, workspace: UserWorkspace) => void;
-  onCloseWorkspaceClick: (history: History, workspace: UserWorkspace) => void;
+  changeWorkspace: (history: History, workspace: UserWorkspace) => void;
+  closeWorkspace: (history: History, workspace: UserWorkspace) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events, OwnProps> = () => {
-  const { onClick, onCloseWorkspaceClick } = resolve('workspaceService');
+  const { changeWorkspace, closeWorkspace } = resolve('workspaceService');
   return {
-    onClick,
-    onCloseWorkspaceClick,
+    changeWorkspace,
+    closeWorkspace,
   };
 };
 interface State {
@@ -225,21 +225,27 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   private handleCloseWorkspaceClick = () => {
-    const { onCloseWorkspaceClick, history, workspace } = this.props;
-    onCloseWorkspaceClick(history, workspace);
+    const { closeWorkspace, history, workspace } = this.props;
+    closeWorkspace(history, workspace);
     this.setState({
       anchorEl: undefined,
     });
   };
   public render() {
-    const { workspace, onClick, resources, history, title } = this.props;
+    const {
+      workspace,
+      changeWorkspace,
+      resources,
+      history,
+      title,
+    } = this.props;
     const { anchorEl } = this.state;
     const { root } = getInjectClasses(this.props);
     const open = Boolean(anchorEl);
     return (
       <WorkspaceIconButtonBase
         title={title}
-        onClick={() => onClick(history, workspace)}
+        onClick={() => !open && changeWorkspace(history, workspace)}
         injectClasses={{ root }}
         onContextMenu={this.handleClick}
       >

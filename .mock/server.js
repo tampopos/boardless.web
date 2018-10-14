@@ -17,6 +17,7 @@ server.use(
     '/workspaces/public/60': '/workspaces-public-60',
     '/workspaces/public/90': '/workspaces-public-90',
     '/workspaces/public/99': '/workspaces-public-99',
+    '/workspaces/join': '/workspaces-join',
   }),
 );
 

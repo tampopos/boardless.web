@@ -1,7 +1,7 @@
 import { IWorkspaceService } from './interfaces/workspace-service';
 import { injectable } from 'inversify';
 import { History } from 'history';
-import { UserWorkspace } from 'src/models/accounts/workspace';
+import { UserWorkspace, Workspace } from 'src/models/accounts/workspace';
 import { Url, ApiUrl } from 'src/common/routing/url';
 import { inject } from './common/inject';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
@@ -19,7 +19,7 @@ export class WorkspaceService implements IWorkspaceService {
   private get dispatch() {
     return this.dispatchProvider.dispatch;
   }
-  public onClick = (history: History, workspace: UserWorkspace) => {
+  public changeWorkspace = (history: History, workspace: UserWorkspace) => {
     const { userWorkspaceId, workspaceUrl } = workspace;
     this.dispatch(accountsActionCreators.changeWorkspace({ userWorkspaceId }));
     const relativeUrl = Url.workspaceRoot(workspaceUrl);
@@ -35,10 +35,7 @@ export class WorkspaceService implements IWorkspaceService {
     });
     return url;
   };
-  public onCloseWorkspaceClick = (
-    history: History,
-    workspace: UserWorkspace,
-  ) => {
+  public closeWorkspace = (history: History, workspace: UserWorkspace) => {
     const { userWorkspaceId } = workspace;
     this.dispatch(accountsActionCreators.removeWorkspace({ userWorkspaceId }));
     history.push(Url.root);
@@ -99,12 +96,29 @@ export class WorkspaceService implements IWorkspaceService {
     }
     return completed;
   };
-  public join = (workspace: UserWorkspace, history: History) => {
+  public add = (workspace: UserWorkspace, history: History) => {
     this.dispatch(
       accountsActionCreators.addWorkspace({
         workspace,
       }),
     );
     history.push(Url.workspaceRoot(workspace.workspaceUrl));
+  };
+  public join = async (
+    workspace: Workspace,
+    claim: Claim,
+    history: History,
+  ) => {
+    const { userWorkspace } = await this.fetchService.fetchAsync<{
+      userWorkspace: UserWorkspace;
+    }>(
+      {
+        relativeUrl: ApiUrl.workspacesJoin,
+        methodName: 'POST',
+        body: workspace,
+      },
+      claim.token,
+    );
+    this.add(userWorkspace, history);
   };
 }

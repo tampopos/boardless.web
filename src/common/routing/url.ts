@@ -16,10 +16,14 @@ export namespace Url {
     `${root}${workspaceUrl}`;
 }
 export namespace ApiUrl {
-  export const accountsRefresh = '/accounts/refresh';
-  export const accountsSignIn = '/accounts/sign-in';
-  export const workspacesInvited = '/workspaces/invited';
+  const root = '/';
+  const accounts = `${root}accounts`;
+  export const accountsRefresh = `${accounts}/refresh`;
+  export const accountsSignIn = `${accounts}/sign-in`;
+  const workspaces = `${root}workspaces`;
+  export const workspacesInvited = `${workspaces}/invited`;
+  export const workspacesIcon = `${workspaces}/icon`;
+  export const workspacesJoin = `${workspaces}/join`;
   export const workspacesPublic = (count: number) =>
-    `/workspaces/public/${count}`;
-  export const workspacesIcon = '/workspaces/icon';
+    `${workspaces}/public/${count}`;
 }

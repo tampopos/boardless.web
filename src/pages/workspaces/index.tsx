@@ -59,11 +59,11 @@ interface Events {
     claims: { [index: string]: Claim },
     workspaces: { [index: string]: UserWorkspace },
   ) => void;
-  join: (workspace: UserWorkspace, history: History) => void;
+  add: (workspace: UserWorkspace, history: History) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { getInvitedWorkspaces, join } = resolve('workspaceService');
-  return { getInvitedWorkspaces, join };
+  const { getInvitedWorkspaces, add } = resolve('workspaceService');
+  return { getInvitedWorkspaces, add };
 };
 interface State {}
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
@@ -81,7 +81,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       resources,
       invitedWorkspaces,
       claims,
-      join,
+      add,
       history,
     } = this.props;
     const { root, row, actionButtonRow, btn, listRow } = classes;
@@ -104,38 +104,40 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
             {resources.JoinWorkspace}
           </OutlinedButton>
         </Row>
-        <Row className={appendClassName(row, listRow)}>
-          <Row>
-            <Typography variant="title">
-              {resources.InvitedWorkspace}
-            </Typography>
+        {Object.entries(invitedWorkspaces).length > 0 && (
+          <Row className={appendClassName(row, listRow)}>
+            <Row>
+              <Typography variant="title">
+                {resources.InvitedWorkspace}
+              </Typography>
+            </Row>
+            <Row>
+              {Object.entries(invitedWorkspaces).map(x => {
+                const w = x[1];
+                const { userWorkspaceId, userId, name } = w;
+                const claim = claims[userId];
+                return (
+                  <Row key={userWorkspaceId}>
+                    <Cell xs={3}>
+                      <WorkspaceIcon workspace={w} />
+                    </Cell>
+                    <Cell xs={3}>
+                      <Typography>{name}</Typography>
+                    </Cell>
+                    <Cell xs={3}>
+                      <Typography>{claim.name}</Typography>
+                    </Cell>
+                    <Cell xs={3}>
+                      <OutlinedButton onClick={() => add(w, history)}>
+                        {resources.Join}
+                      </OutlinedButton>
+                    </Cell>
+                  </Row>
+                );
+              })}
+            </Row>
           </Row>
-          <Row>
-            {Object.entries(invitedWorkspaces).map(x => {
-              const w = x[1];
-              const { userWorkspaceId, userId, name } = w;
-              const claim = claims[userId];
-              return (
-                <Row key={userWorkspaceId}>
-                  <Cell xs={3}>
-                    <WorkspaceIcon workspace={w} />
-                  </Cell>
-                  <Cell xs={3}>
-                    <Typography>{name}</Typography>
-                  </Cell>
-                  <Cell xs={3}>
-                    <Typography>{claim.name}</Typography>
-                  </Cell>
-                  <Cell xs={3}>
-                    <OutlinedButton onClick={() => join(w, history)}>
-                      {resources.Join}
-                    </OutlinedButton>
-                  </Cell>
-                </Row>
-              );
-            })}
-          </Row>
-        </Row>
+        )}
       </Container>
     );
   }
