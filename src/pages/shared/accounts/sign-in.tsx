@@ -14,7 +14,7 @@ import { Url } from 'src/common/routing/url';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
-import { OutlinedButton } from 'src/components/forms-controls/button';
+import { OutlinedButton, Button } from 'src/components/forms-controls/button';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 
@@ -47,6 +47,7 @@ interface Props {
 }
 interface Events {
   signIn: (state: SignInModel, history: History, workspaceUrl?: string) => void;
+  signUp: (history: History) => void;
 }
 interface State {
   model: SignInModel;
@@ -75,7 +76,14 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   public render() {
-    const { signIn, resources, history, workspaceUrl, classes } = this.props;
+    const {
+      signIn,
+      signUp,
+      resources,
+      history,
+      workspaceUrl,
+      classes,
+    } = this.props;
     const { email, password } = this.state.model;
     const { form, row, container, root } = classes;
     return (
@@ -111,6 +119,11 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   </OutlinedButton>
                 </Cell>
               </Row>
+              <Row className={row}>
+                <Button onClick={() => signUp(history)}>
+                  {resources.SignUp}
+                </Button>
+              </Row>
             </Container>
           </Form>
         </div>
@@ -126,6 +139,9 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
         return;
       }
       await accountsService.signInAsync(model, history, workspaceUrl);
+    },
+    signUp: history => {
+      history.push(Url.signUp);
     },
   };
 };
