@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: npm i && npm run build
+      - run:
+          name: test
+          command: npm run test
