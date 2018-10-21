@@ -5,7 +5,9 @@ import { createPropagationProps } from 'src/common/component-helper';
 import { FormProps } from '../types';
 
 const styles = createStyles({
-  root: {},
+  root: {
+    width: '100%',
+  },
 });
 export interface Props {
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;

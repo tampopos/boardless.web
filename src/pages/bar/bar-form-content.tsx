@@ -24,12 +24,6 @@ import { RoutingProps } from 'src/common/routing/types';
 
 const styles = createStyles({
   root: {},
-  row: {
-    paddingBottom: 10,
-    '&:last-child': {
-      paddingBottom: 0,
-    },
-  },
   cell: {
     paddingLeft: 10,
     paddingRight: 10,
@@ -123,14 +117,14 @@ const decoratedComponent = decorate(styles)<
     color,
     classes,
   } = props;
-  const { row, cell } = classes;
+  const { cell } = classes;
   return (
     <Container>
       <BarForm themeColor={color}>
-        <Row className={row}>
+        <Row>
           <Typography variant="headline">{title}</Typography>
         </Row>
-        <Row className={row}>
+        <Row>
           <Cell xs={6} className={cell}>
             <TextBox
               themeColor={color}
@@ -160,7 +154,7 @@ const decoratedComponent = decorate(styles)<
             )}
           </Cell>
         </Row>
-        <Row className={row}>
+        <Row>
           <Cell xs={6} className={cell}>
             <RadioGroup
               label="せいべつ"
@@ -186,7 +180,7 @@ const decoratedComponent = decorate(styles)<
           )}
         </Row>
         {!isAddMode && (
-          <Row className={row}>
+          <Row>
             <Table>
               <TableRow>
                 <TableCell isHeader={true}>ちから</TableCell>
@@ -209,7 +203,7 @@ const decoratedComponent = decorate(styles)<
             </Table>
           </Row>
         )}
-        <Row className={row}>
+        <Row>
           <Cell xs={10} />
           <Cell xs={2} className={cell}>
             <OutlinedButton

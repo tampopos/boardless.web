@@ -8,34 +8,20 @@ import { decorate } from 'src/common/styles/styles-helper';
 
 const styles = createStyles({
   root: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    alignSelf: 'flex-start',
-    '$row:last-child': {
-      paddingBottom: 0,
-    },
-  },
-  row: {
-    paddingBottom: 20,
-    '&:first-child': {
-      paddingTop: 20,
-    },
-    '&:last-child': {
-      paddingBottom: 0,
-    },
+    padding: 10,
   },
 });
 export const Bar = decorate(styles)(({ classes }) => {
-  const { root, row } = classes;
+  const { root } = classes;
   return (
     <Container className={root}>
-      <Row className={row}>
+      <Row>
         <Typography variant="display2">ルイーダの酒場</Typography>
       </Row>
-      <Row className={row}>
+      <Row>
         <BarFormContent />
       </Row>
-      <Row className={row}>
+      <Row>
         <BarList />
       </Row>
     </Container>

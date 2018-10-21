@@ -10,19 +10,9 @@ import { Cell } from '../../components/layout/cell';
 import { OutlinedButton } from '../../components/forms-controls/button';
 import { barFormActionCreators } from '../../stores/bar/bar-form-reducer';
 import { Container } from 'src/components/layout/container';
-import { Typography, createStyles } from '@material-ui/core';
-import { decorate } from 'src/common/styles/styles-helper';
+import { Typography } from '@material-ui/core';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
-const styles = createStyles({
-  root: {},
-  row: {
-    paddingBottom: 10,
-    '&:last-child': {
-      paddingBottom: 0,
-    },
-  },
-});
 interface Events {
   toAddMode: () => void;
   selectRow: (friend: Friend) => void;
@@ -54,24 +44,23 @@ const mapStateToProps: StateMapperWithRouter<BarListProps> = ({
     friend,
   };
 };
-const decoratedComponent = decorate(styles)<BarListProps & Events>(props => {
-  const { friends, toAddMode, selectRow, friend, classes } = props;
+const Inner = (props: BarListProps & Events) => {
+  const { friends, toAddMode, selectRow, friend } = props;
   const getThemeColor = ({ sex }: Friend) =>
     sex === 'male' ? 'indigo' : sex === 'female' ? 'pink' : undefined;
-  const { root, row } = classes;
   return (
-    <Container className={root}>
-      <Row className={row}>
+    <Container>
+      <Row>
         <Typography variant="headline">めいぼ</Typography>
       </Row>
-      <Row className={row}>
+      <Row>
         <Cell xs={2}>
           <OutlinedButton onClick={() => toAddMode()}>
             なかまをくわえる
           </OutlinedButton>
         </Cell>
       </Row>
-      <Row className={row}>
+      <Row>
         <Table>
           <TableRow>
             <TableCell isHeader={true}>なまえ</TableCell>
@@ -100,8 +89,8 @@ const decoratedComponent = decorate(styles)<BarListProps & Events>(props => {
       </Row>
     </Container>
   );
-});
+};
 
 export const BarList = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
-  decoratedComponent,
+  Inner,
 );

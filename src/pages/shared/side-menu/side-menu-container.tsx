@@ -28,6 +28,10 @@ const styles = (theme: Theme) =>
       display: 'flex',
       height: `calc(100% - ${56}px)`,
       overflowX: 'auto',
+      alignSelf: 'center',
+      '& > div': {
+        alignContent: 'flex-start',
+      },
       [theme.breakpoints.up('sm')]: {
         height: `calc(100% - ${64}px)`,
       },

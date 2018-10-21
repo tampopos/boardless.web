@@ -20,22 +20,13 @@ import { SideMenuContainer } from '../side-menu/side-menu-container';
 
 const styles = createStyles({
   root: {
-    padding: 50,
-    width: 500,
-    minWidth: 500,
+    padding: 20,
+    maxWidth: 500,
     margin: 'auto',
     paddingBottom: 200,
-    alignSelf: 'center',
   },
   form: {
     paddingTop: 20,
-  },
-  container: {},
-  row: {
-    paddingBottom: 10,
-    '&:last-child': {
-      paddingBottom: 0,
-    },
   },
 });
 interface Props {
@@ -85,17 +76,19 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       classes,
     } = this.props;
     const { email, password } = this.state.model;
-    const { form, row, container, root } = classes;
+    const { form, root } = classes;
     return (
       <SideMenuContainer>
-        <div className={root}>
-          <Typography variant="display1">{resources.SignIn}</Typography>
-          <Form
-            onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
-            className={form}
-          >
-            <Container className={container}>
-              <Row className={row}>
+        <Container className={root}>
+          <Row>
+            <Typography variant="display1">{resources.SignIn}</Typography>
+          </Row>
+          <Row>
+            <Form
+              onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
+              className={form}
+            >
+              <Row>
                 <OutlinedTextBox
                   value={email}
                   type="email"
@@ -103,7 +96,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   label={resources.Email}
                 />
               </Row>
-              <Row className={row}>
+              <Row>
                 <OutlinedTextBox
                   label={resources.Password}
                   value={password}
@@ -111,7 +104,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   onChange={this.onChange('password')}
                 />
               </Row>
-              <Row className={row}>
+              <Row>
                 <Cell xs={8} />
                 <Cell xs={4}>
                   <OutlinedButton type="submit">
@@ -119,14 +112,14 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   </OutlinedButton>
                 </Cell>
               </Row>
-              <Row className={row}>
+              <Row>
                 <Button onClick={() => signUp(history)}>
                   {resources.SignUp}
                 </Button>
               </Row>
-            </Container>
-          </Form>
-        </div>
+            </Form>
+          </Row>
+        </Container>
       </SideMenuContainer>
     );
   }
