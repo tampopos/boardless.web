@@ -35,22 +35,21 @@ interface Props {
   history: History;
   invitedWorkspaces: Workspace[];
 }
-const mapStateToProps: StateMapperWithRouter<Props, { workspaceId: string }> = (
+interface Params {
+  workspaceUrl: string;
+}
+const mapStateToProps: StateMapperWithRouter<Props, Params> = (
   { accountsState, workspacesState },
-  { match, history, location },
+  { history },
 ) => {
   const { workspaces, claims } = accountsState;
   const { invitedWorkspaces } = workspacesState;
-  const { workspaceId } = match.params;
   const { resources } = new AccountsGetters(accountsState);
-  const { pathname } = location;
   return {
     workspaces,
     claims,
     resources,
-    workspaceId,
     history,
-    pathname,
     invitedWorkspaces,
   };
 };
@@ -100,10 +99,10 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           </Row>
           <Row>
             {invitedWorkspaces.map(w => {
-              const { id, userId, name } = w;
+              const { userWorkspaceId, userId, name } = w;
               const claim = claims[userId];
               return (
-                <Row key={JSON.stringify({ id, userId })}>
+                <Row key={userWorkspaceId}>
                   <Cell xs={3}>
                     <WorkspaceIcon workspace={w} />
                   </Cell>

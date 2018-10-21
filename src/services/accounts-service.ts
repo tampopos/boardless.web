@@ -55,7 +55,7 @@ export class AccountsService implements IAccountsService {
   public signInAsync = async (
     model: SignInModel,
     history: History,
-    workspaceId?: string,
+    workspaceUrl?: string,
   ) => {
     const { errors, result } = await this.fetchService.fetchAsync<{
       result: SignInResult;
@@ -83,11 +83,11 @@ export class AccountsService implements IAccountsService {
         showDuration: 5000,
       }));
     }
-    if (workspaceId) {
-      history.push(Url.workspaceRoot(workspaceId));
+    if (workspaceUrl) {
+      history.push(Url.workspaceRoot(workspaceUrl));
       return;
     } else if (result.workspaces && result.workspaces.length > 0) {
-      history.push(Url.workspaceRoot(result.workspaces[0].id));
+      history.push(Url.workspaceRoot(result.workspaces[0].workspaceUrl));
       return;
     }
     history.push(Url.root);

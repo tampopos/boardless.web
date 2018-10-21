@@ -1,5 +1,6 @@
 export interface Workspace {
-  id: string;
+  userWorkspaceId: string;
+  workspaceUrl: string;
   name: string;
   userId: string;
 }

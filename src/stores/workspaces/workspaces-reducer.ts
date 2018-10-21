@@ -22,7 +22,7 @@ export const workspacesReducer = (state: StoredState) =>
           .filter(
             w =>
               s.invitedWorkspaces.filter(
-                x => x.id === w.id && x.userId === w.userId,
+                x => x.userWorkspaceId === w.userWorkspaceId,
               ).length === 0,
           )
           .forEach(w => newWorkspaces.push(w));
