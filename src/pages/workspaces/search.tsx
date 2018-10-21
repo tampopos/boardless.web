@@ -3,7 +3,7 @@ import { createStyles, Typography, Button } from '@material-ui/core';
 import * as React from 'react';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { Resources } from 'src/common/location/resources';
-import { decorate, appendClassName } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
 import { Workspace } from 'src/models/accounts/workspace';
@@ -27,21 +27,15 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: 10,
+      overflowX: 'auto',
     },
-    row: {
-      paddingBottom: 10,
-      '&:last-child': {
-        paddingBottom: 0,
-      },
-    },
+    container: {},
     actionButtonRow: {
       justifyContent: 'center',
       marginTop: 25,
       marginBottom: 25,
     },
-    infinity: {
-      height: `calc(100% - ${176}px)`,
-    },
+    infinity: {},
   });
 interface Props {
   claims: { [index: string]: Claim };
@@ -90,6 +84,7 @@ interface State {
   openJoinContextMenu?: { targetWorkspace: Workspace; anchorEl: HTMLElement };
 }
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
+  private scrollContainer?: HTMLDivElement;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -166,74 +161,88 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       history,
     } = this.props;
     const { searchKeyword, loadCompleted, openJoinContextMenu } = this.state;
-    const { root, row, actionButtonRow, infinity } = classes;
+    const { root, container, actionButtonRow, infinity } = classes;
     const claimsArray = Object.entries(claims);
     const joinableWorkspacesArray = Object.entries(joinableWorkspaces);
     return (
-      <Container className={root}>
-        <Row className={row}>
-          <Typography variant="display1">{resources.JoinWorkspace}</Typography>
-        </Row>
-        <Row className={appendClassName(row, actionButtonRow)}>
-          <TextBox
-            color="primary"
-            value={searchKeyword}
-            onChange={e => this.changeSearchKeyword(e.currentTarget.value)}
-          />
-        </Row>
-        <Row>
-          <Typography variant="title">{resources.JoinableWorkspace}</Typography>
-        </Row>
-        <InfinityLoading
-          loadCompleted={loadCompleted}
-          next={async () => await this.nextWorkspacesAsync(false)}
-          className={infinity}
-        >
-          {joinableWorkspacesArray.map(x => {
-            const w = x[1];
-            const { workspaceUrl, name } = w;
-            return (
-              <Row key={workspaceUrl}>
-                <Cell xs={4}>
-                  <WorkspaceIcon workspace={w} />
-                </Cell>
-                <Cell xs={4}>
-                  <Typography>{name}</Typography>
-                </Cell>
-                <Cell xs={4}>
-                  <OutlinedButton onClick={this.clickJoin(w)}>
-                    {resources.Join}
-                  </OutlinedButton>
-                </Cell>
-              </Row>
-            );
-          })}
-        </InfinityLoading>
-        {claimsArray.length > 0 && (
-          <ContextMenu
-            open={Boolean(openJoinContextMenu)}
-            anchorEl={openJoinContextMenu && openJoinContextMenu.anchorEl}
-            onClose={this.handleClose}
+      <div
+        className={root}
+        ref={e => (this.scrollContainer = e ? e : undefined)}
+      >
+        <Container className={container}>
+          <Row>
+            <Typography variant="display1">
+              {resources.JoinWorkspace}
+            </Typography>
+          </Row>
+          <Row className={actionButtonRow}>
+            <TextBox
+              color="primary"
+              value={searchKeyword}
+              onChange={e => this.changeSearchKeyword(e.currentTarget.value)}
+            />
+          </Row>
+          <Row>
+            <Typography variant="title">
+              {resources.JoinableWorkspace}
+            </Typography>
+          </Row>
+          <InfinityLoading
+            loadCompleted={loadCompleted}
+            next={async () => await this.nextWorkspacesAsync(false)}
+            className={infinity}
+            anchorElm={this.scrollContainer}
           >
-            {claimsArray.map(c => {
-              const claim = c[1];
+            {joinableWorkspacesArray.map(x => {
+              const w = x[1];
+              const { workspaceUrl, name } = w;
               return (
-                <Button
-                  key={claim.userId}
-                  onClick={() => {
-                    if (openJoinContextMenu) {
-                      join(openJoinContextMenu.targetWorkspace, claim, history);
-                    }
-                    this.handleClose();
-                  }}
-                >
-                  {resources.JoinAs(claim.name)}
-                </Button>
+                <Row key={workspaceUrl}>
+                  <Cell xs={4}>
+                    <WorkspaceIcon workspace={w} />
+                  </Cell>
+                  <Cell xs={4}>
+                    <Typography>{name}</Typography>
+                  </Cell>
+                  <Cell xs={4}>
+                    <OutlinedButton onClick={this.clickJoin(w)}>
+                      {resources.Join}
+                    </OutlinedButton>
+                  </Cell>
+                </Row>
               );
             })}
-          </ContextMenu>
-        )}
-      </Container>
+          </InfinityLoading>
+          {claimsArray.length > 0 && (
+            <ContextMenu
+              open={Boolean(openJoinContextMenu)}
+              anchorEl={openJoinContextMenu && openJoinContextMenu.anchorEl}
+              onClose={this.handleClose}
+            >
+              {claimsArray.map(c => {
+                const claim = c[1];
+                return (
+                  <Button
+                    key={claim.userId}
+                    onClick={() => {
+                      if (openJoinContextMenu) {
+                        join(
+                          openJoinContextMenu.targetWorkspace,
+                          claim,
+                          history,
+                        );
+                      }
+                      this.handleClose();
+                    }}
+                  >
+                    {resources.JoinAs(claim.name)}
+                  </Button>
+                );
+              })}
+            </ContextMenu>
+          )}
+        </Container>
+      </div>
     );
   }
 }

@@ -27,14 +27,7 @@ interface Props {
 }
 interface State {}
 class Inner extends StyledComponentBase<typeof styles, Props, State> {
-  private rootNode: HTMLDivElement | null;
-  private get anchor() {
-    const { anchorElm } = this.props;
-    if (anchorElm) {
-      return anchorElm;
-    }
-    return this.rootNode;
-  }
+  private nextThrottle: ThrottleAsync<boolean>;
   constructor(props: any) {
     super(props);
     this.state = {};
@@ -44,22 +37,12 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
       loadingInterval ? loadingInterval : 100,
     );
   }
-  public async componentDidMount() {
-    await this.init();
-  }
-  private init = async () => {
-    await this.next(true);
-    let val = true;
-    while (val) {
-      val = await this.next(false);
-    }
-  };
   private next = async (init: boolean) => {
-    if (!this.anchor) {
+    const { next, anchorElm } = this.props;
+    if (!anchorElm) {
       return false;
     }
-    const { next } = this.props;
-    const { scrollHeight, scrollTop, offsetHeight } = this.anchor;
+    const { scrollHeight, scrollTop, offsetHeight } = anchorElm;
     const { loadCompleted } = this.props;
     const maxScroll = scrollHeight - offsetHeight;
     if (!loadCompleted && scrollTop >= maxScroll) {
@@ -68,26 +51,37 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
     }
     return false;
   };
-  private nextThrottle: ThrottleAsync<boolean>;
-  public scrollContainer() {
-    this.nextThrottle.execute();
-  }
   public async componentDidUpdate?(prevProps: Readonly<Props>) {
-    const { loadCompleted } = this.props;
-    if (!prevProps || (prevProps.loadCompleted && !loadCompleted)) {
+    const { loadCompleted, anchorElm } = this.props;
+    if (
+      anchorElm &&
+      (!prevProps ||
+        !prevProps.anchorElm ||
+        (prevProps.loadCompleted && !loadCompleted))
+    ) {
       await this.init();
     }
+  }
+  private init = async () => {
+    const { anchorElm } = this.props;
+    if (!anchorElm) {
+      return;
+    }
+    anchorElm.onscroll = () => this.scrollContainer();
+    await this.next(true);
+    let val = true;
+    while (val) {
+      val = await this.next(false);
+    }
+  };
+  public scrollContainer() {
+    this.nextThrottle.execute();
   }
   public render() {
     const { children, loadCompleted, height } = this.props;
     const { root, progress, progressRow } = getInjectClasses(this.props);
     return (
-      <div
-        className={root}
-        onScroll={e => this.scrollContainer()}
-        style={{ height }}
-        ref={e => (this.rootNode = e)}
-      >
+      <div className={root} style={{ height }}>
         {children}
         {!loadCompleted && (
           <Row className={progressRow}>

@@ -27,13 +27,6 @@ const styles = createStyles({
   },
   form: {
     paddingTop: 20,
-    width: '100%',
-  },
-  row: {
-    paddingBottom: 10,
-    '&:last-child': {
-      paddingBottom: 0,
-    },
   },
 });
 interface Props {
@@ -75,19 +68,19 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   public render() {
     const { signIn, resources, history, workspaceUrl, classes } = this.props;
     const { email, password } = this.state.model;
-    const { form, row, root } = classes;
+    const { form, root } = classes;
     return (
       <SideMenuContainer>
         <Container className={root}>
-          <Row className={row}>
+          <Row>
             <Typography variant="display1">{resources.SignIn}</Typography>
           </Row>
-          <Row className={row}>
+          <Row>
             <Form
               onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
               className={form}
             >
-              <Row className={row}>
+              <Row>
                 <OutlinedTextBox
                   value={email}
                   type="email"
@@ -95,7 +88,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   label={resources.Email}
                 />
               </Row>
-              <Row className={row}>
+              <Row>
                 <OutlinedTextBox
                   label={resources.Password}
                   value={password}
@@ -103,7 +96,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   onChange={this.onChange('password')}
                 />
               </Row>
-              <Row className={row}>
+              <Row>
                 <Cell xs={8} />
                 <Cell xs={4}>
                   <OutlinedButton type="submit">

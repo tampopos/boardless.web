@@ -10,27 +10,18 @@ const styles = createStyles({
   root: {
     padding: 10,
   },
-  row: {
-    paddingBottom: 20,
-    '&:first-child': {
-      paddingTop: 20,
-    },
-    '&:last-child': {
-      paddingBottom: 0,
-    },
-  },
 });
 export const Bar = decorate(styles)(({ classes }) => {
-  const { root, row } = classes;
+  const { root } = classes;
   return (
     <Container className={root}>
-      <Row className={row}>
+      <Row>
         <Typography variant="display2">ルイーダの酒場</Typography>
       </Row>
-      <Row className={row}>
+      <Row>
         <BarFormContent />
       </Row>
-      <Row className={row}>
+      <Row>
         <BarList />
       </Row>
     </Container>

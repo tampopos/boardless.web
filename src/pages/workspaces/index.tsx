@@ -3,7 +3,7 @@ import { createStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { Resources } from 'src/common/location/resources';
-import { decorate, appendClassName } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
 import { UserWorkspace } from 'src/models/accounts/workspace';
@@ -19,12 +19,6 @@ import { Url } from 'src/common/routing/url';
 
 const styles = createStyles({
   root: { padding: 10 },
-  row: {
-    paddingBottom: 10,
-    '&:last-child': {
-      paddingBottom: 0,
-    },
-  },
   actionButtonRow: { justifyContent: 'center', marginTop: 50 },
   btn: { width: 200, marginRight: 20, marginLeft: 20 },
   listRow: { marginTop: 30, paddingLeft: 30, paddingRight: 30 },
@@ -84,15 +78,15 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       add,
       history,
     } = this.props;
-    const { root, row, actionButtonRow, btn, listRow } = classes;
+    const { root, actionButtonRow, btn, listRow } = classes;
     return (
       <Container className={root}>
-        <Row className={row}>
+        <Row>
           <Typography variant="display1">
             {resources.AddingWorkspace}
           </Typography>
         </Row>
-        <Row className={appendClassName(row, actionButtonRow)}>
+        <Row className={actionButtonRow}>
           <OutlinedButton color="primary" className={btn}>
             {resources.AddNewWorkspace}
           </OutlinedButton>
@@ -105,7 +99,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           </OutlinedButton>
         </Row>
         {Object.entries(invitedWorkspaces).length > 0 && (
-          <Row className={appendClassName(row, listRow)}>
+          <Row className={listRow}>
             <Row>
               <Typography variant="title">
                 {resources.InvitedWorkspace}
