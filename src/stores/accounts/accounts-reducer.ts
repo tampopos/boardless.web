@@ -3,7 +3,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import actionCreatorFactory from 'typescript-fsa';
 import { SignInResult } from 'src/models/accounts/sign-in-result';
 import { AccountsState } from './accounts-state';
-import { Workspace } from 'src/models/accounts/workspace';
+import { UserWorkspace } from 'src/models/accounts/workspace';
 
 export const accountsReducer = (storedState: StoredState) =>
   reducerWithInitialState(storedState.accountsState)
@@ -94,7 +94,7 @@ export const accountsActionCreators = {
   changeWorkspace: factory<{ userWorkspaceId: string }>(
     'accountsActionCreators.changeWorkspace',
   ),
-  addWorkspace: factory<{ workspace: Workspace }>(
+  addWorkspace: factory<{ workspace: UserWorkspace }>(
     'accountsActionCreators.addWorkspace',
   ),
 };

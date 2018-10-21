@@ -3,7 +3,7 @@ import { createStyles, Toolbar, Typography } from '@material-ui/core';
 import { StyledSFC } from 'src/common/styles/types';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { decorate } from 'src/common/styles/styles-helper';
-import { Workspace } from 'src/models/accounts/workspace';
+import { UserWorkspace } from 'src/models/accounts/workspace';
 import {
   WorkspaceIconButton,
   WorkspaceIconButtonBase,
@@ -34,8 +34,8 @@ const styles = (theme: Theme) =>
     selectedWorkspaceBtn: theme.shared.workspaceIcon.selectedButton,
   });
 interface Props {
-  workspaces: { [index: string]: Workspace };
-  currentWorkspace?: Workspace;
+  workspaces: { [index: string]: UserWorkspace };
+  currentWorkspace?: UserWorkspace;
   resources: Resources;
   history: History;
 }

@@ -6,7 +6,10 @@ import { createPropagationProps } from 'src/common/component-helper';
 import { PopoverProps } from '@material-ui/core/Popover';
 
 const styles = createStyles({
-  root: {},
+  root: {
+    flexDirection: 'column',
+    display: 'flex',
+  },
 });
 interface Props {}
 interface Events {}
@@ -30,7 +33,7 @@ const Inner: StyledSFC<
       }}
       open={open}
       {...pProps}
-      className={root}
+      classes={{ paper: root }}
     />
   );
 };

@@ -137,10 +137,11 @@ const mapStateToProps: StateMapperWithRouter<Props, Params> = (
   { match, history },
 ) => {
   const { claim } = accountsState;
-  const { getCurrentWorkspace, resources } = new AccountsGetters(accountsState);
+  const { resources, validateWorkspaceUrl } = new AccountsGetters(
+    accountsState,
+  );
   const { workspaceUrl } = match.params;
-  const workspace = getCurrentWorkspace(workspaceUrl);
-  const redirectRoot = Boolean(workspaceUrl && !workspace);
+  const redirectRoot = !validateWorkspaceUrl(workspaceUrl);
   const getDefaultEmail = () => {
     if (!redirectRoot && claim) {
       return claim.email;

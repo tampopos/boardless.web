@@ -12,7 +12,9 @@ export class Resources {
   public CloseWorkspace = 'ワークスペースを閉じる';
   public JoinedWorkspace = '参加済みのワークスペース';
   public InvitedWorkspace = '招待されたワークスペース';
+  public JoinableWorkspace = '参加可能なワークスペース';
   public Join = '参加する';
+  public JoinAs = (name: string) => `${name}として参加する`;
 }
 export class ResourcesEn extends Resources {
   public Email = 'Email';

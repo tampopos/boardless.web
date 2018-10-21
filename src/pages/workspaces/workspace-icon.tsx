@@ -2,7 +2,11 @@ import { createStyles, ButtonBase, CircularProgress } from '@material-ui/core';
 import { StyledComponentBase } from 'src/common/styles/types';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import * as React from 'react';
-import { Workspace } from 'src/models/accounts/workspace';
+import {
+  UserWorkspace,
+  WorkspaceBase,
+  Workspace,
+} from 'src/models/accounts/workspace';
 import { Theme } from 'src/common/styles/theme';
 import { Button } from 'src/components/forms-controls/button';
 import { Resources } from 'src/common/location/resources';
@@ -12,6 +16,7 @@ import { History } from 'history';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { resolve } from 'src/services/common/service-provider';
 import { ContextMenu } from 'src/components/extensions/context-menu';
+import { Claim } from 'src/models/accounts/claim';
 
 const baseStyles = (theme: Theme) =>
   createStyles({ root: { ...theme.shared.workspaceIcon.base } });
@@ -63,7 +68,7 @@ const iconInnerStyles = (theme: Theme) =>
   });
 interface IconInnerProps {}
 interface IconInnerOwnProps {
-  workspace: Workspace;
+  workspace: WorkspaceBase;
 }
 const mapStateToPropsIconInner: StateMapperWithRouter<
   IconInnerProps,
@@ -73,7 +78,7 @@ const mapStateToPropsIconInner: StateMapperWithRouter<
   return { workspace };
 };
 interface IconInnerEvents {
-  getSrc: (workspace: Workspace) => Promise<string>;
+  getSrc: (workspace: WorkspaceBase) => Promise<string>;
 }
 const mapDispatchToPropsIconInner: DispatchMapper<
   IconInnerEvents,
@@ -133,15 +138,29 @@ interface IconProps {
   title: string;
 }
 interface IconOwnProps {
-  workspace: Workspace;
+  workspace: Workspace | UserWorkspace;
 }
+const getTitle = (
+  claims: { [index: string]: Claim },
+  workspace: Workspace | UserWorkspace,
+) => {
+  const userWorkSpace = workspace as UserWorkspace;
+  if (!userWorkSpace || !userWorkSpace.userId) {
+    return workspace.name;
+  }
+  const claim = claims[userWorkSpace.userId];
+  if (!claim || !claim.name) {
+    return workspace.name;
+  }
+  return `${workspace.name}/${claim.name}`;
+};
 const mapStateToPropsIcon: StateMapperWithRouter<
   IconProps,
   {},
   IconOwnProps
 > = ({ accountsState }, { workspace }) => {
   const { claims } = accountsState;
-  const title = `${workspace.name}/${claims[workspace.userId].name}`;
+  const title = getTitle(claims, workspace);
   return { workspace, title };
 };
 export const WorkspaceIcon = withConnectedRouter(mapStateToPropsIcon)(
@@ -155,13 +174,13 @@ export const WorkspaceIcon = withConnectedRouter(mapStateToPropsIcon)(
   }),
 );
 interface Props {
-  workspace: Workspace;
+  workspace: UserWorkspace;
   resources: Resources;
   history: History;
   title: string;
 }
 interface OwnProps {
-  workspace: Workspace;
+  workspace: UserWorkspace;
 }
 const mapStateToProps: StateMapperWithRouter<Props, {}, OwnProps> = (
   { accountsState },
@@ -173,14 +192,14 @@ const mapStateToProps: StateMapperWithRouter<Props, {}, OwnProps> = (
   return { resources, history, workspace, title };
 };
 interface Events {
-  onClick: (history: History, workspace: Workspace) => void;
-  onCloseWorkspaceClick: (history: History, workspace: Workspace) => void;
+  changeWorkspace: (history: History, workspace: UserWorkspace) => void;
+  closeWorkspace: (history: History, workspace: UserWorkspace) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events, OwnProps> = () => {
-  const { onClick, onCloseWorkspaceClick } = resolve('workspaceService');
+  const { changeWorkspace, closeWorkspace } = resolve('workspaceService');
   return {
-    onClick,
-    onCloseWorkspaceClick,
+    changeWorkspace,
+    closeWorkspace,
   };
 };
 interface State {
@@ -206,21 +225,27 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   private handleCloseWorkspaceClick = () => {
-    const { onCloseWorkspaceClick, history, workspace } = this.props;
-    onCloseWorkspaceClick(history, workspace);
+    const { closeWorkspace, history, workspace } = this.props;
+    closeWorkspace(history, workspace);
     this.setState({
       anchorEl: undefined,
     });
   };
   public render() {
-    const { workspace, onClick, resources, history, title } = this.props;
+    const {
+      workspace,
+      changeWorkspace,
+      resources,
+      history,
+      title,
+    } = this.props;
     const { anchorEl } = this.state;
     const { root } = getInjectClasses(this.props);
     const open = Boolean(anchorEl);
     return (
       <WorkspaceIconButtonBase
         title={title}
-        onClick={() => onClick(history, workspace)}
+        onClick={() => !open && changeWorkspace(history, workspace)}
         injectClasses={{ root }}
         onContextMenu={this.handleClick}
       >

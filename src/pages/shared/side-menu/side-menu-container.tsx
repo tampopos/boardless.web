@@ -25,9 +25,12 @@ const styles = (theme: Theme) =>
     },
     toolbarDummy: theme.mixins.toolbar,
     container: {
-      height: '100%',
-      overflow: 'auto',
       display: 'flex',
+      height: `calc(100% - ${56}px)`,
+      overflowX: 'auto',
+      [theme.breakpoints.up('sm')]: {
+        height: `calc(100% - ${64}px)`,
+      },
     },
   });
 interface Props {
