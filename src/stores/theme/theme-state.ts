@@ -37,7 +37,7 @@ const customThemeOption = {
         width: 40,
         height: 40,
       },
-      button: {
+      base: {
         width: 52,
         height: 52,
         borderStyle: 'solid',

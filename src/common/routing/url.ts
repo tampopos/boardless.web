@@ -10,4 +10,5 @@ export namespace ApiUrl {
   export const accountsRefresh = '/accounts/refresh';
   export const accountsSignIn = '/accounts/sign-in';
   export const workspacesInvited = '/workspaces/invited';
+  export const workspacesIcon = '/workspaces/icon';
 }

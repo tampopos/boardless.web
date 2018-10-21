@@ -3,7 +3,6 @@ import { injectable } from 'inversify';
 import { History } from 'history';
 import { Workspace } from 'src/models/accounts/workspace';
 import { Url, ApiUrl } from 'src/common/routing/url';
-import { delay } from 'src/common/async-helper';
 import { inject } from './common/inject';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
 import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
@@ -27,8 +26,14 @@ export class WorkspaceService implements IWorkspaceService {
     history.push(relativeUrl);
   };
   public getSrc = async (workspace: Workspace) => {
-    await delay(1000);
-    return 'https://material-ui.com/static/images/grid-list/breakfast.jpg';
+    const { url } = await this.fetchService.fetchAsync<{
+      url: string;
+    }>({
+      relativeUrl: ApiUrl.workspacesIcon,
+      methodName: 'GET',
+      body: workspace,
+    });
+    return url;
   };
   public onCloseWorkspaceClick = (history: History, workspace: Workspace) => {
     const { userWorkspaceId } = workspace;
@@ -65,5 +70,13 @@ export class WorkspaceService implements IWorkspaceService {
         }),
       );
     });
+  };
+  public join = (workspace: Workspace, history: History) => {
+    this.dispatch(
+      accountsActionCreators.addWorkspace({
+        workspace,
+      }),
+    );
+    history.push(Url.workspaceRoot(workspace.workspaceUrl));
   };
 }

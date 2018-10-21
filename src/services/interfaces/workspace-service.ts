@@ -10,4 +10,5 @@ export interface IWorkspaceService {
     claims: { [index: string]: Claim },
     workspaces: { [index: string]: Workspace },
   ) => void;
+  join: (workspace: Workspace, history: History) => void;
 }

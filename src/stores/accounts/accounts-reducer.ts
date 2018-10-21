@@ -3,6 +3,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import actionCreatorFactory from 'typescript-fsa';
 import { SignInResult } from 'src/models/accounts/sign-in-result';
 import { AccountsState } from './accounts-state';
+import { Workspace } from 'src/models/accounts/workspace';
 
 export const accountsReducer = (storedState: StoredState) =>
   reducerWithInitialState(storedState.accountsState)
@@ -70,6 +71,18 @@ export const accountsReducer = (storedState: StoredState) =>
         return s;
       }
       return { ...s, claim };
+    })
+    .case(accountsActionCreators.addWorkspace, (s, { workspace }) => {
+      const { workspaces, claims } = s;
+      const claim = claims[workspace.userId];
+      if (!claim) {
+        return s;
+      }
+      workspaces[workspace.userWorkspaceId] = workspace;
+      if (s.claim && s.claim.userId === claim.userId) {
+        return { ...s, workspaces };
+      }
+      return { ...s, workspaces, claim };
     });
 const factory = actionCreatorFactory();
 export const accountsActionCreators = {
@@ -80,5 +93,8 @@ export const accountsActionCreators = {
   ),
   changeWorkspace: factory<{ userWorkspaceId: string }>(
     'accountsActionCreators.changeWorkspace',
+  ),
+  addWorkspace: factory<{ workspace: Workspace }>(
+    'accountsActionCreators.addWorkspace',
   ),
 };

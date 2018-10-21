@@ -58,10 +58,11 @@ interface Events {
     claims: { [index: string]: Claim },
     workspaces: { [index: string]: Workspace },
   ) => void;
+  join: (workspace: Workspace, history: History) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { getInvitedWorkspaces } = resolve('workspaceService');
-  return { getInvitedWorkspaces };
+  const { getInvitedWorkspaces, join } = resolve('workspaceService');
+  return { getInvitedWorkspaces, join };
 };
 interface State {}
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
@@ -74,7 +75,14 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     getInvitedWorkspaces(claims, workspaces);
   }
   public render() {
-    const { classes, resources, invitedWorkspaces, claims } = this.props;
+    const {
+      classes,
+      resources,
+      invitedWorkspaces,
+      claims,
+      join,
+      history,
+    } = this.props;
     const { root, row, actionButtonRow, btn, listRow } = classes;
     return (
       <Container className={root}>
@@ -113,7 +121,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                     <Typography>{claim.name}</Typography>
                   </Cell>
                   <Cell xs={3}>
-                    <OutlinedButton>{resources.Join}</OutlinedButton>
+                    <OutlinedButton onClick={() => join(w, history)}>
+                      {resources.Join}
+                    </OutlinedButton>
                   </Cell>
                 </Row>
               );
