@@ -2,7 +2,7 @@ import { StyledSFC } from 'src/common/styles/types';
 import { createStyles } from '@material-ui/core';
 import * as React from 'react';
 import { StateMapperWithRouter } from 'src/stores/types';
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router';
 import { decorate } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Url } from 'src/common/routing/url';
@@ -42,8 +42,10 @@ const Inner: StyledSFC<typeof styles, Props> = props => {
   checkWorkspace();
   return (
     <SideMenuContainer>
-      <Route exact={true} path={Url.workspaceRootTemplate} component={Bar} />
-      <Route exact={true} path={Url.root} component={WorkspaceIndex} />
+      <Switch>
+        <Route path={Url.workspaceRootTemplate} component={Bar} />
+        <Route path={Url.root} component={WorkspaceIndex} />
+      </Switch>
     </SideMenuContainer>
   );
 };

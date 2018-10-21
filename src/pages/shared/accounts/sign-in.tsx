@@ -19,6 +19,7 @@ import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
+import { ReservedWords } from 'src/common/statics/reserved-words';
 
 const styles = createStyles({
   root: {
@@ -98,7 +99,11 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     } = this.props;
     const workspace = workspaces[workspaceId];
     const existsClaim = workspace && claims[workspace.id];
-    if (!existsClaim && pathname !== Url.root) {
+    if (
+      !existsClaim &&
+      pathname !== Url.root &&
+      workspaceId !== ReservedWords.WorkspaceId.system
+    ) {
       history.push(Url.root);
     }
     const { email, password } = this.state.model;

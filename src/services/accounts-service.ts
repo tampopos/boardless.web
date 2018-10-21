@@ -1,7 +1,7 @@
 import { SignInModel } from 'src/models/accounts/sign-in-model';
 import { injectable } from 'inversify';
 import { IAccountsService } from './interfaces/accounts-service';
-import { Url } from 'src/common/routing/url';
+import { Url, ApiUrl } from 'src/common/routing/url';
 import { inject } from 'src/services/common/inject';
 import { SignInResult } from 'src/models/accounts/sign-in-result';
 import { Claim } from 'src/models/accounts/claim';
@@ -26,7 +26,7 @@ export class AccountsService implements IAccountsService {
       return;
     }
     const result = await this.fetchService.fetchAsync<SignInResult>({
-      relativeUrl: Url.accountsRefresh,
+      relativeUrl: ApiUrl.accountsRefresh,
       methodName: 'POST',
       body: claim,
     });
@@ -61,7 +61,7 @@ export class AccountsService implements IAccountsService {
       result: SignInResult;
       errors: string[];
     }>({
-      relativeUrl: Url.accountsSignIn,
+      relativeUrl: ApiUrl.accountsSignIn,
       methodName: 'POST',
       body: model,
     });

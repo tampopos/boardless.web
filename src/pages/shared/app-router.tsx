@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch, Redirect } from 'react-router';
+import { Route, Switch } from 'react-router';
 import { Url } from 'src/common/routing/url';
 import { StateMapper } from 'src/stores/types';
 import { SignIn } from './accounts/sign-in';
@@ -11,24 +11,12 @@ interface Props {
   authenticated: boolean;
 }
 export const Inner: React.SFC<Props> = ({ authenticated }) => {
-  if (authenticated) {
-    return (
-      <Switch>
-        <Route
-          exact={true}
-          path={Url.workspaceRootTemplate}
-          component={AuthenticatedRoot}
-        />
-        <Route exact={true} path={Url.root} component={AuthenticatedRoot} />
-        <Redirect to={Url.root} />
-      </Switch>
-    );
-  }
+  const component = authenticated ? AuthenticatedRoot : SignIn;
   return (
     <Switch>
-      <Route exact={true} path={Url.workspaceRootTemplate} component={SignIn} />
-      <Route exact={true} path={Url.root} component={SignIn} />
-      <Redirect to={Url.root} />
+      <Route path={Url.signIn} component={SignIn} />
+      <Route path={Url.workspaceRootTemplate} component={component} />
+      <Route path={Url.root} component={component} />
     </Switch>
   );
 };

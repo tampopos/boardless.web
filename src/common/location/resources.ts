@@ -2,6 +2,7 @@ export class Resources {
   public Email = 'Eメール';
   public Password = 'パスワード';
   public SignIn = 'サインイン';
+  public SignInAsAnotherUser = '別のユーザーとしてサインインする';
   public Profile = 'プロフィール';
   public SignOut = 'サインアウト';
   public AddWorkspace = 'ワークスペースを追加する';

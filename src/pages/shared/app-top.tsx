@@ -138,6 +138,11 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                 <MenuItem onClick={this.handleClose()}>
                   {resources.Profile}
                 </MenuItem>
+                <MenuItem
+                  onClick={this.handleClose(() => history.push(Url.signIn))}
+                >
+                  {resources.SignInAsAnotherUser}
+                </MenuItem>
                 <MenuItem onClick={this.handleClose(() => signOut(history))}>
                   {resources.SignOut}
                 </MenuItem>
