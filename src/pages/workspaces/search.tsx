@@ -27,8 +27,6 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: 10,
-      display: 'block',
-      height: `100%`,
     },
     row: {
       paddingBottom: 10,

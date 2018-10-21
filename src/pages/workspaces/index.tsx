@@ -18,7 +18,7 @@ import { WorkspaceIcon } from './workspace-icon';
 import { Url } from 'src/common/routing/url';
 
 const styles = createStyles({
-  root: { padding: 10, alignSelf: 'flex-start' },
+  root: { padding: 10 },
   row: {
     paddingBottom: 10,
     '&:last-child': {

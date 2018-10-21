@@ -20,17 +20,15 @@ import { SideMenuContainer } from '../side-menu/side-menu-container';
 
 const styles = createStyles({
   root: {
-    padding: 50,
-    width: 500,
-    minWidth: 500,
+    padding: 20,
+    maxWidth: 500,
     margin: 'auto',
     paddingBottom: 200,
-    alignSelf: 'center',
   },
   form: {
     paddingTop: 20,
+    width: '100%',
   },
-  container: {},
   row: {
     paddingBottom: 10,
     '&:last-child': {
@@ -77,16 +75,18 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   public render() {
     const { signIn, resources, history, workspaceUrl, classes } = this.props;
     const { email, password } = this.state.model;
-    const { form, row, container, root } = classes;
+    const { form, row, root } = classes;
     return (
       <SideMenuContainer>
-        <div className={root}>
-          <Typography variant="display1">{resources.SignIn}</Typography>
-          <Form
-            onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
-            className={form}
-          >
-            <Container className={container}>
+        <Container className={root}>
+          <Row className={row}>
+            <Typography variant="display1">{resources.SignIn}</Typography>
+          </Row>
+          <Row className={row}>
+            <Form
+              onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
+              className={form}
+            >
               <Row className={row}>
                 <OutlinedTextBox
                   value={email}
@@ -111,9 +111,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                   </OutlinedButton>
                 </Cell>
               </Row>
-            </Container>
-          </Form>
-        </div>
+            </Form>
+          </Row>
+        </Container>
       </SideMenuContainer>
     );
   }
