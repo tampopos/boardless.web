@@ -1,8 +1,11 @@
+import { Culture } from './culture-infos';
+
 export class Resources {
   public Email = 'Eメール';
   public Password = 'パスワード';
   public SignIn = 'サインイン';
   public SignUp = 'サインアップ';
+  public RegisterNewUser = '新しいユーザーを作成する';
   public SignInAsAnotherUser = '別のユーザーとしてサインインする';
   public Profile = 'プロフィール';
   public SignOut = 'サインアウト';
@@ -16,6 +19,14 @@ export class Resources {
   public JoinableWorkspace = '参加可能なワークスペース';
   public Join = '参加する';
   public JoinAs = (name: string) => `${name}として参加する`;
+  public ConfirmPassword = '確認用パスワード';
+  public Name = '名前';
+  public NickName = 'ニックネーム';
+  public Language = '言語';
+  public CultureNames: Record<Culture, string> = {
+    ja: '日本語',
+    en: '英語',
+  };
 }
 export class ResourcesEn extends Resources {
   public Email = 'Email';
@@ -24,4 +35,8 @@ export class ResourcesEn extends Resources {
   public Profile = 'Profile';
   public SignOut = 'Sign Out';
   public AddWorkspace = 'Add Workspace';
+  public CultureNames: Record<Culture, string> = {
+    ja: 'Japanese',
+    en: 'English',
+  };
 }

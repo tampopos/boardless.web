@@ -16,7 +16,6 @@ import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton, Button } from 'src/components/forms-controls/button';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
-import { SideMenuContainer } from '../side-menu/side-menu-container';
 
 const styles = createStyles({
   root: {
@@ -78,49 +77,47 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     const { email, password } = this.state.model;
     const { form, root } = classes;
     return (
-      <SideMenuContainer>
-        <Container className={root}>
-          <Row>
-            <Typography variant="display1">{resources.SignIn}</Typography>
-          </Row>
-          <Row>
-            <Form
-              onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
-              className={form}
-            >
-              <Row>
-                <OutlinedTextBox
-                  value={email}
-                  type="email"
-                  onChange={this.onChange('email')}
-                  label={resources.Email}
-                />
-              </Row>
-              <Row>
-                <OutlinedTextBox
-                  label={resources.Password}
-                  value={password}
-                  type="password"
-                  onChange={this.onChange('password')}
-                />
-              </Row>
-              <Row>
-                <Cell xs={8} />
-                <Cell xs={4}>
-                  <OutlinedButton type="submit">
-                    {resources.SignIn}
-                  </OutlinedButton>
-                </Cell>
-              </Row>
-              <Row>
-                <Button onClick={() => signUp(history)}>
-                  {resources.SignUp}
-                </Button>
-              </Row>
-            </Form>
-          </Row>
-        </Container>
-      </SideMenuContainer>
+      <Container className={root}>
+        <Row>
+          <Typography variant="display1">{resources.SignIn}</Typography>
+        </Row>
+        <Row>
+          <Form
+            onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
+            className={form}
+          >
+            <Row>
+              <OutlinedTextBox
+                value={email}
+                type="email"
+                onChange={this.onChange('email')}
+                label={resources.Email}
+              />
+            </Row>
+            <Row>
+              <OutlinedTextBox
+                label={resources.Password}
+                value={password}
+                type="password"
+                onChange={this.onChange('password')}
+              />
+            </Row>
+            <Row>
+              <Cell xs={8} />
+              <Cell xs={4}>
+                <OutlinedButton type="submit">
+                  {resources.SignIn}
+                </OutlinedButton>
+              </Cell>
+            </Row>
+            <Row>
+              <Button onClick={() => signUp(history)}>
+                {resources.RegisterNewUser}
+              </Button>
+            </Row>
+          </Form>
+        </Row>
+      </Container>
     );
   }
 }
