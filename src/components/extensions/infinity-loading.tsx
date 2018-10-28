@@ -43,7 +43,9 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
   public componentDidMount() {
     const { getExternalTrigger } = this.props;
     getExternalTrigger(this.next);
+    window.addEventListener('scroll', this.handleOnScroll);
   }
+  private handleOnScroll = () => this.nextThrottle.execute();
   private next = async (init: boolean) => {
     const { next } = this.props;
     if (init || this.isShouldNext()) {
@@ -64,32 +66,25 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
     return !loadCompleted && scrollTop >= maxScroll;
   };
   public async componentDidUpdate?(prevProps: Readonly<Props>) {
-    const { loadCompleted } = this.props;
-    if (
-      !prevProps ||
-      !prevProps.anchorElm ||
-      (prevProps.loadCompleted && !loadCompleted)
-    ) {
-      await this.init();
+    if (prevProps && prevProps.anchorElm) {
+      return;
     }
-  }
-  private init = async () => {
     const { anchorElm } = this.props;
     if (!anchorElm) {
       return;
     }
-    anchorElm.onscroll = () => this.scrollContainer();
+    anchorElm.addEventListener('scroll', this.scrollContainer);
     await this.next(true);
-  };
-  public scrollContainer() {
-    this.nextThrottle.execute();
   }
+  private scrollContainer = () => {
+    this.nextThrottle.execute();
+  };
   public componentWillUnmount() {
     const { anchorElm } = this.props;
     if (!anchorElm) {
       return;
     }
-    anchorElm.onscroll = null;
+    anchorElm.removeEventListener('scroll', this.scrollContainer);
   }
   public render() {
     const { children, loadCompleted, height } = this.props;
