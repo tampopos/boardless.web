@@ -36,7 +36,7 @@
     "electron-move:web": "cpx \"./build/**/*\" ./dist/temp/build",
     "electron-move:main": "cpx \"./electron-main.js\" ./dist/temp",
     "electron-move:package": "cpx \"./package.json\" ./dist/temp",
-    "electron-package": "electron-packager ./dist/temp --platform=win32 --arch=x64 --out=dist --asar --overwrite --icon=\"./public/favicon.ico\" "
+    "electron-package": "electron-packager ./dist/temp --platform=all --arch=all --out=dist --asar --overwrite --icon=\"./public/favicon.ico\" "
   },
   "devDependencies": {
     "@types/enzyme": "^3.1.14",
