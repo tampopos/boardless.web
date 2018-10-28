@@ -73,7 +73,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       <SideMenuContainer>
         <Container className={root}>
           <Row>
-            <Typography variant="display1">{resources.SignIn}</Typography>
+            <Typography variant="h4">{resources.SignIn}</Typography>
           </Row>
           <Row>
             <Form
