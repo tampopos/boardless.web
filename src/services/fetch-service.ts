@@ -12,7 +12,6 @@ export class FetchService implements IFetchService {
     request: FetchRequest,
     token?: string,
   ) => {
-    const url = this.config.apiUrl + request.relativeUrl;
     const req = {
       body:
         request.body && !this.config.isMockMode
@@ -29,7 +28,7 @@ export class FetchService implements IFetchService {
     } else if (this.token) {
       // req.credentials.=this.token;
     }
-    const response = await fetch(url, req);
+    const response = await fetch(request.url, req);
     const json = await response.json();
     return json as TResult;
   };

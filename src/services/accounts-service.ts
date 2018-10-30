@@ -26,7 +26,7 @@ export class AccountsService implements IAccountsService {
       return;
     }
     const result = await this.fetchService.fetchAsync<SignInResult>({
-      relativeUrl: ApiUrl.accountsRefresh,
+      url: ApiUrl.accountsRefresh,
       methodName: 'POST',
       body: claim,
     });
@@ -61,7 +61,7 @@ export class AccountsService implements IAccountsService {
       result: SignInResult;
       errors: string[];
     }>({
-      relativeUrl: ApiUrl.accountsSignIn,
+      url: ApiUrl.accountsSignIn,
       methodName: 'POST',
       body: model,
     });

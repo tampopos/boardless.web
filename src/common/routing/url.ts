@@ -1,4 +1,7 @@
 import { stringify } from 'query-string';
+import { format, parse } from 'url';
+import * as urljoin from 'url-join';
+import { config } from '../config';
 
 export namespace Url {
   export const root = '/';
@@ -17,14 +20,27 @@ export namespace Url {
     `${root}${workspaceUrl}`;
 }
 export namespace ApiUrl {
-  const root = '/';
-  const accounts = `${root}accounts`;
-  export const accountsRefresh = `${accounts}/refresh`;
-  export const accountsSignIn = `${accounts}/sign-in`;
-  const workspaces = `${root}workspaces`;
-  export const workspacesInvited = `${workspaces}/invited`;
-  export const workspacesIcon = `${workspaces}/icon`;
-  export const workspacesJoin = `${workspaces}/join`;
+  const resolveHostname = (rootUrl: string) => {
+    const { hostname, port } = parse(rootUrl);
+    if (hostname === 'localhost' && window && window.location) {
+      return format({
+        protocol: window.location.protocol,
+        hostname: window.location.hostname,
+        port,
+      });
+    }
+    return rootUrl;
+  };
+  export const mockRoot = resolveHostname('http://localhost:3001');
+  export const root = resolveHostname(config.apiUrl);
+  const accounts = 'accounts';
+  export const accountsRefresh = urljoin(mockRoot, accounts, 'refresh');
+  export const accountsSignIn = urljoin(mockRoot, accounts, 'sign-in');
+  const workspaces = 'workspaces';
+  export const workspacesInvited = urljoin(mockRoot, workspaces, 'invited');
+  export const workspacesIcon = urljoin(mockRoot, workspaces, 'icon');
+  export const workspacesJoin = urljoin(mockRoot, workspaces, 'join');
+  const workspacesPublicTemplate = urljoin(mockRoot, workspaces, 'public');
   export const workspacesPublic = (count: number) =>
-    `${workspaces}/public/${count}`;
+    urljoin(workspacesPublicTemplate, count.toString());
 }

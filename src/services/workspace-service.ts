@@ -29,7 +29,7 @@ export class WorkspaceService implements IWorkspaceService {
     const { url } = await this.fetchService.fetchAsync<{
       url: string;
     }>({
-      relativeUrl: ApiUrl.workspacesIcon,
+      url: ApiUrl.workspacesIcon,
       methodName: 'GET',
       body: workspace,
     });
@@ -52,7 +52,7 @@ export class WorkspaceService implements IWorkspaceService {
         result: UserWorkspace[];
       }>(
         {
-          relativeUrl: ApiUrl.workspacesInvited,
+          url: ApiUrl.workspacesInvited,
           methodName: 'GET',
         },
         token,
@@ -84,7 +84,7 @@ export class WorkspaceService implements IWorkspaceService {
       result: UserWorkspace[];
       completed: boolean;
     }>({
-      relativeUrl: ApiUrl.workspacesPublic(count),
+      url: ApiUrl.workspacesPublic(count),
       methodName: 'GET',
     });
     if (result.length) {
@@ -113,7 +113,7 @@ export class WorkspaceService implements IWorkspaceService {
       userWorkspace: UserWorkspace;
     }>(
       {
-        relativeUrl: ApiUrl.workspacesJoin,
+        url: ApiUrl.workspacesJoin,
         methodName: 'POST',
         body: workspace,
       },

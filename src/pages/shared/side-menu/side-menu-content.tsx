@@ -110,7 +110,7 @@ const Inner: StyledSFC<typeof styles, Props & Events> = ({
       <div className={contentAria}>
         <div className={contentHeader}>
           <Toolbar>
-            <Typography variant="body1" color="inherit">
+            <Typography color="inherit">
               {currentWorkspace ? currentWorkspace.name : ''}
             </Typography>
           </Toolbar>

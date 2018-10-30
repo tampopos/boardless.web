@@ -82,9 +82,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     return (
       <Container className={root}>
         <Row>
-          <Typography variant="display1">
-            {resources.AddingWorkspace}
-          </Typography>
+          <Typography variant="h4">{resources.AddingWorkspace}</Typography>
         </Row>
         <Row className={actionButtonRow}>
           <OutlinedButton color="primary" className={btn}>
@@ -101,9 +99,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
         {Object.entries(invitedWorkspaces).length > 0 && (
           <Row className={listRow}>
             <Row>
-              <Typography variant="title">
-                {resources.InvitedWorkspace}
-              </Typography>
+              <Typography variant="h6">{resources.InvitedWorkspace}</Typography>
             </Row>
             <Row>
               {Object.entries(invitedWorkspaces).map(x => {

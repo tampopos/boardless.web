@@ -16,7 +16,7 @@ export const Bar = decorate(styles)(({ classes }) => {
   return (
     <Container className={root}>
       <Row>
-        <Typography variant="display2">ルイーダの酒場</Typography>
+        <Typography variant="h3">ルイーダの酒場</Typography>
       </Row>
       <Row>
         <BarFormContent />
