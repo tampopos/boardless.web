@@ -11,6 +11,7 @@ import { Bar } from 'src/pages/bar';
 import { History } from 'history';
 import { WorkspaceIndex } from 'src/pages/workspaces';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { WorkspaceNew } from 'src/pages/workspaces/new';
 import { WorkspaceSearch } from 'src/pages/workspaces/search';
 
 const styles = createStyles({
@@ -31,6 +32,7 @@ class Inner extends StyledComponentBase<typeof styles, Props> {
     return (
       <SideMenuContainer>
         <Switch>
+          <Route path={Url.newWorkSpace} component={WorkspaceNew} />
           <Route path={Url.searchWorkspaces()} component={WorkspaceSearch} />
           <Route path={Url.workspaceRootTemplate} component={Bar} />
           <Route path={Url.root} component={WorkspaceIndex} />

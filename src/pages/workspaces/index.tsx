@@ -87,7 +87,11 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           </Typography>
         </Row>
         <Row className={actionButtonRow}>
-          <OutlinedButton color="primary" className={btn}>
+          <OutlinedButton
+            color="primary"
+            className={btn}
+            onClick={() => history.push(Url.newWorkSpace)}
+          >
             {resources.AddNewWorkspace}
           </OutlinedButton>
           <OutlinedButton

@@ -15,6 +15,7 @@ export class Resources {
   public JoinableWorkspace = '参加可能なワークスペース';
   public Join = '参加する';
   public JoinAs = (name: string) => `${name}として参加する`;
+  public Add = '追加する';
 }
 export class ResourcesEn extends Resources {
   public Email = 'Email';

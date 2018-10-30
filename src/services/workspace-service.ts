@@ -9,6 +9,7 @@ import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { Claim } from 'src/models/accounts/claim';
 import { IFetchService } from './interfaces/fetch-service';
 import { workspacesActionCreators } from 'src/stores/workspaces/workspaces-reducer';
+import { NewWorkspaceModel } from 'src/models/workspaces/new-workspace-model';
 
 @injectable()
 export class WorkspaceService implements IWorkspaceService {
@@ -120,5 +121,16 @@ export class WorkspaceService implements IWorkspaceService {
       claim.token,
     );
     this.add(userWorkspace, history);
+  };
+
+  public addWorkspace = (state: NewWorkspaceModel, history: History) => {
+    const workspace = {
+      name: state.name,
+      userWorkspaceId: 'public-workspace1000000',
+      userId: 'user01',
+      id: 'public-workspace1000000',
+      workspaceUrl: 'public-workspace1000000',
+    };
+    this.add(workspace, history);
   };
 }

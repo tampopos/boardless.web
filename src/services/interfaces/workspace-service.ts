@@ -5,6 +5,7 @@ import {
 } from 'src/models/accounts/workspace';
 import { History } from 'history';
 import { Claim } from 'src/models/accounts/claim';
+import { NewWorkspaceModel } from 'src/models/workspaces/new-workspace-model';
 
 export interface IWorkspaceService {
   changeWorkspace: (history: History, workspace: UserWorkspace) => void;
@@ -22,4 +23,5 @@ export interface IWorkspaceService {
   ) => Promise<boolean>;
   add: (workspace: UserWorkspace, history: History) => void;
   join: (workspace: Workspace, claim: Claim, history: History) => void;
+  addWorkspace: (state: NewWorkspaceModel, history: History) => void;
 }
