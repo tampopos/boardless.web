@@ -3,6 +3,7 @@ import {
   Styles,
   StyledComponent,
   StyledComponentType,
+  Classes,
 } from './types';
 import injectSheet from 'react-jss';
 
@@ -14,6 +15,7 @@ export const decorate = <TStyles extends Styles>(style: TStyles) => <
 
 export const getInjectClasses = <TStyles extends Styles>(
   props: WithStyleProps<TStyles>,
+  appendClasses: Classes<TStyles> = {},
 ) => {
   const { classes, injectClasses, className } = props;
   const classesList: Array<{}> = [classes];
@@ -25,6 +27,7 @@ export const getInjectClasses = <TStyles extends Styles>(
       root: className,
     });
   }
+  classesList.push(appendClasses);
   return mergeClasses(...classesList) as typeof props.classes & {
     root: string;
   };

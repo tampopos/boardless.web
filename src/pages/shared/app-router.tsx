@@ -60,7 +60,10 @@ export const Inner: React.SFC<Props> = ({ authenticated }) => {
       <Switch>
         <Route path={Url.signIn} component={SignIn} exact={true} />
         <Route path={Url.signUp} component={SignUp} exact={true} />
-        <Route path={Url.workspaceRootTemplate} component={WorkspaceRoot} />
+        <Route
+          path={Url.workspaceRootTemplate}
+          component={authenticated ? WorkspaceRoot : SignIn}
+        />
         <Route
           path={Url.root}
           component={authenticated ? WorkspaceRoot : SignIn}

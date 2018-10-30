@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyledComponentBase } from 'src/common/styles/types';
-import { createStyles, Typography } from '@material-ui/core';
+import { createStyles, Typography, Paper } from '@material-ui/core';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
@@ -14,6 +14,12 @@ import { OutlinedButton } from 'src/components/forms-controls/button';
 import { Form } from 'src/components/forms-controls/form';
 import { Culture, cultureInfos } from 'src/common/location/culture-infos';
 import { RadioGroup } from 'src/components/forms-controls/radio-group';
+import {
+  SignUpModel,
+  createDefaultSignUpModel,
+} from 'src/models/accounts/sign-up-model';
+import { PopoverProps } from '@material-ui/core/Popover';
+import { Popup } from 'src/components/layout/popup';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,40 +46,82 @@ const mapStateToProps: StateMapperWithRouter<Props, Param, OwnProps> = (
   const { resources } = new AccountsGetters(accountsState);
   return { resources, history };
 };
-interface Events {}
+interface Events {
+  openPopover: (popoverProps: Partial<PopoverProps>) => void;
+}
 const mapDispatchToProps: DispatchMapper<Events, OwnProps> = dispatch => {
   return {};
 };
+interface PopupContent {
+  text: string;
+  state: 'description' | 'valid' | 'inValid';
+}
 interface State {
-  name: string;
-  nickName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  cultureName: Culture;
+  model: SignUpModel;
+  anchor?: null | { key: keyof SignUpModel; el: HTMLInputElement };
+  popupMessages: Partial<Record<keyof SignUpModel, PopupContent[]>>;
 }
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      name: '',
-      nickName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      cultureName: 'ja',
+      model: createDefaultSignUpModel(),
+      popupMessages: this.createPopupMessages(),
     };
   }
-  public handleChange = (key: keyof State) => (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    this.setState({ [key]: e.currentTarget.value } as Pick<State, typeof key>);
+  private createPopupMessages = (): Partial<
+    Record<keyof SignUpModel, PopupContent[]>
+  > => ({
+    nickName: [
+      {
+        text: 'メンション機能に使用する名前です。',
+        state: 'description',
+      },
+      {
+        text: 'ニックネームは誰にも使用されてない必要があります。',
+        state: 'description',
+      },
+    ],
+    password: [
+      {
+        text: '8文字以上入力してください。',
+        state: 'description',
+      },
+      {
+        text: 'アルファベットおよび数字、記号のうち、2種類以上使用してください',
+        state: 'description',
+      },
+    ],
+    confirmPassword: [
+      {
+        text: '確認のため再度同じパスワードを入力してください。',
+        state: 'description',
+      },
+    ],
+  });
+  private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { model } = this.state;
+    const { name, value } = e.currentTarget;
+    this.setState({ model: { ...model, [name]: value } });
   };
-  public handleChangeCulture = (e: {}, culture: Culture) => {
-    this.setState({ cultureName: culture });
+  private handleChangeCulture = (e: {}, culture: Culture) => {
+    const { model } = this.state;
+    this.setState({ model: { ...model, cultureName: culture } });
+  };
+  private openPopover = (e: React.FocusEvent<HTMLInputElement>) => {
+    this.setState({
+      anchor: {
+        key: e.currentTarget.name as keyof SignUpModel,
+        el: e.currentTarget,
+      },
+    });
+  };
+  private closePopover = () => {
+    this.setState({ anchor: null });
   };
   public render() {
     const { root, btn } = getInjectClasses(this.props);
+    const { model, anchor, popupMessages } = this.state;
     const {
       email,
       password,
@@ -81,18 +129,20 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       nickName,
       confirmPassword,
       cultureName,
-    } = this.state;
+    } = model;
     const { resources } = cultureInfos[cultureName];
     const radioItems = Object.entries(resources.CultureNames).map(x => ({
       value: x[0],
       label: x[1],
     }));
+    const popupContents =
+      anchor && popupMessages[anchor.key]
+        ? popupMessages[anchor.key]
+        : undefined;
     return (
       <Container className={root}>
         <Row>
-          <Typography variant="display1">
-            {resources.RegisterNewUser}
-          </Typography>
+          <Typography variant="h4">{resources.RegisterNewUser}</Typography>
         </Row>
         <Row>
           <Form>
@@ -107,44 +157,59 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
             <Row>
               <OutlinedTextBox
                 value={name}
-                onChange={this.handleChange('name')}
+                name="name"
                 required={true}
                 label={resources.Name}
+                onChange={this.handleChange}
+                onFocus={this.openPopover}
+                onBlur={this.closePopover}
               />
             </Row>
             <Row>
               <OutlinedTextBox
                 value={nickName}
-                onChange={this.handleChange('nickName')}
                 required={true}
+                name="nickName"
                 label={resources.NickName}
+                onChange={this.handleChange}
+                onFocus={this.openPopover}
+                onBlur={this.closePopover}
               />
             </Row>
             <Row>
               <OutlinedTextBox
                 type="email"
                 value={email}
-                onChange={this.handleChange('email')}
+                name="email"
                 required={true}
                 label={resources.Email}
+                onChange={this.handleChange}
+                onFocus={this.openPopover}
+                onBlur={this.closePopover}
               />
             </Row>
             <Row>
               <OutlinedTextBox
                 type="password"
                 value={password}
-                onChange={this.handleChange('password')}
+                name="password"
                 required={true}
                 label={resources.Password}
+                onChange={this.handleChange}
+                onFocus={this.openPopover}
+                onBlur={this.closePopover}
               />
             </Row>
             <Row>
               <OutlinedTextBox
                 type="password"
                 value={confirmPassword}
-                onChange={this.handleChange('confirmPassword')}
+                name="confirmPassword"
                 required={true}
                 label={resources.ConfirmPassword}
+                onChange={this.handleChange}
+                onFocus={this.openPopover}
+                onBlur={this.closePopover}
               />
             </Row>
             <Row>
@@ -154,6 +219,21 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
             </Row>
           </Form>
         </Row>
+        {
+          <Popup anchorEl={anchor && anchor.el}>
+            <Paper>
+              {popupContents &&
+                popupContents.map(({ text, state }) => {
+                  return (
+                    <div key={text}>
+                      {text}
+                      {state}
+                    </div>
+                  );
+                })}
+            </Paper>
+          </Popup>
+        }
       </Container>
     );
   }
