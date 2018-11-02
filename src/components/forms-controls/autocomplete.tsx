@@ -6,7 +6,8 @@ import { createStyles, Popper, Paper, MenuItem } from '@material-ui/core';
 import { StyledComponentBase } from 'src/common/styles/types';
 import * as Autosuggest from 'react-autosuggest';
 import { SuggestionsFetchRequestedParams } from 'react-autosuggest';
-import { match, parse } from 'src/common/autosuggest-highlight-helper';
+import * as match from 'autosuggest-highlight/match';
+import * as parse from 'autosuggest-highlight/parse';
 import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
