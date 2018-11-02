@@ -122,7 +122,7 @@ const decoratedComponent = decorate(styles)<
     <Container>
       <BarForm themeColor={color}>
         <Row>
-          <Typography variant="headline">{title}</Typography>
+          <Typography variant="h5">{title}</Typography>
         </Row>
         <Row>
           <Cell xs={6} className={cell}>

@@ -51,7 +51,7 @@ const Inner = (props: BarListProps & Events) => {
   return (
     <Container>
       <Row>
-        <Typography variant="headline">めいぼ</Typography>
+        <Typography variant="h5">めいぼ</Typography>
       </Row>
       <Row>
         <Cell xs={2}>
