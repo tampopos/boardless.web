@@ -16,8 +16,6 @@ import { resolve } from 'src/services/common/service-provider';
 import { Cell } from 'src/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
 import { TextBox } from 'src/components/forms-controls/text-box';
-import { parse } from 'query-string';
-import { Url } from 'src/common/routing/url';
 import { ThrottleAsync } from 'src/common/throttle';
 import { InfinityLoading } from 'src/components/extensions/infinity-loading';
 import { Theme } from 'src/common/styles/theme';
@@ -42,7 +40,6 @@ interface Props {
   resources: Resources;
   history: History;
   joinableWorkspaces: { [index: string]: Workspace };
-  searchKeyword?: string;
   fetchCount: number;
 }
 interface Params {
@@ -55,13 +52,11 @@ const mapStateToProps: StateMapperWithRouter<Props, Params> = (
   const { claims } = accountsState;
   const { joinableWorkspaces } = workspacesState;
   const { resources } = new AccountsGetters(accountsState);
-  const { searchKeyword } = parse(location.search);
   return {
     claims,
     resources,
     history,
     joinableWorkspaces,
-    searchKeyword: searchKeyword ? searchKeyword.toString() : undefined,
     fetchCount: 50,
   };
 };
@@ -81,25 +76,19 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
 interface State {
   searchKeyword?: string;
   loadCompleted: boolean;
+  scrollContainer: HTMLDivElement | null;
+  trigger?: (init: boolean) => Promise<void>;
   openJoinContextMenu?: { targetWorkspace: Workspace; anchorEl: HTMLElement };
 }
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
-  private scrollContainer?: HTMLDivElement;
   constructor(props: any) {
     super(props);
     this.state = {
-      searchKeyword: this.props.searchKeyword,
+      searchKeyword: '',
       loadCompleted: false,
+      scrollContainer: null,
     };
   }
-  private redirect = async () => {
-    const { history } = this.props;
-    const { searchKeyword } = this.state;
-    if (this.props.searchKeyword !== searchKeyword) {
-      history.push(Url.searchWorkspaces(searchKeyword));
-      await this.nextWorkspacesAsync(true);
-    }
-  };
   private nextWorkspacesAsync = async (init: boolean) => {
     const {
       getJoinableWorkspaces,
@@ -118,7 +107,12 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       this.setState({ loadCompleted: completed });
     }
   };
-  private searchKeywordThrottle = new ThrottleAsync(this.redirect, 500);
+  private searchKeywordThrottle = new ThrottleAsync(async () => {
+    const { trigger } = this.state;
+    if (trigger) {
+      await trigger(true);
+    }
+  }, 2000);
   private changeSearchKeyword(searchKeyword: string) {
     this.setState({ searchKeyword });
   }
@@ -151,6 +145,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       });
     }
   };
+  private setScrollContainer = (scrollContainer: HTMLDivElement | null) => {
+    this.setState({ scrollContainer });
+  };
   public render() {
     const {
       classes,
@@ -160,15 +157,17 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       join,
       history,
     } = this.props;
-    const { searchKeyword, loadCompleted, openJoinContextMenu } = this.state;
+    const {
+      searchKeyword,
+      loadCompleted,
+      openJoinContextMenu,
+      scrollContainer,
+    } = this.state;
     const { root, container, actionButtonRow, infinity } = classes;
     const claimsArray = Object.entries(claims);
     const joinableWorkspacesArray = Object.entries(joinableWorkspaces);
     return (
-      <div
-        className={root}
-        ref={e => (this.scrollContainer = e ? e : undefined)}
-      >
+      <div className={root} ref={this.setScrollContainer}>
         <Container className={container}>
           <Row>
             <Typography variant="h4">{resources.JoinWorkspace}</Typography>
@@ -185,9 +184,10 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           </Row>
           <InfinityLoading
             loadCompleted={loadCompleted}
-            next={async () => await this.nextWorkspacesAsync(false)}
+            next={this.nextWorkspacesAsync}
             className={infinity}
-            anchorElm={this.scrollContainer}
+            anchorElm={scrollContainer}
+            getExternalTrigger={trigger => this.setState({ trigger })}
           >
             {joinableWorkspacesArray.map(x => {
               const w = x[1];
