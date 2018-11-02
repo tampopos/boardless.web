@@ -63,7 +63,7 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
     const { scrollHeight, scrollTop, offsetHeight } = anchorElm;
     const { loadCompleted } = this.props;
     const maxScroll = scrollHeight - offsetHeight;
-    return !loadCompleted && scrollTop >= maxScroll;
+    return !loadCompleted && scrollTop >= maxScroll - 50;
   };
   public async componentDidUpdate?(prevProps: Readonly<Props>) {
     if (prevProps && prevProps.anchorElm) {
