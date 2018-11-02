@@ -23,59 +23,68 @@ interface Props {
   loadingInterval?: number;
   height?: number | string;
   next: (init: boolean) => Promise<void>;
-  anchorElm?: HTMLElement;
+  anchorElm: HTMLElement | null;
+  getExternalTrigger: (trigger: (init: boolean) => Promise<void>) => void;
 }
-interface State {}
+interface State {
+  shouldNext: boolean;
+}
 class Inner extends StyledComponentBase<typeof styles, Props, State> {
-  private nextThrottle: ThrottleAsync<boolean>;
+  private nextThrottle: ThrottleAsync<void>;
   constructor(props: any) {
     super(props);
-    this.state = {};
+    this.state = { shouldNext: false };
     const { loadingInterval } = this.props;
     this.nextThrottle = new ThrottleAsync(
       () => this.next(false),
       loadingInterval ? loadingInterval : 100,
     );
   }
+  public componentDidMount() {
+    const { getExternalTrigger } = this.props;
+    getExternalTrigger(this.next);
+    window.addEventListener('scroll', this.handleOnScroll);
+  }
+  private handleOnScroll = () => this.nextThrottle.execute();
   private next = async (init: boolean) => {
-    const { next, anchorElm } = this.props;
+    const { next } = this.props;
+    if (init || this.isShouldNext()) {
+      await next(init);
+      while (this.isShouldNext()) {
+        await next(false);
+      }
+    }
+  };
+  private isShouldNext = () => {
+    const { anchorElm } = this.props;
     if (!anchorElm) {
       return false;
     }
     const { scrollHeight, scrollTop, offsetHeight } = anchorElm;
     const { loadCompleted } = this.props;
     const maxScroll = scrollHeight - offsetHeight;
-    if (!loadCompleted && scrollTop >= maxScroll) {
-      await next(init);
-      return true;
-    }
-    return false;
+    return !loadCompleted && scrollTop >= maxScroll;
   };
   public async componentDidUpdate?(prevProps: Readonly<Props>) {
-    const { loadCompleted, anchorElm } = this.props;
-    if (
-      anchorElm &&
-      (!prevProps ||
-        !prevProps.anchorElm ||
-        (prevProps.loadCompleted && !loadCompleted))
-    ) {
-      await this.init();
+    if (prevProps && prevProps.anchorElm) {
+      return;
     }
-  }
-  private init = async () => {
     const { anchorElm } = this.props;
     if (!anchorElm) {
       return;
     }
-    anchorElm.onscroll = () => this.scrollContainer();
+    anchorElm.addEventListener('scroll', this.scrollContainer);
     await this.next(true);
-    let val = true;
-    while (val) {
-      val = await this.next(false);
-    }
-  };
-  public scrollContainer() {
+  }
+  private scrollContainer = () => {
     this.nextThrottle.execute();
+  };
+  public componentWillUnmount() {
+    const { anchorElm } = this.props;
+    if (!anchorElm) {
+      return;
+    }
+    anchorElm.removeEventListener('scroll', this.scrollContainer);
   }
   public render() {
     const { children, loadCompleted, height } = this.props;
