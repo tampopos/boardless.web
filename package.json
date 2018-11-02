@@ -20,7 +20,8 @@
     "reflect-metadata": "^0.1.12",
     "typeface-roboto": "0.0.54",
     "typescript-fsa": "^3.0.0-beta-2",
-    "typescript-fsa-reducers": "^0.4.5"
+    "typescript-fsa-reducers": "^0.4.5",
+    "url-join": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -47,6 +48,7 @@
     "@types/react-dom": "^16.0.7",
     "@types/react-redux": "^6.0.9",
     "@types/react-router-dom": "^4.3.1",
+    "@types/url-join": "^0.8.2",
     "cpx": "^1.5.0",
     "electron": "^3.0.6",
     "electron-packager": "^12.2.0",

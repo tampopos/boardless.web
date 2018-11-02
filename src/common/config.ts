@@ -21,10 +21,6 @@ const createExternalConfig = (): ExternalConfig => {
 
 const getConfig = () => {
   const c: Config = { version: '0', ...createExternalConfig() };
-  if (!c.isMockMode || !window || !window.location) {
-    return c;
-  }
-  c.apiUrl = `${window.location.protocol}//${window.location.hostname}:3001`;
   return c;
 };
 
