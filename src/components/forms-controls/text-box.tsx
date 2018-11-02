@@ -12,34 +12,33 @@ const styles = createStyles({
     width: '100%',
   },
 });
-interface TextBoxProps {
+interface Props {
   maxLength?: number;
   themeColor?: keyof Colors;
 }
-export const TextBox = decorate(styles)<TextBoxProps & TextFieldProps>(
-  props => {
-    const { themeColor, onChange, maxLength } = props;
-    const classes = getInjectClasses(props);
-    const { root } = classes;
-    const pProps = createPropagationProps(props, 'themeColor', 'maxLength');
-    return (
-      <ThemeColorScope themeColor={themeColor}>
-        <TextField
-          {...pProps}
-          className={root}
-          onChange={e =>
-            onChange
-              ? maxLength
-                ? e.target.value.length <= maxLength && onChange(e)
-                : onChange(e)
-              : null
-          }
-          color={themeColor ? 'primary' : 'default'}
-        />
-      </ThemeColorScope>
-    );
-  },
-);
+export type TextBoxProps = Props & TextFieldProps;
+export const TextBox = decorate(styles)<TextBoxProps>(props => {
+  const { themeColor, onChange, maxLength } = props;
+  const classes = getInjectClasses(props);
+  const { root } = classes;
+  const pProps = createPropagationProps(props, 'themeColor', 'maxLength');
+  return (
+    <ThemeColorScope themeColor={themeColor}>
+      <TextField
+        {...pProps}
+        className={root}
+        onChange={e =>
+          onChange
+            ? maxLength
+              ? e.target.value.length <= maxLength && onChange(e)
+              : onChange(e)
+            : null
+        }
+        color={themeColor ? 'primary' : 'default'}
+      />
+    </ThemeColorScope>
+  );
+});
 TextBox.defaultProps = { type: 'text' };
 export const OutlinedTextBox: React.SFC<
   TextBoxProps & TextFieldProps
