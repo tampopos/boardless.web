@@ -2,6 +2,8 @@
   "name": "tmpps.boardless.web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
+  "main": "electron-main.js",
   "dependencies": {
     "@material-ui/core": "^3.1.0",
     "@material-ui/icons": "^3.0.1",
@@ -25,7 +27,15 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "test-ci": "CI=true react-scripts-ts test --env=jsdom",
-    "mock": "node .mock/server.js"
+    "mock": "node .mock/server.js",
+    "electron": "run-s electron-cleanup build electron-move electron-package electron-cleanup-temp",
+    "electron-cleanup": "rimraf ./dist",
+    "electron-cleanup-temp": "rimraf ./dist/temp",
+    "electron-move": "run-p electron-move:*",
+    "electron-move:web": "cpx \"./build/**/*\" ./dist/temp/build",
+    "electron-move:main": "cpx \"./electron-main.js\" ./dist/temp",
+    "electron-move:package": "cpx \"./package.json\" ./dist/temp",
+    "electron-package": "electron-packager ./dist/temp --platform=all --arch=all --out=dist --asar --overwrite --icon=\"./public/favicon.ico\" "
   },
   "devDependencies": {
     "@types/enzyme": "^3.1.14",
@@ -37,10 +47,15 @@
     "@types/react-dom": "^16.0.7",
     "@types/react-redux": "^6.0.9",
     "@types/react-router-dom": "^4.3.1",
+    "cpx": "^1.5.0",
+    "electron": "^3.0.6",
+    "electron-packager": "^12.2.0",
     "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "^1.5.0",
     "json-server": "^0.14.0",
+    "npm-run-all": "^4.1.3",
     "react-test-renderer": "^16.5.2",
+    "rimraf": "^2.6.2",
     "typescript": "^3.1.0-dev.20180922"
   },
   "jest": {

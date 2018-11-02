@@ -35,3 +35,9 @@ tmpps.boardless の Web サーバー
 #### API Mock サーバーの起動
 
 `npm run mock`
+
+#### electron package の作成
+
+`npm run electron`
+
+※ linux 環境で windows 用パッケージを作成する場合 `wine` がインストールされている必要がある
