@@ -9,9 +9,6 @@ const secondary = pink;
 const type = isLight ? 'light' : 'dark';
 const muiThemeOption = { palette: { primary, secondary, type } };
 const customThemeOption = {
-  typography: {
-    useNextVariants: true,
-  },
   shared: {
     fontWeight: { bold: 'bold' as FontWeightProperty },
     borderWidth: { thick: 4 },
@@ -57,10 +54,10 @@ const customThemeOption = {
     },
   },
 };
-export const defaultThemeState = {
-  ...muiThemeOption,
-  ...customThemeOption,
-};
+export const defaultThemeState = Object.assign(
+  muiThemeOption,
+  customThemeOption,
+);
 export type ThemeState = typeof defaultThemeState;
 export class ThemeGetters {
   constructor(private state: ThemeState) {}

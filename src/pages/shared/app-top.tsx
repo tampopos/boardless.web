@@ -108,7 +108,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" color="inherit" className={grow}>
+          <Typography variant="title" color="inherit" className={grow}>
             Boardless
           </Typography>
           {authenticated && (

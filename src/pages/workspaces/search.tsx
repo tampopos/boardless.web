@@ -171,7 +171,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       >
         <Container className={container}>
           <Row>
-            <Typography variant="h4">{resources.JoinWorkspace}</Typography>
+            <Typography variant="display1">
+              {resources.JoinWorkspace}
+            </Typography>
           </Row>
           <Row className={actionButtonRow}>
             <TextBox
@@ -181,7 +183,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
             />
           </Row>
           <Row>
-            <Typography variant="h6">{resources.JoinableWorkspace}</Typography>
+            <Typography variant="title">
+              {resources.JoinableWorkspace}
+            </Typography>
           </Row>
           <InfinityLoading
             loadCompleted={loadCompleted}
