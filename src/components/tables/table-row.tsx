@@ -1,7 +1,4 @@
-import {
-  getInjectClasses,
-  appendClassName,
-} from '../../common/styles/styles-helper';
+import { appendClassName } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
 import * as React from 'react';
 import { createStyles } from '@material-ui/core';
@@ -35,14 +32,15 @@ interface TableRowProps {
   selected?: boolean;
 }
 export const TableRow = decorate(styles)<TableRowProps & DivProps>(props => {
-  const { selectable, selected } = props;
-  const { root, selectableRow, selectedRow } = getInjectClasses(props);
-  const pProps = createPropagationProps(props, 'selectable', 'selected');
+  const { selectable, selected, classes, ...others } = createPropagationProps(
+    props,
+  );
+  const { root, selectableRow, selectedRow } = classes;
   const className = appendClassName(
     root,
     selectable ? selectableRow : '',
     selected ? selectedRow : '',
   );
-  return <div className={className} {...pProps} />;
+  return <div className={className} {...others} />;
 });
 TableRow.defaultProps = { selectable: false, selected: false };

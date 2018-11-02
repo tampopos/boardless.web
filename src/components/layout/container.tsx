@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { getInjectClasses } from '../../common/styles/styles-helper';
 import { Grid, createStyles } from '@material-ui/core';
 import { GridProps } from '@material-ui/core/Grid';
 import { decorate } from 'src/common/styles/styles-helper';
@@ -10,8 +9,7 @@ const styles = createStyles({
 });
 export interface ContainerProps {}
 export const Container = decorate(styles)<ContainerProps & GridProps>(props => {
-  const classes = getInjectClasses(props);
+  const { classes, injectClasses, ...others } = createPropagationProps(props);
   const { root } = classes;
-  const pProps = createPropagationProps(props);
-  return <Grid {...pProps} className={root} container={true} />;
+  return <Grid {...others} className={root} container={true} />;
 });

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { StyledComponentBase } from 'src/common/styles/types';
 import { createStyles, CircularProgress } from '@material-ui/core';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { Row } from 'src/components/layout/row';
 import { ThrottleAsync } from 'src/common/throttle';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = createStyles({
   root: {
@@ -87,8 +88,10 @@ class Inner extends StyledComponentBase<typeof styles, Props, State> {
     anchorElm.removeEventListener('scroll', this.scrollContainer);
   }
   public render() {
-    const { children, loadCompleted, height } = this.props;
-    const { root, progress, progressRow } = getInjectClasses(this.props);
+    const { children, loadCompleted, height, classes } = createPropagationProps(
+      this.props,
+    );
+    const { root, progress, progressRow } = classes;
     return (
       <div className={root} style={{ height }}>
         {children}

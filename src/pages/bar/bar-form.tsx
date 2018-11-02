@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { Theme, Colors, colors } from '../../common/styles/theme';
-import {
-  getInjectClasses,
-  appendClassName,
-} from '../../common/styles/styles-helper';
+import { appendClassName } from '../../common/styles/styles-helper';
 import { Container, ContainerProps } from 'src/components/layout/container';
 import { createStyles } from '@material-ui/core';
 import { decorate } from 'src/common/styles/styles-helper';
@@ -31,14 +28,12 @@ interface BarFormProps {
 }
 export const BarForm = decorate(styles)<BarFormProps & ContainerProps>(
   props => {
-    const { themeColor } = props;
-    const classes = getInjectClasses(props);
+    const { themeColor, classes, ...others } = createPropagationProps(props);
     const { root } = classes;
-    const pProps = createPropagationProps(props, 'themeColor');
     return (
       <Container
         container={true}
-        {...pProps}
+        {...others}
         className={appendClassName(root, themeColor ? classes[themeColor] : '')}
       />
     );

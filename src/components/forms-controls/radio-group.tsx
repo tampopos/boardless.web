@@ -1,4 +1,3 @@
-import { getInjectClasses } from '../../common/styles/styles-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
 import {
@@ -30,17 +29,22 @@ interface RadioGroupProps {
 export const RadioGroup = decorate(styles)<
   RadioGroupProps & MuiRadioGroupProps
 >(props => {
-  const { themeColor, label, items, readOnly } = props;
-  const classes = getInjectClasses(props);
+  const {
+    themeColor,
+    label,
+    items,
+    readOnly,
+    classes,
+    ...others
+  } = createPropagationProps(props);
   const { root, group } = classes;
-  const pProps = createPropagationProps(props, 'themeColor', 'label', 'items');
   const color = themeColor ? 'primary' : 'default';
   const radioColor = themeColor ? 'primary' : 'default';
   return (
     <ThemeColorScope themeColor={themeColor}>
       <FormControl className={root}>
         <FormLabel>{label}</FormLabel>
-        <MuiRadioGroup {...pProps} className={group} color={color}>
+        <MuiRadioGroup {...others} className={group} color={color}>
           {items &&
             items.map(x => (
               <FormControlLabel

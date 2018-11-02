@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Theme } from 'src/common/styles/theme';
 import { Message } from 'src/models/common/message';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { createStyles, Typography } from '@material-ui/core';
 import { Info, Warning, Error } from '@material-ui/icons';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -20,8 +21,7 @@ export interface MessageFieldProps {
   message: Message;
 }
 export const MessageField = decorate(styles)<MessageFieldProps>(props => {
-  const { message } = props;
-  const classes = getInjectClasses(props);
+  const { message, classes } = createPropagationProps(props);
   const { root, text } = classes;
   return (
     <div className={root}>

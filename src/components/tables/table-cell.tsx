@@ -1,7 +1,4 @@
-import {
-  getInjectClasses,
-  appendClassName,
-} from '../../common/styles/styles-helper';
+import { appendClassName } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
 import * as React from 'react';
 import { Theme, Colors, colors } from '../../common/styles/theme';
@@ -35,17 +32,17 @@ interface TableCellProps {
   themeColor?: keyof Colors;
 }
 export const TableCell = decorate(styles)<TableCellProps & DivProps>(props => {
-  const { isHeader, themeColor } = props;
-  const classes = getInjectClasses(props);
+  const { isHeader, themeColor, classes, ...others } = createPropagationProps(
+    props,
+  );
   const { root, header } = classes;
-  const pProps = createPropagationProps(props, 'isHeader', 'themeColor');
   return (
     <div
       className={appendClassName(
         root,
         isHeader ? header : themeColor ? classes[themeColor] : '',
       )}
-      {...pProps}
+      {...others}
     />
   );
 });

@@ -4,9 +4,10 @@ import { createStyles, Snackbar, IconButton } from '@material-ui/core';
 import { SnackbarOrigin } from '@material-ui/core/Snackbar';
 import { Theme } from 'src/common/styles/theme';
 import { Message } from 'src/models/common/message';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { Close } from '@material-ui/icons';
 import { delay } from 'src/common/async-helper';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,7 +41,9 @@ export interface MessageBarProps {
   anchorOrigin?: SnackbarOrigin;
 }
 export const MessageBar = decorate(styles)<MessageBarProps>(props => {
-  const { close, message, anchorOrigin } = props;
+  const { close, message, anchorOrigin, classes } = createPropagationProps(
+    props,
+  );
   const { showDuration } = message;
   const {
     root,
@@ -49,7 +52,7 @@ export const MessageBar = decorate(styles)<MessageBarProps>(props => {
     contentAction,
     contentButton,
     closeIcon,
-  } = getInjectClasses(props);
+  } = classes;
   if (showDuration && close) {
     delay(showDuration).then(close);
   }

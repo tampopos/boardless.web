@@ -3,12 +3,9 @@ import { SnackbarOrigin } from '@material-ui/core/Snackbar';
 import { MessageBar } from './message-bar';
 import { Theme } from 'src/common/styles/theme';
 import { Message } from 'src/models/common/message';
-import {
-  decorate,
-  getInjectClasses,
-  appendClassName,
-} from 'src/common/styles/styles-helper';
+import { decorate, appendClassName } from 'src/common/styles/styles-helper';
 import { createStyles } from '@material-ui/core';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,8 +32,13 @@ export interface MessageContainerProps {
 }
 export const MessageContainer = decorate(styles)<MessageContainerProps>(
   props => {
-    const { clear, messages, close, anchorOrigin } = props;
-    const classes = getInjectClasses(props);
+    const {
+      clear,
+      messages,
+      close,
+      anchorOrigin,
+      classes,
+    } = createPropagationProps(props);
     const { root } = classes;
     const classNames = [root];
     if (anchorOrigin) {

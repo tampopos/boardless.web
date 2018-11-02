@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Hidden, Drawer, createStyles } from '@material-ui/core';
 import { Theme } from 'src/common/styles/theme';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { SideMenuContent } from './side-menu-content';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,8 +49,13 @@ const Content: React.SFC = () => {
   return <SideMenuContent />;
 };
 export const Inner = decorate(styles)<Props & Events>(props => {
-  const { children, theme, open, handleClose, enabled } = props;
-  const classes = getInjectClasses(props);
+  const {
+    children,
+    open,
+    handleClose,
+    enabled,
+    classes,
+  } = createPropagationProps(props);
   const {
     drawerDocked,
     drawerPaper,
@@ -57,7 +63,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
     toolbarDummy,
     container,
   } = classes;
-  const { direction } = Object.assign({}, theme);
+  const { direction } = Object.assign({}, props.theme);
   return (
     <React.Fragment>
       {enabled && (

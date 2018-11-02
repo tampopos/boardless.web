@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyledSFC } from 'src/common/styles/types';
 import { createStyles, Popover } from '@material-ui/core';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { createPropagationProps } from 'src/common/component-helper';
 import { PopoverProps } from '@material-ui/core/Popover';
 
@@ -17,9 +17,8 @@ const Inner: StyledSFC<
   typeof styles,
   Props & PopoverProps & Events
 > = props => {
-  const { anchorEl } = props;
-  const { root } = getInjectClasses(props);
-  const pProps = createPropagationProps(props);
+  const { anchorEl, classes, ...others } = createPropagationProps(props);
+  const { root } = classes;
   const open = Boolean(anchorEl);
   return (
     <Popover
@@ -32,7 +31,7 @@ const Inner: StyledSFC<
         horizontal: 'center',
       }}
       open={open}
-      {...pProps}
+      {...others}
       classes={{ paper: root }}
     />
   );

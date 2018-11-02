@@ -1,4 +1,4 @@
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { createStyles } from '@material-ui/core';
 import * as React from 'react';
 import { createPropagationProps } from 'src/common/component-helper';
@@ -13,10 +13,8 @@ export interface Props {
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 export const Form = decorate(styles)<Props & FormProps>(props => {
-  const { onSubmit } = props;
-  const classes = getInjectClasses(props);
+  const { onSubmit, classes, ...others } = createPropagationProps(props);
   const { root } = classes;
-  const pProps = createPropagationProps(props, 'onSubmit');
   const onSubmitInner = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (onSubmit) {
@@ -26,7 +24,7 @@ export const Form = decorate(styles)<Props & FormProps>(props => {
   };
   return (
     <form
-      {...pProps}
+      {...others}
       className={root}
       onSubmit={onSubmitInner}
       noValidate={true}

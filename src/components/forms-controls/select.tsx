@@ -1,4 +1,3 @@
-import { getInjectClasses } from '../../common/styles/styles-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
 import {
@@ -25,16 +24,20 @@ interface SelectProps {
   label: string;
 }
 export const Select = decorate(styles)<SelectProps & MuiSelectProps>(props => {
-  const { items, themeColor, label } = props;
-  const classes = getInjectClasses(props);
+  const {
+    items,
+    themeColor,
+    label,
+    classes,
+    ...others
+  } = createPropagationProps(props);
   const { root, select } = classes;
-  const pProps = createPropagationProps(props, 'items', 'themeColor', 'label');
   return (
     <ThemeColorScope themeColor={themeColor}>
       <FormControl className={root}>
         <InputLabel>{label}</InputLabel>
         <MuiSelect
-          {...pProps}
+          {...others}
           className={select}
           color={themeColor ? 'primary' : 'default'}
         >

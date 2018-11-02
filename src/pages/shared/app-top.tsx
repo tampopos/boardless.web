@@ -7,11 +7,7 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
-import {
-  decorate,
-  getInjectClasses,
-  appendClassName,
-} from 'src/common/styles/styles-helper';
+import { decorate, appendClassName } from 'src/common/styles/styles-helper';
 import { StyledComponentBase } from 'src/common/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
@@ -24,6 +20,7 @@ import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
 import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
 import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -83,11 +80,10 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       history,
       handleOpenMenu,
       sideMenuEnabled,
-    } = this.props;
+      classes,
+    } = createPropagationProps(this.props);
     const { anchorEl } = this.state;
-    const { root, menuButton, grow, sideMenuEnabledRoot } = getInjectClasses(
-      this.props,
-    );
+    const { root, menuButton, grow, sideMenuEnabledRoot } = classes;
     const open = Boolean(anchorEl);
     return (
       <AppBar

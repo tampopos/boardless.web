@@ -1,4 +1,3 @@
-import { getInjectClasses } from '../../common/styles/styles-helper';
 import * as React from 'react';
 import { Colors } from '../../common/styles/theme';
 import { TextField, createStyles } from '@material-ui/core';
@@ -18,14 +17,20 @@ interface Props {
 }
 export type TextBoxProps = Props & TextFieldProps;
 export const TextBox = decorate(styles)<TextBoxProps>(props => {
-  const { themeColor, onChange, maxLength } = props;
-  const classes = getInjectClasses(props);
+  const {
+    themeColor,
+    onChange,
+    maxLength,
+    classes,
+    variant,
+    ...others
+  } = createPropagationProps(props);
   const { root } = classes;
-  const pProps = createPropagationProps(props, 'themeColor', 'maxLength');
   return (
     <ThemeColorScope themeColor={themeColor}>
       <TextField
-        {...pProps}
+        variant="standard"
+        {...others}
         className={root}
         onChange={e =>
           onChange
@@ -39,7 +44,7 @@ export const TextBox = decorate(styles)<TextBoxProps>(props => {
     </ThemeColorScope>
   );
 });
-TextBox.defaultProps = { type: 'text' };
+TextBox.defaultProps = { type: 'text', variant: 'standard' };
 export const OutlinedTextBox: React.SFC<
   TextBoxProps & TextFieldProps
 > = props => <TextBox {...props} variant="outlined" />;

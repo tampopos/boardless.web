@@ -1,12 +1,13 @@
 import { TextBox, TextBoxProps } from 'src/components/forms-controls/text-box';
 import * as React from 'react';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import { Theme } from 'src/common/styles/theme';
 import { createStyles, Popper, Paper, MenuItem } from '@material-ui/core';
 import { StyledComponentBase } from 'src/common/styles/types';
 import * as Autosuggest from 'react-autosuggest';
 import { SuggestionsFetchRequestedParams } from 'react-autosuggest';
 import { match, parse } from 'src/common/autosuggest-highlight-helper';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -65,8 +66,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     this.setState({ anchorEl });
   };
   public render() {
-    const { textBoxProps, onChange, value } = this.props;
-    const classes = getInjectClasses(this.props);
+    const { textBoxProps, onChange, value, classes } = createPropagationProps(
+      this.props,
+    );
     const { anchorEl, suggestions } = this.state;
     return (
       <div className={classes.root}>

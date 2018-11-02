@@ -1,6 +1,6 @@
 import { createStyles, ButtonBase, CircularProgress } from '@material-ui/core';
 import { StyledComponentBase } from 'src/common/styles/types';
-import { decorate, getInjectClasses } from 'src/common/styles/styles-helper';
+import { decorate } from 'src/common/styles/styles-helper';
 import * as React from 'react';
 import {
   UserWorkspace,
@@ -17,6 +17,7 @@ import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { resolve } from 'src/services/common/service-provider';
 import { ContextMenu } from 'src/components/extensions/context-menu';
 import { Claim } from 'src/models/accounts/claim';
+import { createPropagationProps } from 'src/common/component-helper';
 
 const baseStyles = (theme: Theme) =>
   createStyles({ root: { ...theme.shared.workspaceIcon.base } });
@@ -24,8 +25,8 @@ interface BaseProps {
   title: string;
 }
 export const WorkspaceIconBase = decorate(baseStyles)<BaseProps>(props => {
-  const { children, title } = props;
-  const { root } = getInjectClasses(props);
+  const { title, children, classes } = createPropagationProps(props);
+  const { root } = classes;
   return (
     <div className={root} title={title}>
       {children}
@@ -42,8 +43,14 @@ interface ButtonBaseProps {
 export const WorkspaceIconButtonBase = decorate(buttonBaseStyles)<
   ButtonBaseProps
 >(props => {
-  const { children, onClick, onContextMenu, title } = props;
-  const { root } = getInjectClasses(props);
+  const {
+    children,
+    onClick,
+    onContextMenu,
+    title,
+    classes,
+  } = createPropagationProps(props);
+  const { root } = classes;
   return (
     <ButtonBase
       className={root}
@@ -120,8 +127,9 @@ const WorkspaceIconInner = withConnectedRouter(
         this.disposing = true;
       }
       public render() {
+        const { classes } = createPropagationProps(this.props);
         const { src } = this.state;
-        const { image } = getInjectClasses(this.props);
+        const { image } = classes;
         return src ? (
           <img src={src} className={image} />
         ) : (
@@ -238,9 +246,10 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       resources,
       history,
       title,
-    } = this.props;
+      classes,
+    } = createPropagationProps(this.props);
     const { anchorEl } = this.state;
-    const { root } = getInjectClasses(this.props);
+    const { root } = classes;
     const open = Boolean(anchorEl);
     return (
       <WorkspaceIconButtonBase

@@ -1,4 +1,3 @@
-import { getInjectClasses } from '../../common/styles/styles-helper';
 import { DivProps } from '../types';
 import * as React from 'react';
 import { createStyles } from '@material-ui/core';
@@ -17,8 +16,8 @@ const styles = (theme: Theme) =>
   });
 interface TableProps {}
 export const Table = decorate(styles)<TableProps & DivProps>(props => {
-  const { root } = getInjectClasses(props);
-  const pProps = createPropagationProps(props);
-  return <div className={root} {...pProps} />;
+  const { classes, ...others } = createPropagationProps(props);
+  const { root } = classes;
+  return <div className={root} {...others} />;
 });
 Table.defaultProps = {};
