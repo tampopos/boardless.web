@@ -1,11 +1,8 @@
+import { MessagesState } from './state';
 import { MessageGeneratorArgs } from 'src/models/common/message';
 import { CultureInfo } from 'src/common/location/culture-infos';
 
-export interface MessagesState {
-  messageGeneratorArgs: MessageGeneratorArgs[];
-}
-export const defaultMessagesState: MessagesState = { messageGeneratorArgs: [] };
-export class MessagesStateGetters implements MessagesState {
+export class MessagesStateSelectors implements MessagesState {
   public messageGeneratorArgs: MessageGeneratorArgs[];
   constructor(state: MessagesState) {
     Object.assign(this, state);

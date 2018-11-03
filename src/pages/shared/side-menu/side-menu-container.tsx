@@ -4,10 +4,10 @@ import { Theme } from 'src/common/styles/theme';
 import { decorate } from 'src/common/styles/styles-helper';
 import { SideMenuContent } from './side-menu-content';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
-import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { createPropagationProps } from 'src/common/component-helper';
+import { handleClose } from 'src/stores/side-menu/action-creators';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,19 +43,15 @@ interface Props {
   enabled: boolean;
 }
 interface Events {
-  handleClose: () => void;
+  close: () => void;
 }
 const Content: React.SFC = () => {
   return <SideMenuContent />;
 };
 export const Inner = decorate(styles)<Props & Events>(props => {
-  const {
-    children,
-    open,
-    handleClose,
-    enabled,
-    classes,
-  } = createPropagationProps(props);
+  const { children, open, close, enabled, classes } = createPropagationProps(
+    props,
+  );
   const {
     drawerDocked,
     drawerPaper,
@@ -73,7 +69,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
               variant="temporary"
               anchor={direction === 'rtl' ? 'right' : 'left'}
               open={open}
-              onClose={handleClose}
+              onClose={close}
               classes={{
                 docked: drawerDocked,
                 paper: drawerPaper,
@@ -108,17 +104,17 @@ export const Inner = decorate(styles)<Props & Events>(props => {
 });
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
-    handleClose: () => {
-      return dispatch(sideMenuActionCreators.handleClose());
+    close: () => {
+      return dispatch(handleClose());
     },
   };
 };
 const mapStateToProps: StateMapperWithRouter<Props> = ({
-  sideMenuState,
-  accountsState,
+  sideMenu,
+  accounts,
 }) => {
-  const { sideMenuEnabled } = new AccountsGetters(accountsState);
-  const { open } = sideMenuState;
+  const { sideMenuEnabled } = new AccountsSelectors(accounts);
+  const { open } = sideMenu;
   return {
     open,
     enabled: sideMenuEnabled,

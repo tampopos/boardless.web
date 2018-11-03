@@ -1,9 +1,9 @@
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
-import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import * as React from 'react';
 import { resolve } from 'src/services/common/service-provider';
 import { Claim } from 'src/models/accounts/claim';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
+import { init } from 'src/stores/accounts/action-creators';
 
 interface Events {
   refreshTokenAsync: (claim?: Claim) => Promise<void>;
@@ -20,15 +20,15 @@ const Inner: React.SFC<Props & Events> = props => {
   return <React.Fragment>{!notInitialized && children}</React.Fragment>;
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
-  dispatch(accountsActionCreators.init({}));
+  dispatch(init({}));
   return {
     refreshTokenAsync: async state => {
       await resolve('accountsService').refreshTokenAsync(state);
     },
   };
 };
-const mapStateToProps: StateMapperWithRouter<Props> = ({ accountsState }) => {
-  const { claim } = accountsState;
+const mapStateToProps: StateMapperWithRouter<Props> = ({ accounts }) => {
+  const { claim } = accounts;
   return {
     claim,
   };

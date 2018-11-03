@@ -1,6 +1,5 @@
 import { FontWeightProperty } from 'csstype';
-import { colors, CommonColors, Theme } from 'src/common/styles/theme';
-import { createMuiTheme } from '@material-ui/core';
+import { colors, CommonColors } from 'src/common/styles/theme';
 
 const { grey, indigo, yellow, red, blueGrey, pink } = colors;
 const isLight = true;
@@ -57,14 +56,8 @@ const customThemeOption = {
     },
   },
 };
-export const defaultThemeState = {
+export const defaultTheme = {
   ...muiThemeOption,
   ...customThemeOption,
 };
-export type ThemeState = typeof defaultThemeState;
-export class ThemeGetters {
-  constructor(private state: ThemeState) {}
-  public createTheme = () => {
-    return createMuiTheme(this.state as Theme) as Theme;
-  };
-}
+export type ThemeState = typeof defaultTheme;

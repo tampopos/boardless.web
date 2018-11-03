@@ -11,7 +11,7 @@ import { Theme } from 'src/common/styles/theme';
 import { Button } from 'src/components/forms-controls/button';
 import { Resources } from 'src/common/location/resources';
 import { StateMapperWithRouter, DispatchMapper } from 'src/stores/types';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { History } from 'history';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { resolve } from 'src/services/common/service-provider';
@@ -166,8 +166,8 @@ const mapStateToPropsIcon: StateMapperWithRouter<
   IconProps,
   {},
   IconOwnProps
-> = ({ accountsState }, { workspace }) => {
-  const { claims } = accountsState;
+> = ({ accounts }, { workspace }) => {
+  const { claims } = accounts;
   const title = getTitle(claims, workspace);
   return { workspace, title };
 };
@@ -191,11 +191,11 @@ interface OwnProps {
   workspace: UserWorkspace;
 }
 const mapStateToProps: StateMapperWithRouter<Props, {}, OwnProps> = (
-  { accountsState },
+  { accounts },
   { history, workspace },
 ) => {
-  const { claims } = accountsState;
-  const { resources } = new AccountsGetters(accountsState);
+  const { claims } = accounts;
+  const { resources } = new AccountsSelectors(accounts);
   const title = `${workspace.name}/${claims[workspace.userId].name}`;
   return { resources, history, workspace, title };
 };

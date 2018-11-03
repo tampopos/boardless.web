@@ -5,10 +5,19 @@ import { UserWorkspace, Workspace } from 'src/models/accounts/workspace';
 import { Url, ApiUrl } from 'src/common/routing/url';
 import { inject } from './common/inject';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
-import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { Claim } from 'src/models/accounts/claim';
 import { IFetchService } from './interfaces/fetch-service';
-import { workspacesActionCreators } from 'src/stores/workspaces/workspaces-reducer';
+import {
+  changeWorkspace,
+  removeWorkspace,
+  addWorkspace,
+} from 'src/stores/accounts/action-creators';
+import {
+  clearInvitedWorkspaces,
+  addInvitedWorkspaces,
+  clearJoinableWorkspaces,
+  addJoinableWorkspaces,
+} from 'src/stores/workspaces/action-creators';
 
 @injectable()
 export class WorkspaceService implements IWorkspaceService {
@@ -21,7 +30,7 @@ export class WorkspaceService implements IWorkspaceService {
   }
   public changeWorkspace = (history: History, workspace: UserWorkspace) => {
     const { userWorkspaceId, workspaceUrl } = workspace;
-    this.dispatch(accountsActionCreators.changeWorkspace({ userWorkspaceId }));
+    this.dispatch(changeWorkspace({ userWorkspaceId }));
     const relativeUrl = Url.workspaceRoot(workspaceUrl);
     history.push(relativeUrl);
   };
@@ -37,14 +46,14 @@ export class WorkspaceService implements IWorkspaceService {
   };
   public closeWorkspace = (history: History, workspace: UserWorkspace) => {
     const { userWorkspaceId } = workspace;
-    this.dispatch(accountsActionCreators.removeWorkspace({ userWorkspaceId }));
+    this.dispatch(removeWorkspace({ userWorkspaceId }));
     history.push(Url.root);
   };
   public getInvitedWorkspaces = (
     claims: { [index: string]: Claim },
     workspaces: { [index: string]: UserWorkspace },
   ) => {
-    this.dispatch(workspacesActionCreators.clearInvitedWorkspaces());
+    this.dispatch(clearInvitedWorkspaces());
     const joined = Object.entries(workspaces).map(x => x[1]);
     Object.entries(claims).forEach(async x => {
       const { token } = x[1];
@@ -65,7 +74,7 @@ export class WorkspaceService implements IWorkspaceService {
           ).length === 0,
       );
       this.dispatch(
-        workspacesActionCreators.addInvitedWorkspaces({
+        addInvitedWorkspaces({
           invitedWorkspaces,
         }),
       );
@@ -78,7 +87,7 @@ export class WorkspaceService implements IWorkspaceService {
     fetchCount: number,
   ) => {
     if (clear) {
-      this.dispatch(workspacesActionCreators.clearJoinableWorkspaces());
+      this.dispatch(clearJoinableWorkspaces());
     }
     const { result, completed } = await this.fetchService.fetchAsync<{
       result: UserWorkspace[];
@@ -89,7 +98,7 @@ export class WorkspaceService implements IWorkspaceService {
     });
     if (result.length) {
       this.dispatch(
-        workspacesActionCreators.addJoinableWorkspaces({
+        addJoinableWorkspaces({
           joinableWorkspaces: result,
         }),
       );
@@ -98,7 +107,7 @@ export class WorkspaceService implements IWorkspaceService {
   };
   public add = (workspace: UserWorkspace, history: History) => {
     this.dispatch(
-      accountsActionCreators.addWorkspace({
+      addWorkspace({
         workspace,
       }),
     );

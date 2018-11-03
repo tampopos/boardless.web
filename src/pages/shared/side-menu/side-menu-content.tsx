@@ -14,7 +14,7 @@ import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
 import { Add } from '@material-ui/icons';
 import { Resources } from 'src/common/location/resources';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,12 +43,12 @@ interface RouteParams {
   workspaceUrl: string;
 }
 const mapStateToProps: StateMapperWithRouter<Props, RouteParams> = (
-  { accountsState },
+  { accounts },
   { match, history },
 ) => {
   const { workspaceUrl } = match.params;
-  const { workspaces } = accountsState;
-  const { getCurrentWorkspace, resources } = new AccountsGetters(accountsState);
+  const { workspaces } = accounts;
+  const { getCurrentWorkspace, resources } = new AccountsSelectors(accounts);
   const currentWorkspace = getCurrentWorkspace(workspaceUrl);
   return { workspaces, workspaceUrl, resources, history, currentWorkspace };
 };

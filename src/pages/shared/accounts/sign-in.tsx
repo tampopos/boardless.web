@@ -15,7 +15,7 @@ import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
 import { Cell } from 'src/components/layout/cell';
 import { OutlinedButton } from 'src/components/forms-controls/button';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 
 const styles = createStyles({
@@ -126,13 +126,11 @@ interface Params {
   workspaceUrl: string;
 }
 const mapStateToProps: StateMapperWithRouter<Props, Params> = (
-  { accountsState },
+  { accounts },
   { match, history },
 ) => {
-  const { claim } = accountsState;
-  const { resources, validateWorkspaceUrl } = new AccountsGetters(
-    accountsState,
-  );
+  const { claim } = accounts;
+  const { resources, validateWorkspaceUrl } = new AccountsSelectors(accounts);
   const { workspaceUrl } = match.params;
   const redirectRoot = !validateWorkspaceUrl(workspaceUrl);
   const getDefaultEmail = () => {

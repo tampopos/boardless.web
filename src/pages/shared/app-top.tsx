@@ -13,14 +13,14 @@ import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
 import { StateMapperWithRouter, DispatchMapper } from 'src/stores/types';
 import { Resources } from 'src/common/location/resources';
-import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { History } from 'history';
 import { Url } from 'src/common/routing/url';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Theme } from 'src/common/styles/theme';
-import { sideMenuActionCreators } from 'src/stores/side-menu/side-menu-reducer';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { createPropagationProps } from 'src/common/component-helper';
+import { signIn } from 'src/stores/accounts/action-creators';
+import { handleOpen } from 'src/stores/side-menu/action-creators';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -152,22 +152,22 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 }
 
 const mapStateToProps: StateMapperWithRouter<Props> = (
-  { accountsState },
+  { accounts },
   { history },
 ) => {
-  const { resources, authenticated, sideMenuEnabled } = new AccountsGetters(
-    accountsState,
+  const { resources, authenticated, sideMenuEnabled } = new AccountsSelectors(
+    accounts,
   );
   return { resources, authenticated, sideMenuEnabled, history };
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
     signOut: (history: History) => {
-      dispatch(accountsActionCreators.signIn({ result: {} }));
+      dispatch(signIn({ result: {} }));
       history.push(Url.root);
     },
     handleOpenMenu: () => {
-      dispatch(sideMenuActionCreators.handleOpen());
+      dispatch(handleOpen());
     },
   };
 };

@@ -4,7 +4,7 @@ import { Url } from 'src/common/routing/url';
 import { StateMapper } from 'src/stores/types';
 import { SignIn } from './accounts/sign-in';
 import { AuthenticatedRoot } from './accounts/authenticated-root';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 interface Props {
@@ -20,8 +20,8 @@ export const Inner: React.SFC<Props> = ({ authenticated }) => {
     </Switch>
   );
 };
-const mapStateToProps: StateMapper<Props> = ({ accountsState }) => {
-  const { authenticated } = new AccountsGetters(accountsState);
+const mapStateToProps: StateMapper<Props> = ({ accounts }) => {
+  const { authenticated } = new AccountsSelectors(accounts);
   return { authenticated };
 };
 export const AppRouter = withConnectedRouter(mapStateToProps)(Inner);

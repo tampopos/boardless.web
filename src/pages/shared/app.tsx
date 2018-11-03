@@ -9,7 +9,7 @@ import { AppTop } from './app-top';
 import { AuthenticateProvider } from './accounts/authenticate-provider';
 import { getInitialStoredState, StoredState } from 'src/stores/stored-state';
 import { AppBody } from './app-body';
-import { ThemeGetters } from 'src/stores/theme/theme-state';
+import { ThemeSelectors } from 'src/stores/theme/selectors';
 import { createBrowserHistory } from 'history';
 
 interface Props {
@@ -33,8 +33,8 @@ const Inner: React.SFC<Props> = ({ theme }) => {
 const mapDispatchToProps: DispatchMapper<{}> = () => {
   return {};
 };
-const mapStateToProps = ({ themeState }: StoredState) => {
-  const { createTheme } = new ThemeGetters(themeState);
+const mapStateToProps = ({ theme }: StoredState) => {
+  const { createTheme } = new ThemeSelectors(theme);
   return {
     theme: createTheme(),
   };

@@ -1,13 +1,16 @@
-import { StoredState } from '../stored-state';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import actionCreatorFactory from 'typescript-fsa';
-import { SignInResult } from 'src/models/accounts/sign-in-result';
-import { AccountsState } from './accounts-state';
-import { UserWorkspace } from 'src/models/accounts/workspace';
+import { AccountsState } from './state';
+import {
+  init,
+  signIn,
+  removeWorkspace,
+  changeWorkspace,
+  addWorkspace,
+} from './action-creators';
 
-export const accountsReducer = (storedState: StoredState) =>
-  reducerWithInitialState(storedState.accountsState)
-    .case(accountsActionCreators.init, s => {
+export const accountsReducer = (state: AccountsState) =>
+  reducerWithInitialState(state)
+    .case(init, s => {
       const newState = Object.assign({}, s);
       if (newState.claim) {
         newState.claim.isInitialized = false;
@@ -17,7 +20,7 @@ export const accountsReducer = (storedState: StoredState) =>
       });
       return newState;
     })
-    .case(accountsActionCreators.signIn, (s, { result }) => {
+    .case(signIn, (s, { result }) => {
       const { claim, workspaces } = result;
       const newState: AccountsState = {
         claims: {},
@@ -55,7 +58,7 @@ export const accountsReducer = (storedState: StoredState) =>
       }
       return newState;
     })
-    .case(accountsActionCreators.removeWorkspace, (s, { userWorkspaceId }) => {
+    .case(removeWorkspace, (s, { userWorkspaceId }) => {
       const workspaces = {};
       Object.entries(s.workspaces)
         .filter(x => x[0] !== userWorkspaceId)
@@ -63,7 +66,7 @@ export const accountsReducer = (storedState: StoredState) =>
 
       return { ...s, workspaces };
     })
-    .case(accountsActionCreators.changeWorkspace, (s, { userWorkspaceId }) => {
+    .case(changeWorkspace, (s, { userWorkspaceId }) => {
       const { workspaces, claims } = s;
       const workspace = workspaces[userWorkspaceId];
       const claim = claims[workspace.userId];
@@ -72,7 +75,7 @@ export const accountsReducer = (storedState: StoredState) =>
       }
       return { ...s, claim };
     })
-    .case(accountsActionCreators.addWorkspace, (s, { workspace }) => {
+    .case(addWorkspace, (s, { workspace }) => {
       const { workspaces, claims } = s;
       const claim = claims[workspace.userId];
       if (!claim) {
@@ -84,17 +87,3 @@ export const accountsReducer = (storedState: StoredState) =>
       }
       return { ...s, workspaces, claim };
     });
-const factory = actionCreatorFactory();
-export const accountsActionCreators = {
-  init: factory<{}>('accountsActionCreators.init'),
-  signIn: factory<{ result: SignInResult }>('accountsActionCreators.signIn'),
-  removeWorkspace: factory<{ userWorkspaceId: string }>(
-    'accountsActionCreators.removeWorkspace',
-  ),
-  changeWorkspace: factory<{ userWorkspaceId: string }>(
-    'accountsActionCreators.changeWorkspace',
-  ),
-  addWorkspace: factory<{ workspace: UserWorkspace }>(
-    'accountsActionCreators.addWorkspace',
-  ),
-};

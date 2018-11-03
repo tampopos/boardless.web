@@ -1,20 +1,8 @@
-import { Claim } from 'src/models/accounts/claim';
-import { UserWorkspace } from 'src/models/accounts/workspace';
+import { AccountsState } from './state';
 import { cultureInfos } from 'src/common/location/culture-infos';
 import { ReservedWords } from 'src/common/statics/reserved-words';
 
-export interface AccountsState {
-  claim?: Claim;
-  claims: { [index: string]: Claim };
-  workspaces: { [index: string]: UserWorkspace };
-}
-
-export const defaultAccountsState: AccountsState = {
-  claims: {},
-  workspaces: {},
-};
-
-export class AccountsGetters {
+export class AccountsSelectors {
   constructor(private state: AccountsState) {}
   public get resources() {
     const { resources } = this.cultureInfo;

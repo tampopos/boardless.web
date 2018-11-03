@@ -7,10 +7,9 @@ import { decorate } from 'src/common/styles/styles-helper';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { Url } from 'src/common/routing/url';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
-import { Bar } from 'src/pages/bar';
 import { History } from 'history';
 import { WorkspaceIndex } from 'src/pages/workspaces';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { WorkspaceSearch } from 'src/pages/workspaces/search';
 
 const styles = createStyles({
@@ -32,7 +31,6 @@ class Inner extends StyledComponentBase<typeof styles, Props> {
       <SideMenuContainer>
         <Switch>
           <Route path={Url.searchWorkspaces()} component={WorkspaceSearch} />
-          <Route path={Url.workspaceRootTemplate} component={Bar} />
           <Route path={Url.root} component={WorkspaceIndex} />
         </Switch>
       </SideMenuContainer>
@@ -43,10 +41,10 @@ interface Params {
   workspaceUrl: string;
 }
 const mapStateToProps: StateMapperWithRouter<Props, Params> = (
-  { accountsState },
+  { accounts },
   { match, history },
 ) => {
-  const { validateWorkspaceUrl } = new AccountsGetters(accountsState);
+  const { validateWorkspaceUrl } = new AccountsSelectors(accounts);
   const { workspaceUrl } = match.params;
   const redirectRoot = !validateWorkspaceUrl(workspaceUrl);
   return {

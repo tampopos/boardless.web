@@ -2,9 +2,9 @@ import * as React from 'react';
 import { MessageContainer } from '../../components/messages/message-container';
 import { Message } from 'src/models/common/message';
 import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
-import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
-import { MessagesStateGetters } from 'src/stores/messages/messages-state';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { messagesActionCreators } from 'src/stores/messages/reducer';
+import { MessagesStateSelectors } from 'src/stores/messages/selectors';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/common/routing/routing-helper';
 
 interface Events {
@@ -35,11 +35,11 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   };
 };
 const mapStateToProps: StateMapperWithRouter<Props> = ({
-  messagesState,
-  accountsState,
+  messages,
+  accounts,
 }) => {
-  const { cultureInfo } = new AccountsGetters(accountsState);
-  const { getMessages } = new MessagesStateGetters(messagesState);
+  const { cultureInfo } = new AccountsSelectors(accounts);
+  const { getMessages } = new MessagesStateSelectors(messages);
   return {
     messages: getMessages(cultureInfo),
   };

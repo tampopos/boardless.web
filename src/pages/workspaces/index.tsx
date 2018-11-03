@@ -8,7 +8,7 @@ import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
 import { UserWorkspace } from 'src/models/accounts/workspace';
 import { Claim } from 'src/models/accounts/claim';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
+import { AccountsSelectors } from 'src/stores/accounts/selectors';
 import { OutlinedButton } from 'src/components/forms-controls/button';
 import { Container } from 'src/components/layout/container';
 import { Row } from 'src/components/layout/row';
@@ -34,14 +34,14 @@ interface Params {
   workspaceUrl: string;
 }
 const mapStateToProps: StateMapperWithRouter<Props, Params> = (
-  { accountsState, workspacesState },
+  { accounts, workspaces },
   { history },
 ) => {
-  const { workspaces, claims } = accountsState;
-  const { invitedWorkspaces } = workspacesState;
-  const { resources } = new AccountsGetters(accountsState);
+  const { claims } = accounts;
+  const { invitedWorkspaces } = workspaces;
+  const { resources } = new AccountsSelectors(accounts);
   return {
-    workspaces,
+    workspaces: accounts.workspaces,
     claims,
     resources,
     history,

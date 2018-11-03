@@ -7,9 +7,9 @@ import { SignInResult } from 'src/models/accounts/sign-in-result';
 import { Claim } from 'src/models/accounts/claim';
 import { IFetchService } from './interfaces/fetch-service';
 import { IMessagesService } from './interfaces/messages-service';
-import { accountsActionCreators } from 'src/stores/accounts/accounts-reducer';
 import { History } from 'history';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
+import { signIn } from 'src/stores/accounts/action-creators';
 
 @injectable()
 export class AccountsService implements IAccountsService {
@@ -30,7 +30,7 @@ export class AccountsService implements IAccountsService {
       methodName: 'POST',
       body: claim,
     });
-    this.dispatch(accountsActionCreators.signIn({ result }));
+    this.dispatch(signIn({ result }));
   };
   public validate = (model: SignInModel) => {
     const { email, password } = model;
@@ -74,7 +74,7 @@ export class AccountsService implements IAccountsService {
       );
       return;
     }
-    this.dispatch(accountsActionCreators.signIn({ result }));
+    this.dispatch(signIn({ result }));
     if (result.claim) {
       const { name } = result.claim;
       this.messagesService.appendMessages(({ messages }) => ({

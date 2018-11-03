@@ -1,5 +1,5 @@
 import { Theme as MuiTheme, colors as MuiColors } from '@material-ui/core';
-import { ThemeState } from 'src/stores/theme/theme-state';
+import { ThemeState } from 'src/stores/theme/state';
 
 export const colors = {
   amber: MuiColors.amber,

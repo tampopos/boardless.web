@@ -5,7 +5,7 @@ import {
   MessageGenerator,
   MessageGeneratorArgs,
 } from 'src/models/common/message';
-import { messagesActionCreators } from 'src/stores/messages/messages-reducer';
+import { messagesActionCreators } from 'src/stores/messages/reducer';
 import { IMessagesService } from './interfaces/messages-service';
 import { IDispatchProvider } from './interfaces/dispatch-provider';
 
