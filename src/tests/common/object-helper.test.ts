@@ -1,4 +1,4 @@
-import { mapObject } from 'src/common/object-helper';
+import { mapObject } from 'src/infrastructures/common/object-helper';
 
 it('ObjectHelper.mapObject', () => {
   type keys = 'p1' | 'p2';
