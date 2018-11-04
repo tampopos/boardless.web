@@ -4,7 +4,7 @@ import * as React from 'react';
 import { OutlinedTextBox } from 'src/web/components/forms-controls/text-box';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { SignInModel } from 'src/domains/models/accounts/sign-in-model';
-import { resolve } from 'src/domains/services/common/service-provider';
+import { resolve, symbols } from 'src/use-cases/di-container';
 import { Resources } from 'src/domains/common/location/resources';
 import { Form } from 'src/web/components/forms-controls/form';
 import { decorate } from 'src/infrastructures/styles/styles-helper';
@@ -116,7 +116,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   return {
     signIn: async (model, history, workspaceUrl) => {
-      const accountsService = resolve('accountsService');
+      const accountsService = resolve(symbols.accountsService);
       if (!(await accountsService.validate(model))) {
         return;
       }

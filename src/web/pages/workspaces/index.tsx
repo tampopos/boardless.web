@@ -12,7 +12,7 @@ import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors
 import { OutlinedButton } from 'src/web/components/forms-controls/button';
 import { Container } from 'src/web/components/layout/container';
 import { Row } from 'src/web/components/layout/row';
-import { resolve } from 'src/domains/services/common/service-provider';
+import { resolve, symbols } from 'src/use-cases/di-container';
 import { Cell } from 'src/web/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
 import { Url } from 'src/infrastructures/routing/url';
@@ -58,7 +58,7 @@ interface Events {
   add: (workspace: UserWorkspace, history: History) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { getInvitedWorkspaces, add } = resolve('workspaceService');
+  const { getInvitedWorkspaces, add } = resolve(symbols.workspaceService);
   return { getInvitedWorkspaces, add };
 };
 interface State {}

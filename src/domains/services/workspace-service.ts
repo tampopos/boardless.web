@@ -4,7 +4,7 @@ import {
   UserWorkspace,
   Workspace,
 } from 'src/domains/models/accounts/workspace';
-import { inject } from 'src/infrastructures/services/inject';
+import { inject } from 'src/infrastructures/services/inversify-helper';
 import { Claim } from 'src/domains/models/accounts/claim';
 import {
   changeWorkspace,
@@ -21,12 +21,14 @@ import { IWorkspaceService } from 'src/use-cases/services/interfaces/workspace-s
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { Url, ApiUrl } from 'src/infrastructures/routing/url';
+import { serviceSymbols } from './common/symbols';
 
 @injectable()
 export class WorkspaceService implements IWorkspaceService {
   constructor(
-    @inject('fetchService') private fetchService: IFetchService,
-    @inject('dispatchProvider') private dispatchProvider: IDispatchProvider,
+    @inject(serviceSymbols.fetchService) private fetchService: IFetchService,
+    @inject(serviceSymbols.dispatchProvider)
+    private dispatchProvider: IDispatchProvider,
   ) {}
   private get dispatch() {
     return this.dispatchProvider.dispatch;

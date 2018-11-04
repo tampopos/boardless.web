@@ -1,3 +1,4 @@
+import { createRegisterSymbol } from 'src/infrastructures/services/inversify-helper';
 import { Config } from 'src/domains/models/common/config';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
 import { IAccountsService } from 'src/use-cases/services/interfaces/accounts-service';
@@ -7,14 +8,13 @@ import { IMessagesService } from 'src/use-cases/services/interfaces/messages-ser
 import { IValidateService } from 'src/use-cases/services/interfaces/validate-service';
 import { IWorkspaceService } from 'src/use-cases/services/interfaces/workspace-service';
 
-export interface Services {
-  config: Config;
-  fetchService: IFetchService;
-  accountsService: IAccountsService;
-  dispatchProvider: IDispatchProvider;
-  guidProvider: IGuidProvider;
-  messagesService: IMessagesService;
-  validateService: IValidateService;
-  workspaceService: IWorkspaceService;
-}
-export type ServiceKeys = keyof Services;
+export const serviceSymbols = {
+  config: createRegisterSymbol<Config>(),
+  fetchService: createRegisterSymbol<IFetchService>(),
+  guidProvider: createRegisterSymbol<IGuidProvider>(),
+  accountsService: createRegisterSymbol<IAccountsService>(),
+  messagesService: createRegisterSymbol<IMessagesService>(),
+  dispatchProvider: createRegisterSymbol<IDispatchProvider>(),
+  validateService: createRegisterSymbol<IValidateService>(),
+  workspaceService: createRegisterSymbol<IWorkspaceService>(),
+};

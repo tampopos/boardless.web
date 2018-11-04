@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { createAppStore } from 'src/infrastructures/stores/reducer-factory';
-import { resolve } from 'src/domains/services/common/service-provider';
+import { resolve, symbols } from 'src/use-cases/di-container';
 
 export interface StoreProviderProps {
   initialState: StoredState;
@@ -10,6 +10,6 @@ export interface StoreProviderProps {
 export const StoreProvider: React.SFC<StoreProviderProps> = props => {
   const { initialState } = props;
   const store = createAppStore(initialState);
-  resolve('dispatchProvider').dispatch = store.dispatch;
+  resolve(symbols.dispatchProvider).dispatch = store.dispatch;
   return <Provider store={store}>{props.children}</Provider>;
 };

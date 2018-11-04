@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Claim } from 'src/domains/models/accounts/claim';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
-import { resolve } from 'src/domains/services/common/service-provider';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { init } from 'src/infrastructures/stores/accounts/action-creators';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
+import { resolve, symbols } from 'src/use-cases/di-container';
 
 interface Events {
   refreshTokenAsync: (claim?: Claim) => Promise<void>;
@@ -25,7 +25,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   dispatch(init({}));
   return {
     refreshTokenAsync: async state => {
-      await resolve('accountsService').refreshTokenAsync(state);
+      await resolve(symbols.accountsService).refreshTokenAsync(state);
     },
   };
 };

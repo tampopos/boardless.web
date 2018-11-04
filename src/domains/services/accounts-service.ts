@@ -8,15 +8,18 @@ import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
 import { IMessagesService } from 'src/use-cases/services/interfaces/messages-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { ApiUrl, Url } from 'src/infrastructures/routing/url';
-import { inject } from 'src/infrastructures/services/inject';
+import { inject } from 'src/infrastructures/services/inversify-helper';
 import { signIn } from 'src/infrastructures/stores/accounts/action-creators';
+import { serviceSymbols } from './common/symbols';
 
 @injectable()
 export class AccountsService implements IAccountsService {
   constructor(
-    @inject('fetchService') private fetchService: IFetchService,
-    @inject('messagesService') private messagesService: IMessagesService,
-    @inject('dispatchProvider') private dispatchProvider: IDispatchProvider,
+    @inject(serviceSymbols.fetchService) private fetchService: IFetchService,
+    @inject(serviceSymbols.messagesService)
+    private messagesService: IMessagesService,
+    @inject(serviceSymbols.dispatchProvider)
+    private dispatchProvider: IDispatchProvider,
   ) {}
   private get dispatch() {
     return this.dispatchProvider.dispatch;

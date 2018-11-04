@@ -14,7 +14,7 @@ import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { History } from 'history';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
-import { resolve } from 'src/domains/services/common/service-provider';
+import { resolve, symbols } from 'src/use-cases/di-container';
 import { ContextMenu } from 'src/web/components/extensions/context-menu';
 import { Claim } from 'src/domains/models/accounts/claim';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
@@ -94,7 +94,7 @@ const mapDispatchToPropsIconInner: DispatchMapper<
   IconInnerEvents,
   IconInnerOwnProps
 > = () => {
-  const { getSrc } = resolve('workspaceService');
+  const { getSrc } = resolve(symbols.workspaceService);
   return {
     getSrc,
   };
@@ -210,7 +210,7 @@ interface Events {
   closeWorkspace: (history: History, workspace: UserWorkspace) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events, OwnProps> = () => {
-  const { changeWorkspace, closeWorkspace } = resolve('workspaceService');
+  const { changeWorkspace, closeWorkspace } = resolve(symbols.workspaceService);
   return {
     changeWorkspace,
     closeWorkspace,
