@@ -7,9 +7,9 @@ import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper'
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { History } from 'history';
 import { WorkspaceIndex } from 'src/web/pages/workspaces';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { WorkspaceSearch } from 'src/web/pages/workspaces/search';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { Url } from 'src/infrastructures/routing/url';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 

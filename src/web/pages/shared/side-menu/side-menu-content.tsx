@@ -13,9 +13,9 @@ import { Url } from 'src/infrastructures/routing/url';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { Theme } from 'src/infrastructures/styles/theme';
 import { Add } from '@material-ui/icons';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { Resources } from 'src/domains/common/location/resources';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
 
 const styles = (theme: Theme) =>

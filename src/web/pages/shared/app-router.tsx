@@ -4,9 +4,9 @@ import { Url } from 'src/infrastructures/routing/url';
 import { StateMapper } from 'src/infrastructures/stores/types';
 import { SignIn } from './accounts/sign-in';
 import { AuthenticatedRoot } from './accounts/authenticated-root';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 
 interface Props {
   authenticated: boolean;

@@ -8,7 +8,7 @@ import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper'
 import { History } from 'history';
 import { UserWorkspace } from 'src/domains/models/accounts/workspace';
 import { Claim } from 'src/domains/models/accounts/claim';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { OutlinedButton } from 'src/web/components/forms-controls/button';
 import { Container } from 'src/web/components/layout/container';
 import { Row } from 'src/web/components/layout/row';
@@ -17,7 +17,7 @@ import { Cell } from 'src/web/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
 import { Url } from 'src/infrastructures/routing/url';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 
 const styles = createStyles({
   root: { padding: 10 },

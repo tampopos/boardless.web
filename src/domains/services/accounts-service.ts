@@ -8,8 +8,8 @@ import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
 import { IMessagesService } from 'src/use-cases/services/interfaces/messages-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { ApiUrl, Url } from 'src/infrastructures/routing/url';
-import { signIn } from '../stores/accounts/action-creators';
 import { inject } from 'src/infrastructures/services/inject';
+import { signIn } from 'src/infrastructures/stores/accounts/action-creators';
 
 @injectable()
 export class AccountsService implements IAccountsService {

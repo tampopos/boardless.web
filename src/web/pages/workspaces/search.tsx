@@ -8,7 +8,7 @@ import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper'
 import { History } from 'history';
 import { Workspace } from 'src/domains/models/accounts/workspace';
 import { Claim } from 'src/domains/models/accounts/claim';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import {
   OutlinedButton,
   Button,
@@ -27,7 +27,7 @@ import { Url } from 'src/infrastructures/routing/url';
 import { parse } from 'query-string';
 import { Search } from '@material-ui/icons';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 
 const suggestions = [
   'Afghanistan',

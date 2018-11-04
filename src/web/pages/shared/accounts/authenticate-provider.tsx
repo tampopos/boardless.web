@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Claim } from 'src/domains/models/accounts/claim';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { resolve } from 'src/domains/services/common/service-provider';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
-import { init } from 'src/domains/stores/accounts/action-creators';
+import { init } from 'src/infrastructures/stores/accounts/action-creators';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 

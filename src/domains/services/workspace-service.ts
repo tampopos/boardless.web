@@ -10,13 +10,13 @@ import {
   changeWorkspace,
   removeWorkspace,
   addWorkspace,
-} from 'src/domains/stores/accounts/action-creators';
+} from 'src/infrastructures/stores/accounts/action-creators';
 import {
   clearInvitedWorkspaces,
   addInvitedWorkspaces,
   clearJoinableWorkspaces,
   addJoinableWorkspaces,
-} from 'src/domains/stores/workspaces/action-creators';
+} from 'src/infrastructures/stores/workspaces/action-creators';
 import { IWorkspaceService } from 'src/use-cases/services/interfaces/workspace-service';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';

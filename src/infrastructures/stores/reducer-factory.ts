@@ -6,8 +6,8 @@ import { sideMenuReducer } from './side-menu/reducer';
 import { createLocalstorageSetting } from './localstorage';
 import { themeReducer } from './theme/reducer';
 import { workspacesReducer } from './workspaces/reducer';
-import { createStore } from '../../infrastructures/stores/redux-helper';
-import { ReducerBuilders } from '../../infrastructures/stores/types';
+import { createStore } from './redux-helper';
+import { ReducerBuilders } from './types';
 
 const enhancer = compose(createLocalstorageSetting('accounts'));
 const builders: ReducerBuilders<StoredState> = {

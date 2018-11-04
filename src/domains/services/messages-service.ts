@@ -3,11 +3,14 @@ import { inject } from 'src/infrastructures/services/inject';
 import { IMessagesService } from 'src/use-cases/services/interfaces/messages-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { IGuidProvider } from 'src/use-cases/services/interfaces/guid-provider';
-import { messagesActionCreators } from '../stores/messages/reducer';
 import {
   MessageGenerator,
   MessageGeneratorArgs,
 } from '../models/common/message';
+import {
+  clear,
+  showMessages,
+} from 'src/infrastructures/stores/messages/action-creators';
 
 @injectable()
 export class MessagesService implements IMessagesService {
@@ -18,7 +21,7 @@ export class MessagesService implements IMessagesService {
   private get dispatch() {
     return this.dispatchProvider.dispatch;
   }
-  public clear = () => this.dispatch(messagesActionCreators.clear());
+  public clear = () => this.dispatch(clear());
   public showMessages = (...messageGenerators: MessageGenerator[]) => {
     this.showMessagesInner(false, ...messageGenerators);
   };
@@ -34,7 +37,7 @@ export class MessagesService implements IMessagesService {
       generator,
     }));
     this.dispatch(
-      messagesActionCreators.showMessages({
+      showMessages({
         messageGeneratorArgs: args,
         append,
       }),

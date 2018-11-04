@@ -20,12 +20,12 @@ import { History } from 'history';
 import { Url } from 'src/infrastructures/routing/url';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { Theme } from 'src/infrastructures/styles/theme';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
-import { signIn } from 'src/domains/stores/accounts/action-creators';
-import { handleOpen } from 'src/domains/stores/side-menu/action-creators';
+import { signIn } from 'src/infrastructures/stores/accounts/action-creators';
+import { handleOpen } from 'src/infrastructures/stores/side-menu/action-creators';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 
 const styles = (theme: Theme) =>
   createStyles({

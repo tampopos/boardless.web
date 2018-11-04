@@ -4,12 +4,12 @@ import { Theme } from 'src/infrastructures/styles/theme';
 import { decorate } from 'src/infrastructures/styles/styles-helper';
 import { SideMenuContent } from './side-menu-content';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
-import { handleClose } from 'src/domains/stores/side-menu/action-creators';
+import { handleClose } from 'src/infrastructures/stores/side-menu/action-creators';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 
 const styles = (theme: Theme) =>
   createStyles({

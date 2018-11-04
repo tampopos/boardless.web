@@ -15,10 +15,10 @@ import { Container } from 'src/web/components/layout/container';
 import { Row } from 'src/web/components/layout/row';
 import { Cell } from 'src/web/components/layout/cell';
 import { OutlinedButton } from 'src/web/components/forms-controls/button';
-import { AccountsSelectors } from 'src/domains/stores/accounts/selectors';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { StoredState } from 'src/domains/stores/stored-state';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
 
 const styles = createStyles({
   root: {
