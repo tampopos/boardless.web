@@ -1,3 +1,5 @@
+import { Box } from './types';
+
 export const mapObject = <K extends string, T, U>(
   obj: Record<K, T>,
   func: (x: T) => U,
@@ -10,7 +12,6 @@ export const mapObject = <K extends string, T, U>(
     {} as Record<K, U>,
   );
 };
-interface Box<T> {}
 export const createMappedObject = <
   T extends {},
   TFuncs extends { [P in keyof T]: (state: T[P]) => Box<T[P]> }
