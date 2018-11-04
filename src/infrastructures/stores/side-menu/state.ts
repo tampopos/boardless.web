@@ -1,6 +1,7 @@
 export interface SideMenuState {
   open: boolean;
 }
-export const defaultSideMenu: SideMenuState = {
+export const defaultSideMenuState: SideMenuState = {
   open: false,
 };
+export default SideMenuState;

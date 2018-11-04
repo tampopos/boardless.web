@@ -1,11 +1,11 @@
 import { StoredState } from './stored-state';
 import { compose } from 'redux';
-import { accountsReducer } from './accounts/reducer';
-import { messagesReducer } from './messages/reducer';
-import { sideMenuReducer } from './side-menu/reducer';
+import { accountsReducer } from './accounts';
+import { messagesReducer } from './messages';
+import { sideMenuReducer } from './side-menu';
 import { createLocalstorageSetting } from './localstorage';
-import { themeReducer } from './theme/reducer';
-import { workspacesReducer } from './workspaces/reducer';
+import { themeReducer } from './theme';
+import { workspacesReducer } from './workspaces';
 import { createStore } from './redux-helper';
 import { ReducerBuilders } from './types';
 

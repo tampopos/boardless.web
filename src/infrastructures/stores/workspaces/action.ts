@@ -7,3 +7,4 @@ export interface Action {
   clearJoinableWorkspaces: void;
   addJoinableWorkspaces: { joinableWorkspaces: UserWorkspace[] };
 }
+export default Action;

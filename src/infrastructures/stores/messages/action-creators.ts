@@ -1,13 +1,16 @@
+import Action from './action';
 import { createActionCreators } from 'src/infrastructures/stores/redux-helper';
-import { Action } from './action';
-export const {
-  clear,
-  removeMessage,
-  showMessage,
-  showMessages,
-} = createActionCreators('message')<Action>(
+
+const actionCreators = createActionCreators('messages')<Action>(
   'clear',
   'removeMessage',
   'showMessage',
   'showMessages',
 );
+export const {
+  clear,
+  removeMessage,
+  showMessage,
+  showMessages,
+} = actionCreators;
+export default actionCreators;

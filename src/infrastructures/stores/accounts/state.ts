@@ -7,7 +7,8 @@ export interface AccountsState {
   workspaces: { [index: string]: UserWorkspace };
 }
 
-export const defaultAccounts: AccountsState = {
+export const defaultAccountsState: AccountsState = {
   claims: {},
   workspaces: {},
 };
+export default AccountsState;

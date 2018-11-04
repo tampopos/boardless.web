@@ -1,9 +1,9 @@
-import { AccountsState } from './state';
+import State from './state';
 import { cultureInfos } from 'src/domains/common/location/culture-infos';
 import { ReservedWords } from 'src/domains/common/reserved-words';
 
 export class AccountsSelectors {
-  constructor(private state: AccountsState) {}
+  constructor(private state: State) {}
   public get resources() {
     const { resources } = this.cultureInfo;
     return resources;

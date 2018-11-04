@@ -12,3 +12,4 @@ export interface Action {
     append?: boolean;
   };
 }
+export default Action;

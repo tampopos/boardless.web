@@ -2,12 +2,12 @@ import * as React from 'react';
 import { MessageContainer } from '../../components/messages/message-container';
 import { Message } from 'src/domains/models/common/message';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
-import { messagesActionCreators } from 'src/infrastructures/stores/messages/reducer';
 import { MessagesStateSelectors } from 'src/infrastructures/stores/messages/selectors';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { messagesActionCreators } from 'src/infrastructures/stores/messages';
 
 interface Events {
   clear: () => void;

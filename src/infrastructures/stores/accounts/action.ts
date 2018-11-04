@@ -8,3 +8,4 @@ export interface Action {
   changeWorkspace: { userWorkspaceId: string };
   addWorkspace: { workspace: UserWorkspace };
 }
+export default Action;
