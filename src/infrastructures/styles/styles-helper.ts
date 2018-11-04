@@ -3,6 +3,7 @@ import {
   StyledComponent,
   StyledComponentType,
   WithStyleProps,
+  Classes,
 } from './types';
 import injectSheet from 'react-jss';
 import { Omit } from '../common/types';
@@ -35,6 +36,7 @@ export const appendClassName = (...classNames: Array<string | undefined>) =>
   classNames.filter(x => x).join(' ');
 export const getInjectClasses = <TStyles extends Styles>(
   props: WithStyleProps<TStyles>,
+  ...appendClasses: Array<Classes<TStyles>>
 ) => {
   const { classes, injectClasses, className } = props;
   const classesList: Array<{}> = [classes];
@@ -46,7 +48,10 @@ export const getInjectClasses = <TStyles extends Styles>(
       root: className,
     });
   }
-  return mergeClasses(...classesList) as typeof props.classes & {
+  return mergeClasses(
+    ...classesList,
+    ...appendClasses,
+  ) as typeof props.classes & {
     root: string;
   };
 };
@@ -55,18 +60,12 @@ export const createPropagationProps = <
   TProps extends {}
 >(
   props: WithStyleProps<TStyles, TProps>,
-): Omit<typeof newObj, 'theme' | 'className'> => {
-  const classes = getInjectClasses(props);
-  const append = { classes } as any;
-  if (props.theme) {
-    append.theme = undefined;
-  }
-  if (props.className) {
-    append.className = undefined;
-  }
-  if (props.injectClasses) {
-    append.injectClasses = undefined;
-  }
-  const newObj = Object.assign({}, props, append as {});
-  return newObj;
+  ...appendClasses: Array<Classes<TStyles>>
+): Omit<
+  WithStyleProps<TStyles, TProps>,
+  'theme' | 'className' | 'injectClasses'
+> => {
+  const c = getInjectClasses(props, ...appendClasses);
+  const { theme, className, injectClasses, ...others } = props as any;
+  return Object.assign({}, others, { classes: c });
 };

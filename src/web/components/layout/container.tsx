@@ -9,7 +9,7 @@ const styles = createStyles({
 });
 export interface ContainerProps {}
 export const Container = decorate(styles)<ContainerProps & GridProps>(props => {
-  const { classes, injectClasses, ...others } = createPropagationProps(props);
+  const { classes, ...others } = createPropagationProps(props);
   const { root } = classes;
   return <Grid {...others} className={root} container={true} />;
 });

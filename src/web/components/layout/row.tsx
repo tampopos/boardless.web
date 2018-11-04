@@ -16,7 +16,7 @@ const styles = createStyles({
 });
 interface RowProps {}
 export const Row = decorate(styles)<RowProps & GridProps>(props => {
-  const { classes, injectClasses, ...others } = createPropagationProps(props);
+  const { classes, ...others } = createPropagationProps(props);
   const { root } = classes;
   return <Grid {...others} className={root} item={true} xs={12 as 12} />;
 });

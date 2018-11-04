@@ -7,33 +7,35 @@ import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
-import { messagesActionCreators } from 'src/infrastructures/stores/messages';
+import {
+  removeMessage,
+  clear,
+} from 'src/infrastructures/stores/messages/action-creators';
 
 interface Events {
-  clear: () => void;
-  removeMessage: (id: string) => void;
+  onClear: () => void;
+  onRemoveMessage: (id: string) => void;
 }
 interface Props {
   messages: Message[];
 }
 const Inner: React.SFC<Events & Props> = ({
   messages,
-  removeMessage,
-  clear,
+  onRemoveMessage,
+  onClear,
 }) => {
   return (
     <MessageContainer
       messages={messages}
-      close={id => removeMessage(id)}
-      clear={clear}
+      close={id => onRemoveMessage(id)}
+      clear={onClear}
     />
   );
 };
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
-    removeMessage: (id: string) =>
-      dispatch(messagesActionCreators.removeMessage({ id })),
-    clear: () => dispatch(messagesActionCreators.clear()),
+    onRemoveMessage: (id: string) => dispatch(removeMessage({ id })),
+    onClear: () => dispatch(clear()),
   };
 };
 const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({

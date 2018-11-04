@@ -11,7 +11,7 @@ const styles = createStyles({
 });
 interface CellProps {}
 export const Cell = decorate(styles)<CellProps & GridProps>(props => {
-  const { classes, injectClasses, ...others } = createPropagationProps(props);
+  const { classes, ...others } = createPropagationProps(props);
   const { root } = classes;
   return <Grid {...others} className={root} item={true} />;
 });

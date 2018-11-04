@@ -16,8 +16,9 @@ import { symbols } from 'src/use-cases/common/di-symbols';
 @injectable()
 export class MessagesUseCase implements IMessagesUseCase {
   constructor(
-    @inject(symbols.config) private dispatchProvider: IDispatchProvider,
-    @inject(symbols.config) private guidProvider: IGuidProvider,
+    @inject(symbols.dispatchProvider)
+    private dispatchProvider: IDispatchProvider,
+    @inject(symbols.guidProvider) private guidProvider: IGuidProvider,
   ) {}
   private get dispatch() {
     return this.dispatchProvider.dispatch;

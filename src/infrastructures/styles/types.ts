@@ -26,18 +26,19 @@ export type StyledComponent<TStyles extends Styles, TProps = {}> =
   | StyledSFC<TStyles, TProps>;
 
 export type Styles = string | StyleRules | StyleRulesCallback;
+export type Classes<T extends Styles> = Partial<
+  ClassNameMap<
+    T extends string
+      ? T
+      : T extends StyleRulesCallback<infer K>
+        ? K
+        : T extends StyleRules<infer L> ? L : never
+  >
+>;
 export interface InjectableStylesProps<T extends Styles> {
   theme?: Theme;
   className?: string;
-  injectClasses?: Partial<
-    ClassNameMap<
-      T extends string
-        ? T
-        : T extends StyleRulesCallback<infer K>
-          ? K
-          : T extends StyleRules<infer L> ? L : never
-    >
-  >;
+  injectClasses?: Classes<T>;
 }
 export type WithStyleProps<TStyles extends Styles, TProps = {}> = WithStyles<
   TStyles
