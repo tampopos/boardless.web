@@ -12,12 +12,13 @@ import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors
 import { OutlinedButton } from 'src/web/components/forms-controls/button';
 import { Container } from 'src/web/components/layout/container';
 import { Row } from 'src/web/components/layout/row';
-import { resolve, symbols } from 'src/use-cases/di-container';
+import { resolve } from 'src/use-cases/common/di-container';
 import { Cell } from 'src/web/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
 import { Url } from 'src/infrastructures/routing/url';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 const styles = createStyles({
   root: { padding: 10 },
@@ -58,7 +59,7 @@ interface Events {
   add: (workspace: UserWorkspace, history: History) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { getInvitedWorkspaces, add } = resolve(symbols.workspaceService);
+  const { getInvitedWorkspaces, add } = resolve(symbols.workspaceUseCase);
   return { getInvitedWorkspaces, add };
 };
 interface State {}

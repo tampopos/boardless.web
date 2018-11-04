@@ -5,7 +5,8 @@ import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper'
 import { init } from 'src/infrastructures/stores/accounts/action-creators';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { resolve, symbols } from 'src/use-cases/di-container';
+import { resolve } from 'src/use-cases/common/di-container';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 interface Events {
   refreshTokenAsync: (claim?: Claim) => Promise<void>;
@@ -25,7 +26,7 @@ const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   dispatch(init({}));
   return {
     refreshTokenAsync: async state => {
-      await resolve(symbols.accountsService).refreshTokenAsync(state);
+      await resolve(symbols.accountsUseCase).refreshTokenAsync(state);
     },
   };
 };

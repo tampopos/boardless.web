@@ -1,23 +1,23 @@
 import { injectable } from 'inversify';
 import { inject } from 'src/infrastructures/services/inversify-helper';
-import { IMessagesService } from 'src/use-cases/services/interfaces/messages-service';
+import { IMessagesUseCase } from 'src/use-cases/interfaces/messages-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { IGuidProvider } from 'src/use-cases/services/interfaces/guid-provider';
 import {
   MessageGenerator,
   MessageGeneratorArgs,
-} from '../models/common/message';
+} from '../domains/models/common/message';
 import {
   clear,
   showMessages,
 } from 'src/infrastructures/stores/messages/action-creators';
-import { serviceSymbols } from './common/symbols';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 @injectable()
-export class MessagesService implements IMessagesService {
+export class MessagesUseCase implements IMessagesUseCase {
   constructor(
-    @inject(serviceSymbols.config) private dispatchProvider: IDispatchProvider,
-    @inject(serviceSymbols.config) private guidProvider: IGuidProvider,
+    @inject(symbols.config) private dispatchProvider: IDispatchProvider,
+    @inject(symbols.config) private guidProvider: IGuidProvider,
   ) {}
   private get dispatch() {
     return this.dispatchProvider.dispatch;

@@ -3,22 +3,21 @@ import { injectable } from 'inversify';
 import { SignInResult } from 'src/domains/models/accounts/sign-in-result';
 import { Claim } from 'src/domains/models/accounts/claim';
 import { History } from 'history';
-import { IAccountsService } from 'src/use-cases/services/interfaces/accounts-service';
+import { IAccountsUseCase } from 'src/use-cases/interfaces/accounts-use-case';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
-import { IMessagesService } from 'src/use-cases/services/interfaces/messages-service';
+import { IMessagesUseCase } from 'src/use-cases/interfaces/messages-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { ApiUrl, Url } from 'src/infrastructures/routing/url';
 import { inject } from 'src/infrastructures/services/inversify-helper';
 import { signIn } from 'src/infrastructures/stores/accounts/action-creators';
-import { serviceSymbols } from './common/symbols';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 @injectable()
-export class AccountsService implements IAccountsService {
+export class AccountsUseCase implements IAccountsUseCase {
   constructor(
-    @inject(serviceSymbols.fetchService) private fetchService: IFetchService,
-    @inject(serviceSymbols.messagesService)
-    private messagesService: IMessagesService,
-    @inject(serviceSymbols.dispatchProvider)
+    @inject(symbols.fetchService) private fetchService: IFetchService,
+    @inject(symbols.messagesUseCase) private messagesService: IMessagesUseCase,
+    @inject(symbols.dispatchProvider)
     private dispatchProvider: IDispatchProvider,
   ) {}
   private get dispatch() {

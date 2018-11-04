@@ -3,10 +3,10 @@ import {
   WorkspaceBase,
   Workspace,
 } from 'src/domains/models/accounts/workspace';
-import { History } from 'history';
 import { Claim } from 'src/domains/models/accounts/claim';
+import { History } from 'history';
 
-export interface IWorkspaceService {
+export interface IWorkspaceUseCase {
   changeWorkspace: (history: History, workspace: UserWorkspace) => void;
   closeWorkspace: (history: History, workspace: UserWorkspace) => void;
   getSrc: (workspace: WorkspaceBase) => Promise<string>;

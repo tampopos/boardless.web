@@ -17,17 +17,17 @@ import {
   clearJoinableWorkspaces,
   addJoinableWorkspaces,
 } from 'src/infrastructures/stores/workspaces/action-creators';
-import { IWorkspaceService } from 'src/use-cases/services/interfaces/workspace-service';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
 import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { Url, ApiUrl } from 'src/infrastructures/routing/url';
-import { serviceSymbols } from './common/symbols';
+import { IWorkspaceUseCase } from './interfaces/workspace-use-case';
+import { symbols } from './common/di-symbols';
 
 @injectable()
-export class WorkspaceService implements IWorkspaceService {
+export class WorkspaceUseCase implements IWorkspaceUseCase {
   constructor(
-    @inject(serviceSymbols.fetchService) private fetchService: IFetchService,
-    @inject(serviceSymbols.dispatchProvider)
+    @inject(symbols.fetchService) private fetchService: IFetchService,
+    @inject(symbols.dispatchProvider)
     private dispatchProvider: IDispatchProvider,
   ) {}
   private get dispatch() {

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { OutlinedTextBox } from 'src/web/components/forms-controls/text-box';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { SignInModel } from 'src/domains/models/accounts/sign-in-model';
-import { resolve, symbols } from 'src/use-cases/di-container';
+import { resolve } from 'src/use-cases/common/di-container';
 import { Resources } from 'src/domains/common/location/resources';
 import { Form } from 'src/web/components/forms-controls/form';
 import { decorate } from 'src/infrastructures/styles/styles-helper';
@@ -19,6 +19,7 @@ import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 const styles = createStyles({
   root: {
@@ -116,11 +117,11 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   return {
     signIn: async (model, history, workspaceUrl) => {
-      const accountsService = resolve(symbols.accountsService);
-      if (!(await accountsService.validate(model))) {
+      const useCase = resolve(symbols.accountsUseCase);
+      if (!(await useCase.validate(model))) {
         return;
       }
-      await accountsService.signInAsync(model, history, workspaceUrl);
+      await useCase.signInAsync(model, history, workspaceUrl);
     },
   };
 };

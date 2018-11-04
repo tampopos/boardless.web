@@ -15,7 +15,7 @@ import {
 } from 'src/web/components/forms-controls/button';
 import { Container } from 'src/web/components/layout/container';
 import { Row } from 'src/web/components/layout/row';
-import { resolve, symbols } from 'src/use-cases/di-container';
+import { resolve } from 'src/use-cases/common/di-container';
 import { Cell } from 'src/web/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
 import { InfinityLoading } from 'src/web/components/extensions/infinity-loading';
@@ -28,6 +28,7 @@ import { parse } from 'query-string';
 import { Search } from '@material-ui/icons';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 const suggestions = [
   'Afghanistan',
@@ -115,7 +116,7 @@ interface Events {
   join: (workspace: Workspace, claim: Claim, history: History) => void;
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { getJoinableWorkspaces, join } = resolve(symbols.workspaceService);
+  const { getJoinableWorkspaces, join } = resolve(symbols.workspaceUseCase);
   return { getJoinableWorkspaces, join };
 };
 interface State {
