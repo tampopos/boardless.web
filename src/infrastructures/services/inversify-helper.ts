@@ -18,7 +18,8 @@ export const createContainer = (
     ) => {
       option(tmp.bind<T>(symbol.symbol));
     },
-    resolve: <T>(symbol: RegisterSymbol<T>): T => tmp.get<T>(symbol.symbol),
+    resolveService: <T>(symbol: RegisterSymbol<T>): T =>
+      tmp.get<T>(symbol.symbol),
   };
   return Object.assign(tmp, extensions);
 };

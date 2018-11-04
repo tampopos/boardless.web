@@ -5,4 +5,5 @@ import { registerUseCases } from './register-module';
 const container = createContainer({ autoBindInjectable: true });
 registerServices(container);
 registerUseCases(container);
-export const { resolve } = container;
+const { resolveService } = container;
+export const resolve = resolveService;
