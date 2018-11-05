@@ -21,6 +21,7 @@
     "boardless",
     "clickaway",
     "csstype",
+    "deserialize",
     "haspopup",
     "inversify",
     "localstorage",
@@ -29,6 +30,7 @@
     "roboto",
     "selectable",
     "tmpps",
+    "urljoin",
     "workspaces",
     "yxxx"
   ],
