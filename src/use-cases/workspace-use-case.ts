@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { History } from 'history';
-import { NewWorkspaceModel } from 'src/models/workspaces/new-workspace-model';
+import { NewWorkspaceModel } from 'src/domains/models/workspaces/new-workspace-model';
 import { inject } from 'src/infrastructures/services/inversify-helper';
 import { Claim } from 'src/domains/models/accounts/claim';
 import {
@@ -19,7 +19,10 @@ import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-pr
 import { Url, ApiUrl } from 'src/infrastructures/routing/url';
 import { IWorkspaceUseCase } from './interfaces/workspace-use-case';
 import { symbols } from './common/di-symbols';
-import { UserWorkspace } from 'src/domains/models/accounts/workspace';
+import {
+  UserWorkspace,
+  Workspace,
+} from 'src/domains/models/accounts/workspace';
 
 @injectable()
 export class WorkspaceUseCase implements IWorkspaceUseCase {

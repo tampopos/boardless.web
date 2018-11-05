@@ -5,7 +5,7 @@ import {
 } from 'src/domains/models/accounts/workspace';
 import { Claim } from 'src/domains/models/accounts/claim';
 import { History } from 'history';
-import { NewWorkspaceModel } from 'src/models/workspaces/new-workspace-model';
+import { NewWorkspaceModel } from 'src/domains/models/workspaces/new-workspace-model';
 
 export interface IWorkspaceUseCase {
   changeWorkspace: (history: History, workspace: UserWorkspace) => void;

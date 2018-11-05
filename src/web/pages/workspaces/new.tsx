@@ -1,23 +1,26 @@
-import { StyledComponentBase } from 'src/common/styles/types';
 import { createStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { DispatchMapper, StateMapperWithRouter } from 'src/stores/types';
-import { Resources } from 'src/common/location/resources';
-import { decorate } from 'src/common/styles/styles-helper';
-import { withConnectedRouter } from 'src/common/routing/routing-helper';
 import { History } from 'history';
-import { Workspace } from 'src/models/accounts/workspace';
-import { Claim } from 'src/models/accounts/claim';
-import { AccountsGetters } from 'src/stores/accounts/accounts-state';
-import { Container } from 'src/components/layout/container';
-import { Row } from 'src/components/layout/row';
-import { resolve } from 'src/services/common/service-provider';
 import { parse } from 'query-string';
-import { Theme } from 'src/common/styles/theme';
 import { TextBox } from '../../components/forms-controls/text-box';
-import { OutlinedButton } from 'src/components/forms-controls/button';
-import { NewWorkspaceModel } from 'src/models/workspaces/new-workspace-model';
+import { NewWorkspaceModel } from 'src/domains/models/workspaces/new-workspace-model';
 import { Form } from '../../components/forms-controls/form';
+import { Claim } from 'src/domains/models/accounts/claim';
+import { Resources } from 'src/domains/common/location/resources';
+import { Workspace } from 'src/domains/models/accounts/workspace';
+import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
+import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { StyledComponentBase } from 'src/infrastructures/styles/types';
+import { Row } from 'src/web/components/layout/row';
+import { OutlinedButton } from 'src/web/components/forms-controls/button';
+import { decorate } from 'src/infrastructures/styles/styles-helper';
+import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
+import { Theme } from 'src/infrastructures/styles/theme';
+import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
+import { resolve } from 'src/use-cases/common/di-container';
+import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { symbols } from 'src/use-cases/common/di-symbols';
+import { Container } from 'src/web/components/layout/container';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -49,13 +52,13 @@ interface Params {
   workspaceUrl: string;
 }
 
-const mapStateToProps: StateMapperWithRouter<Props, Params> = (
-  { accountsState, workspacesState },
+const mapStateToProps: StateMapperWithRouter<StoredState, Props, Params> = (
+  { accounts, workspaces },
   { history, location },
 ) => {
-  const { claims } = accountsState;
-  const { joinableWorkspaces } = workspacesState;
-  const { resources } = new AccountsGetters(accountsState);
+  const { claims } = accounts;
+  const { joinableWorkspaces } = workspaces;
+  const { resources } = new AccountsSelectors(accounts);
   const { searchKeyword } = parse(location.search);
 
   return {
@@ -73,7 +76,7 @@ interface Events {
 }
 
 const mapDispatchToProps: DispatchMapper<Events> = () => {
-  const { addWorkspace } = resolve('workspaceService');
+  const { addWorkspace } = resolve(symbols.workspaceUseCase);
   return { addWorkspace };
 };
 

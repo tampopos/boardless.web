@@ -6,7 +6,7 @@ import { decorate } from 'src/infrastructures/styles/styles-helper';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { History } from 'history';
-import { WorkspaceNew } from 'src/pages/workspaces/new';
+import { WorkspaceNew } from 'src/web/pages/workspaces/new';
 import { WorkspaceIndex } from 'src/web/pages/workspaces';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { WorkspaceSearch } from 'src/web/pages/workspaces/search';
