@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as enzyme from 'enzyme';
-import { OutlinedButton } from 'src/components/forms-controls/button';
+import { OutlinedButton } from 'src/web/components/forms-controls/button';
 
 it('Button.text', () => {
   const button = enzyme.shallow(<OutlinedButton>test</OutlinedButton>);
