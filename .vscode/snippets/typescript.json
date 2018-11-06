@@ -1,0 +1,73 @@
+{
+  "State": {
+    "prefix": "state",
+    "body": [
+      "export interface ${0:name}State {",
+      "}",
+      "export const default${0:name}State: ${0:name}State = {",
+      "};",
+      "export default ${0:name}State;"
+    ],
+    "description": "State"
+  },
+  "State From Default": {
+    "prefix": "stated",
+    "body": [
+      "export const default${0:name}State = {};",
+      "export type ${0:name}State = typeof default${0:name}State;",
+      "export default ${0:name}State;"
+    ],
+    "description": "State From Default"
+  },
+  "Action": {
+    "prefix": "action",
+    "body": ["export interface Action {", "}", "export default Action;"],
+    "description": "Action"
+  },
+  "Action Creators": {
+    "prefix": "actc",
+    "body": [
+      "import Action from './action';",
+      "import { createActionCreators } from 'src/infrastructures/stores/redux-helper';",
+      "",
+      "const actionCreators = createActionCreators('${0:prefix}')<Action>();",
+      "export const {} = actionCreators;",
+      "export default actionCreators;"
+    ],
+    "description": "Action Creators"
+  },
+  "Functions": {
+    "prefix": "fncs",
+    "body": [
+      "import { ReducerFunctions } from '../types';",
+      "import State from './state';",
+      "import Action from './action';",
+      "",
+      "const functions: ReducerFunctions<State, Action> = {",
+      "}",
+      "export default functions;"
+    ],
+    "description": "Functions"
+  },
+  "Reducers": {
+    "prefix": "reducers",
+    "body": [
+      "import { createReducers } from '../redux-helper';",
+      "import actionCreators from './action-creators';",
+      "import functions from './functions';",
+      "",
+      "export const ${0:name}Reducer = createReducers(actionCreators, functions);"
+    ],
+    "description": "Reducers"
+  },
+  "Selectors": {
+    "prefix": "selectors",
+    "body": [
+      "import State from './state';",
+      "export class ${0:name}Selectors {",
+      "  constructor(private state: State) {}",
+      "}"
+    ],
+    "description": "Selectors"
+  }
+}

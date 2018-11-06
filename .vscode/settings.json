@@ -21,6 +21,7 @@
     "boardless",
     "clickaway",
     "csstype",
+    "deserialize",
     "haspopup",
     "inversify",
     "localstorage",
