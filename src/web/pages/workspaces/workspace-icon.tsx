@@ -17,10 +17,11 @@ import { ContextMenu } from 'src/web/components/extensions/context-menu';
 import { Claim } from 'src/domains/models/accounts/claim';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { resolve } from 'src/use-cases/common/di-container';
 import { symbols } from 'src/use-cases/common/di-symbols';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
+import { Url } from 'src/infrastructures/routing/url';
 
 const baseStyles = (theme: Theme) =>
   createStyles({ root: { ...theme.shared.workspaceIcon.base } });
@@ -91,7 +92,7 @@ const mapStateToPropsIconInner: StateMapperWithRouter<
 interface IconInnerEvents {
   getSrc: (workspace: WorkspaceBase) => Promise<string>;
 }
-const mapDispatchToPropsIconInner: DispatchMapper<
+const mapEventToPropsIconInner: EventMapper<
   IconInnerEvents,
   IconInnerOwnProps
 > = () => {
@@ -107,7 +108,7 @@ interface IconInnerState {
 
 const WorkspaceIconInner = withConnectedRouter(
   mapStateToPropsIconInner,
-  mapDispatchToPropsIconInner,
+  mapEventToPropsIconInner,
 )(
   decorate(iconInnerStyles)<IconInnerProps>(
     class extends StyledComponentBase<
@@ -210,20 +211,26 @@ interface Events {
   changeWorkspace: (history: History, workspace: UserWorkspace) => void;
   closeWorkspace: (history: History, workspace: UserWorkspace) => void;
 }
-const mapDispatchToProps: DispatchMapper<Events, OwnProps> = () => {
+const mapEventToProps: EventMapper<Events, OwnProps> = () => {
   const { changeWorkspace, closeWorkspace } = resolve(symbols.workspaceUseCase);
   return {
-    changeWorkspace,
-    closeWorkspace,
+    changeWorkspace: (history, workspace) => {
+      changeWorkspace(workspace);
+      const relativeUrl = Url.workspaceRoot(workspace.workspaceUrl);
+      history.push(relativeUrl);
+    },
+    closeWorkspace: (history, workspace) => {
+      closeWorkspace(workspace);
+      history.push(Url.root);
+    },
   };
 };
 interface State {
   anchorEl?: HTMLElement;
 }
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-  });
+const styles = createStyles({
+  root: {},
+});
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
@@ -278,5 +285,5 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const StyledInner = decorate(styles)(Inner);
 export const WorkspaceIconButton = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(StyledInner);

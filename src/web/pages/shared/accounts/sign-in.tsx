@@ -2,7 +2,7 @@ import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { createStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { OutlinedTextBox } from 'src/web/components/forms-controls/text-box';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { SignInModel } from 'src/domains/models/accounts/sign-in-model';
 import { resolve } from 'src/use-cases/common/di-container';
 import { Resources } from 'src/domains/common/location/resources';
@@ -127,14 +127,22 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     );
   }
 }
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
+  const { signInAsync } = resolve(symbols.accountsUseCase);
   return {
     signIn: async (model, history, workspaceUrl) => {
-      const useCase = resolve(symbols.accountsUseCase);
-      if (!(await useCase.validate(model))) {
+      const { workspaces, hasError } = await signInAsync(model);
+      if (hasError) {
         return;
       }
-      await useCase.signInAsync(model, history, workspaceUrl);
+      if (workspaceUrl) {
+        history.push(Url.workspaceRoot(workspaceUrl));
+        return;
+      } else if (workspaces && workspaces.length > 0) {
+        history.push(Url.workspaceRoot(workspaces[0].workspaceUrl));
+        return;
+      }
+      history.push(Url.root);
     },
     signUp: history => {
       history.push(Url.signUp);
@@ -161,6 +169,6 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props, Params> = (
   return { resources, getDefaultEmail, history, redirectRoot };
 };
 const StyledInner = decorate(styles)(Inner);
-export const SignIn = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+export const SignIn = withConnectedRouter(mapStateToProps, mapEventToProps)(
   StyledInner,
 );

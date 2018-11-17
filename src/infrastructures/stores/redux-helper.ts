@@ -1,5 +1,14 @@
-import { combineReducers, createStore as createReduxStore } from 'redux';
-import { ReducerBuilders, ActionCreators, ReducerFunctions } from './types';
+import {
+  combineReducers,
+  createStore as createReduxStore,
+  Dispatch,
+} from 'redux';
+import {
+  ReducerBuilders,
+  ActionCreators,
+  ReducerFunctions,
+  Operators,
+} from './types';
 import actionCreatorFactory from 'typescript-fsa';
 import { createMappedObject } from 'src/infrastructures/common/object-helper';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
@@ -34,4 +43,16 @@ export const createReducers = <TState, TAction>(
   return Object.keys(actions).reduce((pre, k) => {
     return pre.case(actions[k], functions[k]);
   }, reducerWithInitialState(state));
+};
+export const createOperators = <TAction extends {}>(
+  actionCreators: ActionCreators<TAction>,
+) => (dispatch: Dispatch) => {
+  return Object.entries(actionCreators).reduce(
+    (o, [k, v]) => {
+      const func = v as any;
+      o[k] = (p: any) => dispatch(func(p));
+      return o;
+    },
+    {} as Operators<TAction>,
+  );
 };

@@ -1,7 +1,7 @@
 import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { createStyles, Typography, IconButton } from '@material-ui/core';
 import * as React from 'react';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { Resources } from 'src/domains/common/location/resources';
 import { decorate } from 'src/infrastructures/styles/styles-helper';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
@@ -19,7 +19,6 @@ import { resolve } from 'src/use-cases/common/di-container';
 import { Cell } from 'src/web/components/layout/cell';
 import { WorkspaceIcon } from './workspace-icon';
 import { InfinityLoading } from 'src/web/components/extensions/infinity-loading';
-import { Theme } from 'src/infrastructures/styles/theme';
 import { ContextMenu } from 'src/web/components/extensions/context-menu';
 import { Autocomplete } from 'src/web/components/forms-controls/autocomplete';
 import { delay } from 'src/infrastructures/common/async-helper';
@@ -61,23 +60,22 @@ const suggestions = [
   'Brazil',
   'British Indian Ocean Territory',
 ];
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: 10,
-      overflowX: 'auto',
-    },
-    container: {},
-    actionButtonRow: {
-      justifyContent: 'center',
-      marginTop: 25,
-      marginBottom: 25,
-    },
-    autocomplete: { paddingLeft: 16 },
-    autocompleteContainer: { width: `calc(100% - ${56}px)` },
-    searchButtonContainer: { marginLeft: 'auto', top: -4 },
-    infinity: {},
-  });
+const styles = createStyles({
+  root: {
+    padding: 10,
+    overflowX: 'auto',
+  },
+  container: {},
+  actionButtonRow: {
+    justifyContent: 'center',
+    marginTop: 25,
+    marginBottom: 25,
+  },
+  autocomplete: { paddingLeft: 16 },
+  autocompleteContainer: { width: `calc(100% - ${56}px)` },
+  searchButtonContainer: { marginLeft: 'auto', top: -4 },
+  infinity: {},
+});
 interface Props {
   claims: { [index: string]: Claim };
   resources: Resources;
@@ -115,9 +113,15 @@ interface Events {
   ) => Promise<boolean>;
   join: (workspace: Workspace, claim: Claim, history: History) => void;
 }
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   const { getJoinableWorkspaces, join } = resolve(symbols.workspaceUseCase);
-  return { getJoinableWorkspaces, join };
+  return {
+    getJoinableWorkspaces,
+    join: (workspace, claim, history) => {
+      join(workspace, claim);
+      history.push(Url.workspaceRoot(workspace.workspaceUrl));
+    },
+  };
 };
 interface State {
   searchKeyword?: string;
@@ -309,5 +313,5 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const StyledInner = decorate(styles)(Inner);
 export const WorkspaceSearch = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(StyledInner);

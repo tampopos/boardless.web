@@ -6,7 +6,7 @@ export type StateMapper<TStoredState extends {}, TState, TOwnProps = {}> = ((
   state: TStoredState,
   props: TOwnProps,
 ) => Partial<TState>);
-export type DispatchMapper<TDispatches, TOwnProps = {}> = (
+export type EventMapper<TDispatches, TOwnProps = {}> = (
   dispatch: Dispatch,
   props: TOwnProps,
 ) => Partial<TDispatches>;
@@ -20,4 +20,7 @@ export type ReducerBuilders<TStoredState extends {}> = {
 };
 export type ReducerFunctions<TState, TAction> = {
   [TKey in keyof TAction]: (state: TState, payload: TAction[TKey]) => TState
+};
+export type Operators<TAction extends {}> = {
+  [K in keyof TAction]: (payload: TAction[K]) => void
 };

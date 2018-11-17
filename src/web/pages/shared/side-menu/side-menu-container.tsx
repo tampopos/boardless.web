@@ -7,9 +7,10 @@ import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
-import { handleClose } from 'src/infrastructures/stores/side-menu/action-creators';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { resolve } from 'src/use-cases/common/di-container';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -104,11 +105,10 @@ export const Inner = decorate(styles)<Props & Events>(props => {
     </React.Fragment>
   );
 });
-const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
+const mapEventToProps: EventMapper<Events> = () => {
+  const useCase = resolve(symbols.sideMenuUseCase);
   return {
-    close: () => {
-      return dispatch(handleClose());
-    },
+    close: useCase.handleClose,
   };
 };
 const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({
@@ -124,5 +124,5 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({
 };
 export const SideMenuContainer = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(Inner);

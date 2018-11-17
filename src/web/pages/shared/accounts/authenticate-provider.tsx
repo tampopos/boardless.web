@@ -3,7 +3,7 @@ import { Claim } from 'src/domains/models/accounts/claim';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { init } from 'src/infrastructures/stores/accounts/action-creators';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { resolve } from 'src/use-cases/common/di-container';
 import { symbols } from 'src/use-cases/common/di-symbols';
@@ -22,12 +22,11 @@ const Inner: React.SFC<Props & Events> = props => {
   }
   return <React.Fragment>{!notInitialized && children}</React.Fragment>;
 };
-const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
+const mapEventToProps: EventMapper<Events> = dispatch => {
+  const { refreshTokenAsync } = resolve(symbols.accountsUseCase);
   dispatch(init({}));
   return {
-    refreshTokenAsync: async state => {
-      await resolve(symbols.accountsUseCase).refreshTokenAsync(state);
-    },
+    refreshTokenAsync: async state => await refreshTokenAsync(state),
   };
 };
 const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({
@@ -40,5 +39,5 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({
 };
 export const AuthenticateProvider = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(Inner);
