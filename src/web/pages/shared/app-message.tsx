@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MessageContainer } from '../../components/messages/message-container';
 import { Message } from 'src/domains/models/common/message';
 import { EventMapper } from 'src/infrastructures/stores/types';
-import { MessagesStateSelectors } from 'src/infrastructures/stores/messages/selectors';
+import { MessagesSelectors } from 'src/infrastructures/stores/messages/selectors';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
@@ -42,7 +42,7 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({
   accounts,
 }) => {
   const { cultureInfo } = new AccountsSelectors(accounts);
-  const { getMessages } = new MessagesStateSelectors(messages);
+  const { getMessages } = new MessagesSelectors(messages);
   return {
     messages: getMessages(cultureInfo),
   };
