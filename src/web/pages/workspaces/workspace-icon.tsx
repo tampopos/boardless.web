@@ -21,6 +21,7 @@ import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { resolve } from 'src/use-cases/common/di-container';
 import { symbols } from 'src/use-cases/common/di-symbols';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
+import { Url } from 'src/infrastructures/routing/url';
 
 const baseStyles = (theme: Theme) =>
   createStyles({ root: { ...theme.shared.workspaceIcon.base } });
@@ -213,17 +214,23 @@ interface Events {
 const mapDispatchToProps: DispatchMapper<Events, OwnProps> = () => {
   const { changeWorkspace, closeWorkspace } = resolve(symbols.workspaceUseCase);
   return {
-    changeWorkspace,
-    closeWorkspace,
+    changeWorkspace: (history, workspace) => {
+      changeWorkspace(workspace);
+      const relativeUrl = Url.workspaceRoot(workspace.workspaceUrl);
+      history.push(relativeUrl);
+    },
+    closeWorkspace: (history, workspace) => {
+      closeWorkspace(workspace);
+      history.push(Url.root);
+    },
   };
 };
 interface State {
   anchorEl?: HTMLElement;
 }
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-  });
+const styles = createStyles({
+  root: {},
+});
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);

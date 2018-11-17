@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { inject } from 'src/infrastructures/services/inversify-helper';
-import { IMessagesUseCase } from 'src/use-cases/interfaces/messages-service';
+import { IMessagesUseCase } from 'src/use-cases/interfaces/messages-use-case';
 import { IGuidProvider } from 'src/infrastructures/common/services/interfaces/guid-provider';
 import {
   MessageGenerator,
@@ -17,6 +17,7 @@ export class MessagesUseCase implements IMessagesUseCase {
     @inject(symbols.guidProvider) private guidProvider: IGuidProvider,
   ) {}
   public clear = () => this.messagesOperators.clear({});
+  public removeMessage = (id: string) => this.messagesOperators.removeMessage({ id });
   public showMessages = (...messageGenerators: MessageGenerator[]) => {
     this.showMessagesInner(false, ...messageGenerators);
   };

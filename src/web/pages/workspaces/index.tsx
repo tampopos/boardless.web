@@ -60,7 +60,13 @@ interface Events {
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
   const { getInvitedWorkspaces, add } = resolve(symbols.workspaceUseCase);
-  return { getInvitedWorkspaces, add };
+  return {
+    getInvitedWorkspaces,
+    add: (workspace, history) => {
+      add(workspace);
+      history.push(Url.workspaceRoot(workspace.workspaceUrl));
+    },
+  };
 };
 interface State {}
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {

@@ -1,5 +1,5 @@
 export interface Action {
-  handleOpen: void;
-  handleClose: void;
+  handleOpen: {};
+  handleClose: {};
 }
 export default Action;

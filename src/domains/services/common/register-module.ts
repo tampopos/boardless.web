@@ -4,6 +4,7 @@ import { FetchService } from '../fetch-service';
 import { GuidProvider } from '../../../infrastructures/common/services/guid-provider';
 import { ValidateService } from '../validate-service';
 import { config } from 'src/domains/common/config';
+import { AccountsService } from '../accounts-service';
 
 export const registerServices = (container: Container) => {
   container.register(serviceSymbols.config, binder =>
@@ -17,5 +18,8 @@ export const registerServices = (container: Container) => {
   );
   container.register(serviceSymbols.validateService, binder =>
     binder.to(ValidateService).inSingletonScope(),
+  );
+  container.register(serviceSymbols.accountsService, binder =>
+    binder.to(AccountsService).inSingletonScope(),
   );
 };

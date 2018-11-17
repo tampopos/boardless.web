@@ -22,10 +22,10 @@ import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper'
 import { Theme } from 'src/infrastructures/styles/theme';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
-import { signIn } from 'src/infrastructures/stores/accounts/action-creators';
-import { handleOpen } from 'src/infrastructures/stores/side-menu/action-creators';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { resolve } from 'src/use-cases/common/di-container';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -165,15 +165,15 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = (
   );
   return { resources, authenticated, sideMenuEnabled, history };
 };
-const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
+const mapDispatchToProps: DispatchMapper<Events> = () => {
+  const { signOut } = resolve(symbols.accountsUseCase);
+  const { handleOpen } = resolve(symbols.sideMenuUseCase);
   return {
     signOut: (history: History) => {
-      dispatch(signIn({ result: {} }));
+      signOut();
       history.push(Url.root);
     },
-    handleOpenMenu: () => {
-      dispatch(handleOpen());
-    },
+    handleOpenMenu: handleOpen,
   };
 };
 const StyledInner = decorate(styles)(Inner);

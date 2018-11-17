@@ -4,11 +4,10 @@ import {
   Workspace,
 } from 'src/domains/models/accounts/workspace';
 import { Claim } from 'src/domains/models/accounts/claim';
-import { History } from 'history';
 
 export interface IWorkspaceUseCase {
-  changeWorkspace: (history: History, workspace: UserWorkspace) => void;
-  closeWorkspace: (history: History, workspace: UserWorkspace) => void;
+  changeWorkspace: (workspace: UserWorkspace) => void;
+  closeWorkspace: (workspace: UserWorkspace) => void;
   getSrc: (workspace: WorkspaceBase) => Promise<string>;
   getInvitedWorkspaces: (
     claims: { [index: string]: Claim },
@@ -20,6 +19,6 @@ export interface IWorkspaceUseCase {
     count: number,
     fetchCount: number,
   ) => Promise<boolean>;
-  add: (workspace: UserWorkspace, history: History) => void;
-  join: (workspace: Workspace, claim: Claim, history: History) => void;
+  add: (workspace: UserWorkspace) => void;
+  join: (workspace: Workspace, claim: Claim) => void;
 }

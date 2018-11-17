@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Claim } from 'src/domains/models/accounts/claim';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
-import { init } from 'src/infrastructures/stores/accounts/action-creators';
 import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { resolve } from 'src/use-cases/common/di-container';
@@ -22,12 +21,11 @@ const Inner: React.SFC<Props & Events> = props => {
   }
   return <React.Fragment>{!notInitialized && children}</React.Fragment>;
 };
-const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
-  dispatch(init({}));
+const mapDispatchToProps: DispatchMapper<Events> = () => {
+  const { init, refreshTokenAsync } = resolve(symbols.accountsUseCase);
+  init();
   return {
-    refreshTokenAsync: async state => {
-      await resolve(symbols.accountsUseCase).refreshTokenAsync(state);
-    },
+    refreshTokenAsync: async state => await refreshTokenAsync(state),
   };
 };
 const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({

@@ -115,13 +115,21 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   }
 }
 const mapDispatchToProps: DispatchMapper<Events> = () => {
+  const { signInAsync } = resolve(symbols.accountsUseCase);
   return {
     signIn: async (model, history, workspaceUrl) => {
-      const useCase = resolve(symbols.accountsUseCase);
-      if (!(await useCase.validate(model))) {
+      const { workspaces, hasError } = await signInAsync(model);
+      if (hasError) {
         return;
       }
-      await useCase.signInAsync(model, history, workspaceUrl);
+      if (workspaceUrl) {
+        history.push(Url.workspaceRoot(workspaceUrl));
+        return;
+      } else if (workspaces && workspaces.length > 0) {
+        history.push(Url.workspaceRoot(workspaces[0].workspaceUrl));
+        return;
+      }
+      history.push(Url.root);
     },
   };
 };

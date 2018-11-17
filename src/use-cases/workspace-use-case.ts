@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import { History } from 'history';
 import {
   UserWorkspace,
   Workspace,
@@ -7,7 +6,7 @@ import {
 import { inject } from 'src/infrastructures/services/inversify-helper';
 import { Claim } from 'src/domains/models/accounts/claim';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
-import { Url, ApiUrl } from 'src/infrastructures/routing/url';
+import { ApiUrl } from 'src/infrastructures/routing/url';
 import { IWorkspaceUseCase } from './interfaces/workspace-use-case';
 import { symbols } from './common/di-symbols';
 import { IWorkspacesOperators } from 'src/infrastructures/stores/workspaces/operators-interface';
@@ -22,11 +21,9 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
     @inject(symbols.accountsOperators)
     private accountsOperators: IAccountsOperators,
   ) {}
-  public changeWorkspace = (history: History, workspace: UserWorkspace) => {
-    const { userWorkspaceId, workspaceUrl } = workspace;
+  public changeWorkspace = (workspace: UserWorkspace) => {
+    const { userWorkspaceId } = workspace;
     this.accountsOperators.changeWorkspace({ userWorkspaceId });
-    const relativeUrl = Url.workspaceRoot(workspaceUrl);
-    history.push(relativeUrl);
   };
   public getSrc = async (workspace: UserWorkspace) => {
     const { url } = await this.fetchService.fetchAsync<{
@@ -38,10 +35,9 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
     });
     return url;
   };
-  public closeWorkspace = (history: History, workspace: UserWorkspace) => {
+  public closeWorkspace = (workspace: UserWorkspace) => {
     const { userWorkspaceId } = workspace;
     this.accountsOperators.removeWorkspace({ userWorkspaceId });
-    history.push(Url.root);
   };
   public getInvitedWorkspaces = (
     claims: { [index: string]: Claim },
@@ -95,17 +91,12 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
     }
     return completed;
   };
-  public add = (workspace: UserWorkspace, history: History) => {
+  public add = (workspace: UserWorkspace) => {
     this.accountsOperators.addWorkspace({
       workspace,
     });
-    history.push(Url.workspaceRoot(workspace.workspaceUrl));
   };
-  public join = async (
-    workspace: Workspace,
-    claim: Claim,
-    history: History,
-  ) => {
+  public join = async (workspace: Workspace, claim: Claim) => {
     const { userWorkspace } = await this.fetchService.fetchAsync<{
       userWorkspace: UserWorkspace;
     }>(
@@ -116,6 +107,6 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
       },
       claim.token,
     );
-    this.add(userWorkspace, history);
+    this.add(userWorkspace);
   };
 }
