@@ -35,7 +35,7 @@ const Inner: React.SFC<Events & Props> = ({
 const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
   return {
     onRemoveMessage: (id: string) => dispatch(removeMessage({ id })),
-    onClear: () => dispatch(clear()),
+    onClear: () => dispatch(clear({})),
   };
 };
 const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({

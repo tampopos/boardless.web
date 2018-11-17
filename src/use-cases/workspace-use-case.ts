@@ -6,36 +6,25 @@ import {
 } from 'src/domains/models/accounts/workspace';
 import { inject } from 'src/infrastructures/services/inversify-helper';
 import { Claim } from 'src/domains/models/accounts/claim';
-import {
-  changeWorkspace,
-  removeWorkspace,
-  addWorkspace,
-} from 'src/infrastructures/stores/accounts/action-creators';
-import {
-  clearInvitedWorkspaces,
-  addInvitedWorkspaces,
-  clearJoinableWorkspaces,
-  addJoinableWorkspaces,
-} from 'src/infrastructures/stores/workspaces/action-creators';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
-import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { Url, ApiUrl } from 'src/infrastructures/routing/url';
 import { IWorkspaceUseCase } from './interfaces/workspace-use-case';
 import { symbols } from './common/di-symbols';
+import { IWorkspacesOperators } from 'src/infrastructures/stores/workspaces/operators-interface';
+import { IAccountsOperators } from 'src/infrastructures/stores/accounts/operators-interface';
 
 @injectable()
 export class WorkspaceUseCase implements IWorkspaceUseCase {
   constructor(
     @inject(symbols.fetchService) private fetchService: IFetchService,
-    @inject(symbols.dispatchProvider)
-    private dispatchProvider: IDispatchProvider,
+    @inject(symbols.workspacesOperators)
+    private workspacesOperators: IWorkspacesOperators,
+    @inject(symbols.accountsOperators)
+    private accountsOperators: IAccountsOperators,
   ) {}
-  private get dispatch() {
-    return this.dispatchProvider.dispatch;
-  }
   public changeWorkspace = (history: History, workspace: UserWorkspace) => {
     const { userWorkspaceId, workspaceUrl } = workspace;
-    this.dispatch(changeWorkspace({ userWorkspaceId }));
+    this.accountsOperators.changeWorkspace({ userWorkspaceId });
     const relativeUrl = Url.workspaceRoot(workspaceUrl);
     history.push(relativeUrl);
   };
@@ -51,14 +40,14 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
   };
   public closeWorkspace = (history: History, workspace: UserWorkspace) => {
     const { userWorkspaceId } = workspace;
-    this.dispatch(removeWorkspace({ userWorkspaceId }));
+    this.accountsOperators.removeWorkspace({ userWorkspaceId });
     history.push(Url.root);
   };
   public getInvitedWorkspaces = (
     claims: { [index: string]: Claim },
     workspaces: { [index: string]: UserWorkspace },
   ) => {
-    this.dispatch(clearInvitedWorkspaces());
+    this.workspacesOperators.clearInvitedWorkspaces({});
     const joined = Object.entries(workspaces).map(x => x[1]);
     Object.entries(claims).forEach(async x => {
       const { token } = x[1];
@@ -78,11 +67,9 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
               y.userWorkspaceId === r.userWorkspaceId && y.userId === r.userId,
           ).length === 0,
       );
-      this.dispatch(
-        addInvitedWorkspaces({
-          invitedWorkspaces,
-        }),
-      );
+      this.workspacesOperators.addInvitedWorkspaces({
+        invitedWorkspaces,
+      });
     });
   };
   public getJoinableWorkspaces = async (
@@ -92,7 +79,7 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
     fetchCount: number,
   ) => {
     if (clear) {
-      this.dispatch(clearJoinableWorkspaces());
+      this.workspacesOperators.clearJoinableWorkspaces({});
     }
     const { result, completed } = await this.fetchService.fetchAsync<{
       result: UserWorkspace[];
@@ -102,20 +89,16 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
       methodName: 'GET',
     });
     if (result.length) {
-      this.dispatch(
-        addJoinableWorkspaces({
-          joinableWorkspaces: result,
-        }),
-      );
+      this.workspacesOperators.addJoinableWorkspaces({
+        joinableWorkspaces: result,
+      });
     }
     return completed;
   };
   public add = (workspace: UserWorkspace, history: History) => {
-    this.dispatch(
-      addWorkspace({
-        workspace,
-      }),
-    );
+    this.accountsOperators.addWorkspace({
+      workspace,
+    });
     history.push(Url.workspaceRoot(workspace.workspaceUrl));
   };
   public join = async (

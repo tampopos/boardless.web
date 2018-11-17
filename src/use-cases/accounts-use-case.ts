@@ -6,23 +6,19 @@ import { History } from 'history';
 import { IAccountsUseCase } from 'src/use-cases/interfaces/accounts-use-case';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
 import { IMessagesUseCase } from 'src/use-cases/interfaces/messages-service';
-import { IDispatchProvider } from 'src/use-cases/services/interfaces/dispatch-provider';
 import { ApiUrl, Url } from 'src/infrastructures/routing/url';
 import { inject } from 'src/infrastructures/services/inversify-helper';
-import { signIn } from 'src/infrastructures/stores/accounts/action-creators';
 import { symbols } from 'src/use-cases/common/di-symbols';
+import { IAccountsOperators } from 'src/infrastructures/stores/accounts/operators-interface';
 
 @injectable()
 export class AccountsUseCase implements IAccountsUseCase {
   constructor(
     @inject(symbols.fetchService) private fetchService: IFetchService,
     @inject(symbols.messagesUseCase) private messagesService: IMessagesUseCase,
-    @inject(symbols.dispatchProvider)
-    private dispatchProvider: IDispatchProvider,
+    @inject(symbols.accountsOperators)
+    private accountsOperators: IAccountsOperators,
   ) {}
-  private get dispatch() {
-    return this.dispatchProvider.dispatch;
-  }
   public refreshTokenAsync = async (claim?: Claim) => {
     if (!claim) {
       return;
@@ -32,7 +28,7 @@ export class AccountsUseCase implements IAccountsUseCase {
       methodName: 'POST',
       body: claim,
     });
-    this.dispatch(signIn({ result }));
+    this.accountsOperators.signIn({ result });
   };
   public validate = (model: SignInModel) => {
     const { email, password } = model;
@@ -76,7 +72,7 @@ export class AccountsUseCase implements IAccountsUseCase {
       );
       return;
     }
-    this.dispatch(signIn({ result }));
+    this.accountsOperators.signIn({ result });
     if (result.claim) {
       const { name } = result.claim;
       this.messagesService.appendMessages(({ messages }) => ({
