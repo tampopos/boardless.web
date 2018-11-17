@@ -13,7 +13,7 @@ import {
 import { AppBody } from './app-body';
 import { ThemeSelectors } from 'src/infrastructures/stores/theme/selectors';
 import { createBrowserHistory } from 'history';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 
 interface Props {
   theme: Theme;
@@ -33,7 +33,7 @@ const Inner: React.SFC<Props> = ({ theme }) => {
     </ThemeProvider>
   );
 };
-const mapDispatchToProps: DispatchMapper<{}> = () => {
+const mapEventToProps: EventMapper<{}> = () => {
   return {};
 };
 const mapStateToProps = ({ theme }: StoredState) => {
@@ -45,7 +45,7 @@ const mapStateToProps = ({ theme }: StoredState) => {
 const initialState = getInitialStoredState();
 const ConnectedInner = connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(Inner);
 export const App: React.SFC<{}> = () => {
   return (

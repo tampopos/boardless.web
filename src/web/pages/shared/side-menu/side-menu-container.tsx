@@ -7,7 +7,7 @@ import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { resolve } from 'src/use-cases/common/di-container';
 import { symbols } from 'src/use-cases/common/di-symbols';
@@ -105,7 +105,7 @@ export const Inner = decorate(styles)<Props & Events>(props => {
     </React.Fragment>
   );
 });
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   const useCase = resolve(symbols.sideMenuUseCase);
   return {
     close: useCase.handleClose,
@@ -124,5 +124,5 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({
 };
 export const SideMenuContainer = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(Inner);

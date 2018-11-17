@@ -14,7 +14,7 @@ import {
 import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { Resources } from 'src/domains/common/location/resources';
 import { History } from 'history';
 import { Url } from 'src/infrastructures/routing/url';
@@ -165,7 +165,7 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = (
   );
   return { resources, authenticated, sideMenuEnabled, history };
 };
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   const { signOut } = resolve(symbols.accountsUseCase);
   const { handleOpen } = resolve(symbols.sideMenuUseCase);
   return {
@@ -177,6 +177,6 @@ const mapDispatchToProps: DispatchMapper<Events> = () => {
   };
 };
 const StyledInner = decorate(styles)(Inner);
-export const AppTop = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+export const AppTop = withConnectedRouter(mapStateToProps, mapEventToProps)(
   StyledInner,
 );

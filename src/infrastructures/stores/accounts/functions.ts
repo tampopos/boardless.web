@@ -4,13 +4,6 @@ import Action from './action';
 
 const functions: ReducerFunctions<State, Action> = {
   init: state => {
-    if (
-      state.claim &&
-      !state.claim.isInitialized &&
-      Object.values(state.claims).filter(x => x.isInitialized).length === 0
-    ) {
-      return state;
-    }
     const newState = Object.assign({}, state);
     if (newState.claim) {
       newState.claim.isInitialized = false;

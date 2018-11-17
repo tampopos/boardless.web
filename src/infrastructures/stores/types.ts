@@ -6,7 +6,7 @@ export type StateMapper<TStoredState extends {}, TState, TOwnProps = {}> = ((
   state: TStoredState,
   props: TOwnProps,
 ) => Partial<TState>);
-export type DispatchMapper<TDispatches, TOwnProps = {}> = (
+export type EventMapper<TDispatches, TOwnProps = {}> = (
   dispatch: Dispatch,
   props: TOwnProps,
 ) => Partial<TDispatches>;

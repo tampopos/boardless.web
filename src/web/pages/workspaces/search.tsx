@@ -1,7 +1,7 @@
 import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { createStyles, Typography, IconButton } from '@material-ui/core';
 import * as React from 'react';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { Resources } from 'src/domains/common/location/resources';
 import { decorate } from 'src/infrastructures/styles/styles-helper';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
@@ -113,7 +113,7 @@ interface Events {
   ) => Promise<boolean>;
   join: (workspace: Workspace, claim: Claim, history: History) => void;
 }
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   const { getJoinableWorkspaces, join } = resolve(symbols.workspaceUseCase);
   return {
     getJoinableWorkspaces,
@@ -313,5 +313,5 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const StyledInner = decorate(styles)(Inner);
 export const WorkspaceSearch = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(StyledInner);

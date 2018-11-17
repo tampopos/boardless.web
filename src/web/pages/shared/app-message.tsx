@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MessageContainer } from '../../components/messages/message-container';
 import { Message } from 'src/domains/models/common/message';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { MessagesStateSelectors } from 'src/infrastructures/stores/messages/selectors';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
@@ -30,7 +30,7 @@ const Inner: React.SFC<Events & Props> = ({
     />
   );
 };
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   const useCase = resolve(symbols.messagesUseCase);
   return {
     onRemoveMessage: useCase.removeMessage,
@@ -49,5 +49,5 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = ({
 };
 export const AppMessages = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(Inner);

@@ -20,7 +20,6 @@ export class AccountsUseCase implements IAccountsUseCase {
     private accountsService: IAccountsService,
   ) {}
   public signOut = () => this.accountsOperators.signIn({ result: {} });
-  public init = () => this.accountsOperators.init({});
   public refreshTokenAsync = async (claim?: Claim) => {
     if (!claim) {
       return;

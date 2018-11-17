@@ -4,7 +4,6 @@ import { UserWorkspace } from 'src/domains/models/accounts/workspace';
 
 export interface IAccountsUseCase {
   signOut: () => void;
-  init: () => void;
   refreshTokenAsync: (claim?: Claim) => Promise<void>;
   signInAsync: (
     model: SignInModel,
