@@ -12,6 +12,7 @@ import { WorkspaceSearch } from '../workspaces/search';
 import { WorkspaceIndex } from '../workspaces';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { SignUp } from 'src/web/pages/shared/accounts/sign-up';
+import { SignUpCompletion } from './accounts/sign-up-completion';
 
 interface WorkspaceRootProps {
   redirectRoot: boolean;
@@ -60,6 +61,11 @@ export const Inner: React.SFC<Props> = ({ authenticated }) => {
     <SideMenuContainer>
       <Switch>
         <Route path={Url.signIn} component={SignIn} exact={true} />
+        <Route
+          path={Url.signUpCompletion}
+          component={SignUpCompletion}
+          exact={true}
+        />
         <Route path={Url.signUp} component={SignUp} exact={true} />
         <Route
           path={Url.workspaceRootTemplate}

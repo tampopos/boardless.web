@@ -5,6 +5,7 @@ import { GuidProvider } from '../../../infrastructures/common/services/guid-prov
 import { ValidateService } from '../validate-service';
 import { config } from 'src/domains/common/config';
 import { AccountsService } from '../accounts-service';
+import { MessagesService } from '../messages-service';
 
 export const registerServices = (container: Container) => {
   container.register(serviceSymbols.config, binder =>
@@ -21,5 +22,8 @@ export const registerServices = (container: Container) => {
   );
   container.register(serviceSymbols.accountsService, binder =>
     binder.to(AccountsService).inSingletonScope(),
+  );
+  container.register(serviceSymbols.messagesService, binder =>
+    binder.to(MessagesService).inSingletonScope(),
   );
 };

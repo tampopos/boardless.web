@@ -2,9 +2,7 @@ import * as React from 'react';
 import { createStyles, Popper } from '@material-ui/core';
 import { PopperProps } from '@material-ui/core/Popper';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { Theme } from 'src/infrastructures/styles/theme';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
 import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import {
   decorate,
@@ -12,12 +10,12 @@ import {
   appendClassName,
 } from 'src/infrastructures/styles/styles-helper';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
+import { EventMapper } from 'src/infrastructures/stores/types';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    popper: {},
-  });
+const styles = createStyles({
+  root: {},
+  popper: {},
+});
 interface Props {
   anchorEl?: null | HTMLElement | ((element: HTMLElement) => HTMLElement);
   popperProps: Partial<PopperProps>;
@@ -36,7 +34,7 @@ const mapStateToProps: StateMapperWithRouter<
   return { anchorEl, popperProps: popperProps ? popperProps : {} };
 };
 interface Events {}
-const mapDispatchToProps: DispatchMapper<Events, OwnProps> = dispatch => {
+const mapEventToProps: EventMapper<Events, OwnProps> = () => {
   return {};
 };
 interface State {
@@ -107,6 +105,6 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   }
 }
 const StyledInner = decorate(styles)(Inner);
-export const Popup = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+export const Popup = withConnectedRouter(mapStateToProps, mapEventToProps)(
   StyledInner,
 );

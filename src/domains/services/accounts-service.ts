@@ -2,18 +2,19 @@ import { SignInModel } from 'src/domains/models/accounts/sign-in-model';
 import { injectable } from 'inversify';
 import { SignInResult } from 'src/domains/models/accounts/sign-in-result';
 import { IFetchService } from 'src/use-cases/services/interfaces/fetch-service';
-import { IMessagesUseCase } from 'src/use-cases/interfaces/messages-use-case';
 import { ApiUrl } from 'src/infrastructures/routing/url';
 import { inject } from 'src/infrastructures/services/inversify-helper';
 import { symbols } from 'src/use-cases/common/di-symbols';
 import { IAccountsOperators } from 'src/infrastructures/stores/accounts/operators-interface';
 import { IAccountsService } from 'src/use-cases/services/interfaces/accounts-service';
+import { IMessagesService } from 'src/use-cases/services/interfaces/messages-service';
+import { SignUpModel } from '../models/accounts/sign-up-model';
 
 @injectable()
 export class AccountsService implements IAccountsService {
   constructor(
     @inject(symbols.fetchService) private fetchService: IFetchService,
-    @inject(symbols.messagesUseCase) private messagesService: IMessagesUseCase,
+    @inject(symbols.messagesService) private messagesService: IMessagesService,
     @inject(symbols.accountsOperators)
     private accountsOperators: IAccountsOperators,
   ) {}
@@ -65,5 +66,24 @@ export class AccountsService implements IAccountsService {
       }));
     }
     return { hasError: false, workspaces: result.workspaces };
+  };
+  public signUpAsync = async (model: SignUpModel) => {
+    const { errors } = await this.fetchService.fetchAsync<{
+      errors: string[];
+    }>({
+      url: ApiUrl.accountsSignIn,
+      methodName: 'POST',
+      body: model,
+    });
+    if (errors && errors.length > 0) {
+      this.messagesService.appendMessages(
+        ...errors.map(error => () => ({
+          level: 'error' as 'error',
+          text: error,
+        })),
+      );
+      return { hasError: true };
+    }
+    return { hasError: false };
   };
 }

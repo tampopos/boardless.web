@@ -2,34 +2,22 @@ import { injectable } from 'inversify';
 import { IValidateService } from 'src/use-cases/services/interfaces/validate-service';
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const passwordRegex = /^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}$/i;
+const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[!-~]{1,}$/;
+const nickNameRegex = /^[!-~]{1,}$/i;
 @injectable()
 export class ValidateService implements IValidateService {
   public isRequired = (value: any) => {
     return Boolean(value);
   };
-  public validEmail = (email: string) => {
-    if (!this.isRequired(email)) {
-      return 'requiredError';
-    }
-    if (!emailRegex.test(String(email).toLowerCase())) {
-      return 'emailFormatError';
-    }
-    return;
+  public validateEmailFormat = (email: string) => {
+    return (
+      this.isRequired(email) && emailRegex.test(String(email).toLowerCase())
+    );
   };
-  public validPassword = (password: string) => {
-    if (!this.isRequired(password)) {
-      return 'requiredError';
-    }
-    if (password.length < 8) {
-      return 'passwordMinLengthError';
-    }
-    if (password.length > 100) {
-      return 'passwordMaxLengthError';
-    }
-    if (!passwordRegex.test(password)) {
-      return 'passwordFormatError';
-    }
-    return;
+  public validatePasswordFormat = (password: string) => {
+    return this.isRequired(password) && passwordRegex.test(password);
+  };
+  public validateNickNameFormat = (nickName: string) => {
+    return this.isRequired(nickName) && nickNameRegex.test(nickName);
   };
 }
