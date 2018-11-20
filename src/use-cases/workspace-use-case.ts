@@ -111,15 +111,16 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
     this.add(userWorkspace);
   };
 
-  public addWorkspace = (state: NewWorkspaceModel) => {
-    const workspace = {
-      name: state.name,
-      userWorkspaceId: 'public-workspace1000000',
-      userId: 'user01',
-      id: 'public-workspace1000000',
-      workspaceUrl: state.url,
-    };
-    this.add(workspace);
-    return workspace;
+  public addWorkspaceAsync = async (model: NewWorkspaceModel) => {
+    const { userWorkspace } = await this.fetchService.fetchAsync<{
+      userWorkspace: UserWorkspace;
+    }>({
+      url: ApiUrl.workspacesNew,
+      methodName: 'POST',
+      body: model,
+    });
+
+    this.add(userWorkspace);
+    return userWorkspace;
   };
 }

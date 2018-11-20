@@ -9,6 +9,7 @@ server.use(
     '/accounts/refresh': '/accounts-refresh',
     '/accounts/sign-in': '/accounts-sign-in',
     '/workspaces/invited': '/workspaces-invited',
+    '/workspaces/new': '/workspaces-new',
     '/workspaces/icon': '/workspaces-icon',
     '/workspaces/public/0': '/workspaces-public-0',
     '/workspaces/public/10': '/workspaces-public-10',

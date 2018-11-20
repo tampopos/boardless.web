@@ -45,4 +45,5 @@ export namespace ApiUrl {
   const workspacesPublicTemplate = urljoin(mockRoot, workspaces, 'public');
   export const workspacesPublic = (count: number) =>
     urljoin(workspacesPublicTemplate, count.toString());
+  export const workspacesNew = urljoin(mockRoot, workspaces, 'new');
 }

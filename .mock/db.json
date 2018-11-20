@@ -77,6 +77,14 @@
       }
     ]
   },
+  "workspaces-new": {
+    "userWorkspace": {
+      "userWorkspaceId": "new0001/user01",
+      "workspaceUrl": "new0001",
+      "name": "新ワークスペース0001",
+      "userId": "user01"
+    }
+  },
   "workspaces-public-0": {
     "completed": false,
     "result": [

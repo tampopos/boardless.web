@@ -20,7 +20,7 @@ export interface IWorkspaceUseCase {
     count: number,
     fetchCount: number,
   ) => Promise<boolean>;
-  addWorkspace: (state: NewWorkspaceModel) => UserWorkspace;
+  addWorkspaceAsync: (state: NewWorkspaceModel) => Promise<UserWorkspace>;
   add: (workspace: UserWorkspace) => void;
   join: (workspace: Workspace, claim: Claim) => void;
 }

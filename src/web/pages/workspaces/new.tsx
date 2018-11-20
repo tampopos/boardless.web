@@ -77,10 +77,10 @@ interface Events {
 }
 
 const mapEventToProps: EventMapper<Events> = () => {
-  const { addWorkspace } = resolve(symbols.workspaceUseCase);
+  const { addWorkspaceAsync } = resolve(symbols.workspaceUseCase);
   return {
-    addWorkspace: (state, history) => {
-      const workspace = addWorkspace(state);
+    addWorkspace: async (state, history) => {
+      const workspace = await addWorkspaceAsync(state);
       history.push(Url.workspaceRoot(workspace.workspaceUrl));
     },
   };
