@@ -7,6 +7,8 @@ export namespace Url {
   export const root = '/';
   export const system = `${root}system`;
   export const signIn = `${system}/sign-in`;
+  export const signUp = `${system}/sign-up`;
+  export const signUpCompletion = `${signUp}/completion`;
   export const searchWorkspaces = (searchKeyword?: string) => {
     if (!searchKeyword) {
       return `${system}/workspaces/search`;

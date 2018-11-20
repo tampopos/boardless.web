@@ -14,9 +14,11 @@ import { Url } from 'src/infrastructures/routing/url';
 import { Container } from 'src/web/components/layout/container';
 import { Row } from 'src/web/components/layout/row';
 import { Cell } from 'src/web/components/layout/cell';
-import { OutlinedButton } from 'src/web/components/forms-controls/button';
+import {
+  OutlinedButton,
+  Button,
+} from 'src/web/components/forms-controls/button';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
-import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { symbols } from 'src/use-cases/common/di-symbols';
@@ -41,6 +43,7 @@ interface Props {
 }
 interface Events {
   signIn: (state: SignInModel, history: History, workspaceUrl?: string) => void;
+  signUp: (history: History) => void;
 }
 interface State {
   model: SignInModel;
@@ -69,48 +72,58 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   public render() {
-    const { signIn, resources, history, workspaceUrl, classes } = this.props;
+    const {
+      signIn,
+      signUp,
+      resources,
+      history,
+      workspaceUrl,
+      classes,
+    } = this.props;
     const { email, password } = this.state.model;
     const { form, root } = classes;
     return (
-      <SideMenuContainer>
-        <Container className={root}>
-          <Row>
-            <Typography variant="h4">{resources.SignIn}</Typography>
-          </Row>
-          <Row>
-            <Form
-              onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
-              className={form}
-            >
-              <Row>
-                <OutlinedTextBox
-                  value={email}
-                  type="email"
-                  onChange={this.onChange('email')}
-                  label={resources.Email}
-                />
-              </Row>
-              <Row>
-                <OutlinedTextBox
-                  label={resources.Password}
-                  value={password}
-                  type="password"
-                  onChange={this.onChange('password')}
-                />
-              </Row>
-              <Row>
-                <Cell xs={8} />
-                <Cell xs={4}>
-                  <OutlinedButton type="submit">
-                    {resources.SignIn}
-                  </OutlinedButton>
-                </Cell>
-              </Row>
-            </Form>
-          </Row>
-        </Container>
-      </SideMenuContainer>
+      <Container className={root}>
+        <Row>
+          <Typography variant="h4">{resources.SignIn}</Typography>
+        </Row>
+        <Row>
+          <Form
+            onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
+            className={form}
+          >
+            <Row>
+              <OutlinedTextBox
+                value={email}
+                type="email"
+                onChange={this.onChange('email')}
+                label={resources.Email}
+              />
+            </Row>
+            <Row>
+              <OutlinedTextBox
+                label={resources.Password}
+                value={password}
+                type="password"
+                onChange={this.onChange('password')}
+              />
+            </Row>
+            <Row>
+              <Cell xs={8} />
+              <Cell xs={4}>
+                <OutlinedButton type="submit">
+                  {resources.SignIn}
+                </OutlinedButton>
+              </Cell>
+            </Row>
+            <Row>
+              <Button onClick={() => signUp(history)}>
+                {resources.RegisterNewUser}
+              </Button>
+            </Row>
+          </Form>
+        </Row>
+      </Container>
     );
   }
 }
@@ -130,6 +143,9 @@ const mapEventToProps: EventMapper<Events> = () => {
         return;
       }
       history.push(Url.root);
+    },
+    signUp: history => {
+      history.push(Url.signUp);
     },
   };
 };

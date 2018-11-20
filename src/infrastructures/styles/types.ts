@@ -24,21 +24,20 @@ export type StyledSFC<TStyles extends Styles, TProps = {}> = React.SFC<
 export type StyledComponent<TStyles extends Styles, TProps = {}> =
   | StyledComponentClass<TStyles, TProps>
   | StyledSFC<TStyles, TProps>;
-
-export type Styles = string | StyleRules | StyleRulesCallback;
-export type Classes<T extends Styles> = Partial<
+export type Classes<TStyles extends Styles> = Partial<
   ClassNameMap<
-    T extends string
-      ? T
-      : T extends StyleRulesCallback<infer K>
+    TStyles extends string
+      ? TStyles
+      : TStyles extends StyleRulesCallback<infer K>
         ? K
-        : T extends StyleRules<infer L> ? L : never
+        : TStyles extends StyleRules<infer L> ? L : never
   >
 >;
-export interface InjectableStylesProps<T extends Styles> {
+export type Styles = string | StyleRules | StyleRulesCallback;
+export interface InjectableStylesProps<TStyles extends Styles> {
   theme?: Theme;
   className?: string;
-  injectClasses?: Classes<T>;
+  injectClasses?: Classes<TStyles>;
 }
 export type WithStyleProps<TStyles extends Styles, TProps = {}> = WithStyles<
   TStyles

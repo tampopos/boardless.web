@@ -8,4 +8,11 @@ export interface IAccountsUseCase {
   signInAsync: (
     model: SignInModel,
   ) => Promise<{ hasError: boolean; workspaces?: UserWorkspace[] }>;
+  validateNickNameUniqueAsync: (nickName: string) => Promise<boolean>;
+  validateNickNameFormat: (nickName: string) => boolean;
+  validateEmailUniqueAsync: (email: string) => Promise<boolean>;
+  validateEmailFormat: (email: string) => boolean;
+  validatePasswordFormat: (password: string) => boolean;
+  showSignUpErrorMessage: () => void;
+  signUpAsync: (model: SignInModel) => Promise<{ hasError: boolean }>;
 }
