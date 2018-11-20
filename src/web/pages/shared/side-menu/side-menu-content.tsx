@@ -16,7 +16,7 @@ import { Add } from '@material-ui/icons';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { Resources } from 'src/domains/common/location/resources';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -58,7 +58,7 @@ const mapStateToProps: StateMapperWithRouter<
 interface Events {
   addWorkspace: (history: History) => () => void;
 }
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   return {
     addWorkspace: history => () => {
       history.push(Url.root);
@@ -126,5 +126,5 @@ const Inner: StyledSFC<typeof styles, Props & Events> = ({
 const StyledInner = decorate(styles)(Inner);
 export const SideMenuContent = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(StyledInner);

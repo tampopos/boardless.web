@@ -14,7 +14,7 @@ import {
 import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons';
 import * as React from 'react';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { Resources } from 'src/domains/common/location/resources';
 import { History } from 'history';
 import { Url } from 'src/infrastructures/routing/url';
@@ -22,10 +22,10 @@ import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper'
 import { Theme } from 'src/infrastructures/styles/theme';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
 import { createPropagationProps } from 'src/infrastructures/styles/styles-helper';
-import { signIn } from 'src/infrastructures/stores/accounts/action-creators';
-import { handleOpen } from 'src/infrastructures/stores/side-menu/action-creators';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
+import { resolve } from 'src/use-cases/common/di-container';
+import { symbols } from 'src/use-cases/common/di-symbols';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -165,18 +165,18 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props> = (
   );
   return { resources, authenticated, sideMenuEnabled, history };
 };
-const mapDispatchToProps: DispatchMapper<Events> = dispatch => {
+const mapEventToProps: EventMapper<Events> = () => {
+  const { signOut } = resolve(symbols.accountsUseCase);
+  const { handleOpen } = resolve(symbols.sideMenuUseCase);
   return {
     signOut: (history: History) => {
-      dispatch(signIn({ result: {} }));
+      signOut();
       history.push(Url.root);
     },
-    handleOpenMenu: () => {
-      dispatch(handleOpen());
-    },
+    handleOpenMenu: handleOpen,
   };
 };
 const StyledInner = decorate(styles)(Inner);
-export const AppTop = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+export const AppTop = withConnectedRouter(mapStateToProps, mapEventToProps)(
   StyledInner,
 );

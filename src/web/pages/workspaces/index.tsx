@@ -1,7 +1,7 @@
 import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { createStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { Resources } from 'src/domains/common/location/resources';
 import { decorate } from 'src/infrastructures/styles/styles-helper';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
@@ -58,9 +58,15 @@ interface Events {
   ) => void;
   add: (workspace: UserWorkspace, history: History) => void;
 }
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   const { getInvitedWorkspaces, add } = resolve(symbols.workspaceUseCase);
-  return { getInvitedWorkspaces, add };
+  return {
+    getInvitedWorkspaces,
+    add: (workspace, history) => {
+      add(workspace);
+      history.push(Url.newWorkSpace);
+    },
+  };
 };
 interface State {}
 class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
@@ -142,5 +148,5 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const StyledInner = decorate(styles)(Inner);
 export const WorkspaceIndex = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(StyledInner);

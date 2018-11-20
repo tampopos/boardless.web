@@ -2,7 +2,7 @@ import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { createStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { OutlinedTextBox } from 'src/web/components/forms-controls/text-box';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { SignInModel } from 'src/domains/models/accounts/sign-in-model';
 import { resolve } from 'src/use-cases/common/di-container';
 import { Resources } from 'src/domains/common/location/resources';
@@ -14,9 +14,11 @@ import { Url } from 'src/infrastructures/routing/url';
 import { Container } from 'src/web/components/layout/container';
 import { Row } from 'src/web/components/layout/row';
 import { Cell } from 'src/web/components/layout/cell';
-import { OutlinedButton } from 'src/web/components/forms-controls/button';
+import {
+  OutlinedButton,
+  Button,
+} from 'src/web/components/forms-controls/button';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
-import { SideMenuContainer } from '../side-menu/side-menu-container';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { symbols } from 'src/use-cases/common/di-symbols';
@@ -41,6 +43,7 @@ interface Props {
 }
 interface Events {
   signIn: (state: SignInModel, history: History, workspaceUrl?: string) => void;
+  signUp: (history: History) => void;
 }
 interface State {
   model: SignInModel;
@@ -69,59 +72,80 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
     });
   };
   public render() {
-    const { signIn, resources, history, workspaceUrl, classes } = this.props;
+    const {
+      signIn,
+      signUp,
+      resources,
+      history,
+      workspaceUrl,
+      classes,
+    } = this.props;
     const { email, password } = this.state.model;
     const { form, root } = classes;
     return (
-      <SideMenuContainer>
-        <Container className={root}>
-          <Row>
-            <Typography variant="h4">{resources.SignIn}</Typography>
-          </Row>
-          <Row>
-            <Form
-              onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
-              className={form}
-            >
-              <Row>
-                <OutlinedTextBox
-                  value={email}
-                  type="email"
-                  onChange={this.onChange('email')}
-                  label={resources.Email}
-                />
-              </Row>
-              <Row>
-                <OutlinedTextBox
-                  label={resources.Password}
-                  value={password}
-                  type="password"
-                  onChange={this.onChange('password')}
-                />
-              </Row>
-              <Row>
-                <Cell xs={8} />
-                <Cell xs={4}>
-                  <OutlinedButton type="submit">
-                    {resources.SignIn}
-                  </OutlinedButton>
-                </Cell>
-              </Row>
-            </Form>
-          </Row>
-        </Container>
-      </SideMenuContainer>
+      <Container className={root}>
+        <Row>
+          <Typography variant="h4">{resources.SignIn}</Typography>
+        </Row>
+        <Row>
+          <Form
+            onSubmit={() => signIn(this.state.model, history, workspaceUrl)}
+            className={form}
+          >
+            <Row>
+              <OutlinedTextBox
+                value={email}
+                type="email"
+                onChange={this.onChange('email')}
+                label={resources.Email}
+              />
+            </Row>
+            <Row>
+              <OutlinedTextBox
+                label={resources.Password}
+                value={password}
+                type="password"
+                onChange={this.onChange('password')}
+              />
+            </Row>
+            <Row>
+              <Cell xs={8} />
+              <Cell xs={4}>
+                <OutlinedButton type="submit">
+                  {resources.SignIn}
+                </OutlinedButton>
+              </Cell>
+            </Row>
+            <Row>
+              <Button onClick={() => signUp(history)}>
+                {resources.RegisterNewUser}
+              </Button>
+            </Row>
+          </Form>
+        </Row>
+      </Container>
     );
   }
 }
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
+  const { signInAsync } = resolve(symbols.accountsUseCase);
   return {
     signIn: async (model, history, workspaceUrl) => {
-      const useCase = resolve(symbols.accountsUseCase);
-      if (!(await useCase.validate(model))) {
+      const { workspaces, hasError } = await signInAsync(model);
+      if (hasError) {
         return;
       }
-      await useCase.signInAsync(model, history, workspaceUrl);
+      if (workspaceUrl) {
+        history.push(Url.workspaceRoot(workspaceUrl));
+        return;
+      } else if (workspaces && workspaces.length > 0) {
+        history.push(Url.workspaceRoot(workspaces[0].workspaceUrl));
+        return;
+      }
+      history.push(Url.root);
+    },
+    signUp: history => {
+      history.push(Url.signUp);
     },
   };
 };
@@ -145,6 +169,6 @@ const mapStateToProps: StateMapperWithRouter<StoredState, Props, Params> = (
   return { resources, getDefaultEmail, history, redirectRoot };
 };
 const StyledInner = decorate(styles)(Inner);
-export const SignIn = withConnectedRouter(mapStateToProps, mapDispatchToProps)(
+export const SignIn = withConnectedRouter(mapStateToProps, mapEventToProps)(
   StyledInner,
 );

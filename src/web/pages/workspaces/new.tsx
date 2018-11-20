@@ -9,7 +9,7 @@ import { Claim } from 'src/domains/models/accounts/claim';
 import { Resources } from 'src/domains/common/location/resources';
 import { Workspace } from 'src/domains/models/accounts/workspace';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
-import { DispatchMapper } from 'src/infrastructures/stores/types';
+import { EventMapper } from 'src/infrastructures/stores/types';
 import { StyledComponentBase } from 'src/infrastructures/styles/types';
 import { Row } from 'src/web/components/layout/row';
 import { OutlinedButton } from 'src/web/components/forms-controls/button';
@@ -21,6 +21,7 @@ import { resolve } from 'src/use-cases/common/di-container';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { symbols } from 'src/use-cases/common/di-symbols';
 import { Container } from 'src/web/components/layout/container';
+import { Url } from 'src/infrastructures/routing/url';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -75,9 +76,14 @@ interface Events {
   addWorkspace: (state: NewWorkspaceModel, history: History) => void;
 }
 
-const mapDispatchToProps: DispatchMapper<Events> = () => {
+const mapEventToProps: EventMapper<Events> = () => {
   const { addWorkspace } = resolve(symbols.workspaceUseCase);
-  return { addWorkspace };
+  return {
+    addWorkspace: (state, history) => {
+      const workspace = addWorkspace(state);
+      history.push(Url.workspaceRoot(workspace.workspaceUrl));
+    },
+  };
 };
 
 interface State {
@@ -128,5 +134,5 @@ const StyledInner = decorate(styles)(Inner);
 
 export const WorkspaceNew = withConnectedRouter(
   mapStateToProps,
-  mapDispatchToProps,
+  mapEventToProps,
 )(StyledInner);

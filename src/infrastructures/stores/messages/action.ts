@@ -1,7 +1,7 @@
 import { MessageGeneratorArgs } from 'src/domains/models/common/message';
 
 export interface Action {
-  clear: void;
+  clear: {};
   removeMessage: { id: string };
   showMessage: {
     messageGeneratorArgs: MessageGeneratorArgs;
