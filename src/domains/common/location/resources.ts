@@ -24,6 +24,8 @@ export class Resources {
   public Name = '名前';
   public NickName = 'ニックネーム';
   public Language = '言語';
+  public WorkspaceName = 'ワークスペース名';
+  public WorkspaceUrl = 'URL';
   public CultureNames: Record<Culture, string> = {
     ja: '日本語',
     en: '英語',

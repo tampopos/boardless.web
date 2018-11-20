@@ -117,7 +117,7 @@ export class WorkspaceUseCase implements IWorkspaceUseCase {
       userWorkspaceId: 'public-workspace1000000',
       userId: 'user01',
       id: 'public-workspace1000000',
-      workspaceUrl: 'public-workspace1000000',
+      workspaceUrl: state.url,
     };
     this.add(workspace);
     return workspace;

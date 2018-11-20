@@ -94,19 +94,20 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      model: { name: 'aaaaa' },
+      model: { name: '', url: '' },
     };
   }
 
-  private add = (history: History) => {
-    const { addWorkspace } = this.props;
-    addWorkspace(this.state.model, history);
+  private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { model } = this.state;
+    const { name, value } = e.currentTarget;
+    this.setState({ model: { ...model, [name]: value } });
   };
 
   public render() {
-    const { classes, resources, history } = this.props;
+    const { classes, resources, history, addWorkspace } = this.props;
     const { form, root, container } = classes;
-    const { name } = this.state.model;
+    const { name, url } = this.state.model;
 
     return (
       <div className={root} ref={e => e}>
@@ -114,9 +115,25 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
           <Row>
             <Typography variant="h4">{resources.AddNewWorkspace}</Typography>
           </Row>
-          <Form className={form} onSubmit={() => this.add(history)}>
+          <Form
+            className={form}
+            onSubmit={() => addWorkspace(this.state.model, history)}
+          >
             <Row>
-              <TextBox value={name} />
+              <TextBox
+                name="name"
+                label={resources.WorkspaceName}
+                value={name}
+                onChange={this.handleChange}
+              />
+            </Row>
+            <Row>
+              <TextBox
+                name="url"
+                label={resources.WorkspaceUrl}
+                value={url}
+                onChange={this.handleChange}
+              />
             </Row>
             <Row>
               <OutlinedButton type="submit">{resources.Add}</OutlinedButton>
