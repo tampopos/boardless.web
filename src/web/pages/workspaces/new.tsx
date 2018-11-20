@@ -112,9 +112,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       <div className={root} ref={e => e}>
         <Container className={container}>
           <Row>
-            <Typography variant="display1">
-              {resources.AddNewWorkspace}
-            </Typography>
+            <Typography variant="h4">{resources.AddNewWorkspace}</Typography>
           </Row>
           <Form className={form} onSubmit={() => this.add(history)}>
             <Row>
