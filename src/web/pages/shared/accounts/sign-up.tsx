@@ -1,18 +1,11 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Typography,
-  Paper,
-  Checkbox,
-  FormControlLabel,
-} from '@material-ui/core';
+import { createStyles, Typography } from '@material-ui/core';
 import { History } from 'history';
 import {
   SignUpModel,
   createDefaultSignUpModel,
 } from 'src/domains/models/accounts/sign-up-model';
 import { PopoverProps } from '@material-ui/core/Popover';
-import { Popup } from 'src/web/components/layout/popup';
 import { StateMapperWithRouter } from 'src/infrastructures/routing/types';
 import { StoredState } from 'src/infrastructures/stores/stored-state';
 import { AccountsSelectors } from 'src/infrastructures/stores/accounts/selectors';
@@ -33,12 +26,17 @@ import { Container } from 'src/web/components/layout/container';
 import { OutlinedButton } from 'src/web/components/forms-controls/button';
 import { withConnectedRouter } from 'src/infrastructures/routing/routing-helper';
 import { EventMapper } from 'src/infrastructures/stores/types';
-import { ThrottleAsync } from 'src/infrastructures/common/throttle';
 import { symbols } from 'src/use-cases/common/di-symbols';
 import { resolve } from 'src/use-cases/common/di-container';
 import { Messages } from 'src/domains/common/location/messages';
 import { Resources } from 'src/domains/common/location/resources';
 import { Url } from 'src/infrastructures/routing/url';
+import { ValidationPopup } from 'src/web/components/forms-controls/validation-popup';
+import {
+  ValidationState,
+  Validator,
+  ValidatorInitializer,
+} from 'src/domains/models/validation/validator';
 
 const styles = createStyles({
   root: {
@@ -70,13 +68,13 @@ const mapStateToProps: StateMapperWithRouter<
 };
 interface Events {
   openPopover: (popoverProps: Partial<PopoverProps>) => void;
+  showSignUpErrorMessage: () => void;
+  signUpAsync: (model: SignUpModel) => Promise<{ hasError: boolean }>;
   validateNickNameUniqueAsync: (nickName: string) => Promise<boolean>;
   validateNickNameFormat: (nickName: string) => boolean;
   validateEmailUniqueAsync: (email: string) => Promise<boolean>;
   validateEmailFormat: (email: string) => boolean;
   validatePasswordFormat: (password: string) => boolean;
-  showSignUpErrorMessage: () => void;
-  signUpAsync: (model: SignUpModel) => Promise<{ hasError: boolean }>;
 }
 const mapEventToProps: EventMapper<Events, OwnProps> = () => {
   const {
@@ -89,178 +87,145 @@ const mapEventToProps: EventMapper<Events, OwnProps> = () => {
     signUpAsync,
   } = resolve(symbols.accountsUseCase);
   return {
+    showSignUpErrorMessage,
+    signUpAsync,
     validateEmailFormat,
     validateEmailUniqueAsync,
     validateNickNameFormat,
     validateNickNameUniqueAsync,
     validatePasswordFormat,
-    showSignUpErrorMessage,
-    signUpAsync,
   };
 };
-type contentState = 'valid' | 'inValid' | 'description';
-interface PopupContent {
-  text: string;
-  validate?: () => contentState;
-  validateAsync?: () => Promise<contentState>;
-  validationTriggers?: string[];
-  state?: contentState;
-}
 interface State {
   model: SignUpModel;
   anchor?: null | { key: keyof SignUpModel; el: HTMLInputElement };
-  popupMessages: Record<keyof SignUpModel, PopupContent[]>;
+  validationState: ValidationState<SignUpModel>;
 }
-class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
-  private validateThrottles: Record<keyof SignUpModel, ThrottleAsync>;
-  private validateModel = (key: keyof SignUpModel) => async () => {
-    const { popupMessages } = this.state;
-    const newPopupMessages = { ...popupMessages };
-    const valid = async (x: PopupContent) => {
-      const { validate, validateAsync } = x;
-      if (validate) {
-        x.state = validate();
-        return;
-      }
-      if (validateAsync) {
-        x.state = await validateAsync();
-        return;
-      }
-    };
-    for (const x of newPopupMessages[key]) {
-      await valid(x);
-    }
-    for (const [k, v] of Object.entries(newPopupMessages)) {
-      if (k === key.toString()) {
-        continue;
-      }
-      for (const x of v) {
-        const { validationTriggers } = x;
-        if (
-          !validationTriggers ||
-          validationTriggers.filter(t => t === key.toString()).length === 0
-        ) {
-          continue;
-        }
-        await valid(x);
-      }
-    }
-    this.setState({ popupMessages: newPopupMessages });
+
+class SignUpValidator extends Validator<SignUpModel> {
+  constructor(
+    private props: Events & Props,
+    initializer: ValidatorInitializer<SignUpModel>,
+  ) {
+    super(initializer);
+  }
+  private get messages() {
+    return this.props.messages;
+  }
+  private get resources() {
+    return this.props.resources;
+  }
+  private get validateNickNameUniqueAsync() {
+    return this.props.validateNickNameUniqueAsync;
+  }
+  private get validateNickNameFormat() {
+    return this.props.validateNickNameFormat;
+  }
+  private get validateEmailUniqueAsync() {
+    return this.props.validateEmailUniqueAsync;
+  }
+  private get validateEmailFormat() {
+    return this.props.validateEmailFormat;
+  }
+  private get validatePasswordFormat() {
+    return this.props.validatePasswordFormat;
+  }
+  protected defaultState: ValidationState<SignUpModel> = {
+    name: [
+      {
+        text: this.messages.required(this.resources.Name),
+        validate: model => (model.name ? 'valid' : 'inValid'),
+      },
+    ],
+    nickName: [
+      {
+        text: this.messages.nickNameDescription,
+        state: 'description',
+      },
+      {
+        text: this.messages.required(this.resources.NickName),
+        validate: model => (model.nickName ? 'valid' : 'inValid'),
+      },
+      {
+        text: this.messages.nickNameFormat,
+        validate: model =>
+          this.validateNickNameFormat(model.nickName) ? 'valid' : 'inValid',
+      },
+      {
+        text: this.messages.shouldUnique(this.resources.NickName),
+        validateAsync: async model =>
+          (await this.validateNickNameUniqueAsync(model.nickName))
+            ? 'valid'
+            : 'inValid',
+      },
+    ],
+    email: [
+      {
+        text: this.messages.emailDescription,
+        state: 'description',
+      },
+      {
+        text: this.messages.required(this.resources.Email),
+        validate: model => (model.email ? 'valid' : 'inValid'),
+      },
+      {
+        text: this.messages.emailExample,
+        validate: model =>
+          this.validateEmailFormat(model.email) ? 'valid' : 'inValid',
+      },
+      {
+        text: this.messages.shouldUnique(this.resources.Email),
+        validateAsync: async model =>
+          (await this.validateEmailUniqueAsync(model.email))
+            ? 'valid'
+            : 'inValid',
+      },
+    ],
+    password: [
+      {
+        text: this.messages.passwordDescription,
+        state: 'description',
+      },
+      {
+        text: this.messages.passwordLength,
+        validate: model =>
+          model.password && model.password.length >= 8 ? 'valid' : 'inValid',
+      },
+      {
+        text: this.messages.passwordFormat,
+        validate: model =>
+          this.validatePasswordFormat(model.password) ? 'valid' : 'inValid',
+      },
+    ],
+    confirmPassword: [
+      {
+        text: this.messages.confirmPasswordDescription,
+        validationTriggers: ['password'],
+        validateAsync: async model =>
+          (await this.hasErrorAsync('password', model)) ||
+          model.password !== model.confirmPassword
+            ? 'inValid'
+            : 'valid',
+      },
+    ],
+    cultureName: [],
   };
+}
+
+class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
+  private validator: SignUpValidator;
   constructor(props: any) {
     super(props);
+    this.validator = new SignUpValidator(this.props, {
+      getModel: () => this.state.model,
+      setValidationState: validationState => this.setState({ validationState }),
+      interval: 500,
+    });
     this.state = {
       model: createDefaultSignUpModel(),
-      popupMessages: this.createPopupMessages(),
+      validationState: this.validator.getDefaultState(),
     };
-    this.validateThrottles = Object.keys(this.state.model).reduce(
-      (o, k) => {
-        o[k] = new ThrottleAsync(
-          this.validateModel(k as keyof SignUpModel),
-          500,
-        );
-        return o;
-      },
-      {} as Record<keyof SignUpModel, ThrottleAsync>,
-    );
   }
-  private createPopupMessages = (): Record<
-    keyof SignUpModel,
-    PopupContent[]
-  > => {
-    const { messages, resources } = this.props;
-    const { required, shouldUnique } = messages;
-    return {
-      name: [
-        {
-          text: required(resources.Name),
-          validate: () => (this.state.model.name ? 'valid' : 'inValid'),
-        },
-      ],
-      nickName: [
-        {
-          text: messages.nickNameDescription,
-          state: 'description',
-        },
-        {
-          text: required(resources.NickName),
-          validate: () => (this.state.model.nickName ? 'valid' : 'inValid'),
-        },
-        {
-          text: messages.nickNameFormat,
-          validate: () =>
-            this.props.validateNickNameFormat(this.state.model.nickName)
-              ? 'valid'
-              : 'inValid',
-        },
-        {
-          text: shouldUnique(resources.NickName),
-          validateAsync: async () =>
-            (await this.props.validateNickNameUniqueAsync(
-              this.state.model.nickName,
-            ))
-              ? 'valid'
-              : 'inValid',
-        },
-      ],
-      email: [
-        {
-          text: messages.emailDescription,
-          state: 'description',
-        },
-        {
-          text: required(resources.Email),
-          validate: () => (this.state.model.email ? 'valid' : 'inValid'),
-        },
-        {
-          text: messages.emailExample,
-          validate: () =>
-            this.props.validateEmailFormat(this.state.model.email)
-              ? 'valid'
-              : 'inValid',
-        },
-        {
-          text: shouldUnique(resources.Email),
-          validateAsync: async () =>
-            (await this.props.validateEmailUniqueAsync(this.state.model.email))
-              ? 'valid'
-              : 'inValid',
-        },
-      ],
-      password: [
-        {
-          text: messages.passwordDescription,
-          state: 'description',
-        },
-        {
-          text: messages.passwordLength,
-          validate: () =>
-            this.state.model.password && this.state.model.password.length >= 8
-              ? 'valid'
-              : 'inValid',
-        },
-        {
-          text: messages.passwordFormat,
-          validate: () =>
-            this.props.validatePasswordFormat(this.state.model.password)
-              ? 'valid'
-              : 'inValid',
-        },
-      ],
-      confirmPassword: [
-        {
-          text: messages.confirmPasswordDescription,
-          validationTriggers: ['password'],
-          validate: () =>
-            this.hasError('password') ||
-            this.state.model.password !== this.state.model.confirmPassword
-              ? 'inValid'
-              : 'valid',
-        },
-      ],
-      cultureName: [],
-    };
-  };
   private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { model } = this.state;
     const { name, value } = e.currentTarget;
@@ -281,12 +246,6 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   private closePopover = () => {
     this.setState({ anchor: null });
   };
-  private hasError = (key: keyof SignUpModel) => {
-    const popupMessage = this.state.popupMessages[key];
-    return (
-      popupMessage && popupMessage.filter(x => x.state === 'inValid').length > 0
-    );
-  };
   public componentDidUpdate(
     prevProps: Readonly<Props>,
     prevState: Readonly<State>,
@@ -295,54 +254,22 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       return;
     }
     const prevModel = prevState.model;
-    const { model } = this.state;
-    if (prevModel && model) {
-      for (const key of Object.keys(model)) {
-        const k = key as keyof SignUpModel;
-        if (prevModel[k] !== model[k]) {
-          this.validateThrottles[k].execute();
-          break;
-        }
-      }
+    const { model, anchor } = this.state;
+    if (!anchor) {
+      return;
+    }
+    const key = anchor.key as keyof SignUpModel;
+    if (prevModel[key] !== model[key]) {
+      this.validator.validateThrottle(key);
     }
   }
   private submit = async () => {
     const { showSignUpErrorMessage, signUpAsync, history } = this.props;
-    const { popupMessages, model } = this.state;
-    const newPopupMessages = { ...popupMessages };
-    const errors: string[] = [];
-    const valid = async (x: PopupContent) => {
-      const { validate, validateAsync } = x;
-      if (validate) {
-        x.state = validate();
-      }
-      if (validateAsync) {
-        x.state = await validateAsync();
-      }
-      if (x.state === 'inValid') {
-        errors.push(x.text);
-      }
-    };
-    for (const v of Object.values(newPopupMessages)) {
-      for (const x of v) {
-        const { validationTriggers } = x;
-        if (validationTriggers && validationTriggers.length > 0) {
-          continue;
-        }
-        await valid(x);
-      }
-    }
-    for (const v of Object.values(newPopupMessages)) {
-      for (const x of v) {
-        const { validationTriggers } = x;
-        if (validationTriggers && validationTriggers.length > 0) {
-          await valid(x);
-        }
-      }
-    }
-    if (errors.length > 0) {
+    const { model } = this.state;
+    const validationState = await this.validator.validateAll(model);
+    if (validationState) {
       showSignUpErrorMessage();
-      this.setState({ popupMessages: newPopupMessages });
+      this.setState({ validationState });
       return;
     }
     const { hasError } = await signUpAsync(model);
@@ -353,7 +280,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
   public render() {
     const { classes } = createPropagationProps(this.props);
     const { root, btn } = classes;
-    const { model, anchor, popupMessages } = this.state;
+    const { model, anchor, validationState } = this.state;
     const {
       email,
       password,
@@ -367,9 +294,9 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
       value: x[0],
       label: x[1],
     }));
-    const popupContents =
-      anchor && popupMessages[anchor.key]
-        ? popupMessages[anchor.key]
+    const validationMessages =
+      anchor && validationState[anchor.key]
+        ? validationState[anchor.key]
         : undefined;
     return (
       <Container className={root}>
@@ -394,7 +321,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                 onChange={this.handleChange}
                 onFocus={this.openPopover}
                 onBlur={this.closePopover}
-                error={this.hasError('name')}
+                error={this.validator.hasError('name', validationState)}
               />
             </Row>
             <Row>
@@ -405,7 +332,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                 onChange={this.handleChange}
                 onFocus={this.openPopover}
                 onBlur={this.closePopover}
-                error={this.hasError('nickName')}
+                error={this.validator.hasError('nickName', validationState)}
               />
             </Row>
             <Row>
@@ -417,7 +344,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                 onChange={this.handleChange}
                 onFocus={this.openPopover}
                 onBlur={this.closePopover}
-                error={this.hasError('email')}
+                error={this.validator.hasError('email', validationState)}
               />
             </Row>
             <Row>
@@ -429,7 +356,7 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                 onChange={this.handleChange}
                 onFocus={this.openPopover}
                 onBlur={this.closePopover}
-                error={this.hasError('password')}
+                error={this.validator.hasError('password', validationState)}
               />
             </Row>
             <Row>
@@ -441,7 +368,10 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
                 onChange={this.handleChange}
                 onFocus={this.openPopover}
                 onBlur={this.closePopover}
-                error={this.hasError('confirmPassword')}
+                error={this.validator.hasError(
+                  'confirmPassword',
+                  validationState,
+                )}
               />
             </Row>
             <Row>
@@ -451,13 +381,14 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
             </Row>
           </Form>
         </Row>
-        {popupContents && (
-          <Popup
-            anchorEl={anchor && anchor.el}
-            popperProps={{ placement: 'top-end' }}
-          >
-            <PopupContainer popupContents={popupContents} />
-          </Popup>
+        {validationMessages && (
+          <ValidationPopup
+            popupProps={{
+              anchorEl: anchor && anchor.el,
+              popperProps: { placement: 'top-end' },
+            }}
+            validationMessages={validationMessages}
+          />
         )}
       </Container>
     );
@@ -466,36 +397,4 @@ class Inner extends StyledComponentBase<typeof styles, Props & Events, State> {
 const StyledInner = decorate(styles)(Inner);
 export const SignUp = withConnectedRouter(mapStateToProps, mapEventToProps)(
   StyledInner,
-);
-const popupContainerStyles = createStyles({
-  root: {
-    padding: 10,
-    marginBottom: 20,
-  },
-});
-interface PopupContainerProps {
-  popupContents: PopupContent[];
-}
-const PopupContainer = decorate(popupContainerStyles)<PopupContainerProps>(
-  props => {
-    const { classes, popupContents } = createPropagationProps(props);
-    const { root } = classes;
-    return (
-      <Paper className={root}>
-        {popupContents.map(({ text, state }, i) => {
-          if (state === 'description') {
-            return <Typography key={i}>{text}</Typography>;
-          }
-          return (
-            <div key={i}>
-              <FormControlLabel
-                control={<Checkbox checked={state === 'valid'} />}
-                label={text}
-              />
-            </div>
-          );
-        })}
-      </Paper>
-    );
-  },
 );
