@@ -21,7 +21,7 @@ interface Props {
   popperProps: Partial<PopperProps>;
 }
 interface Param {}
-interface OwnProps {
+export interface PopupProps {
   anchorEl?: null | HTMLElement | ((element: HTMLElement) => HTMLElement);
   popperProps?: Partial<PopperProps>;
 }
@@ -29,12 +29,12 @@ const mapStateToProps: StateMapperWithRouter<
   StoredState,
   Props,
   Param,
-  OwnProps
+  PopupProps
 > = ({}, { anchorEl, popperProps }) => {
   return { anchorEl, popperProps: popperProps ? popperProps : {} };
 };
 interface Events {}
-const mapEventToProps: EventMapper<Events, OwnProps> = () => {
+const mapEventToProps: EventMapper<Events, PopupProps> = () => {
   return {};
 };
 interface State {
